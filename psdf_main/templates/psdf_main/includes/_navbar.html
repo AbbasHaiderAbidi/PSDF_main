@@ -1,0 +1,199 @@
+{% load static %}
+<!-- <div class="bg-img">
+
+    <nav class="navbar navbar-expand-md navbar-inverse transparent row no-gutters">
+        <div class="navbar-brand posocologo">
+            <img class="navbar-brand posocologo" src="{% static 'images/posocologo.png' %}">
+            <i>Welcome</i>,<strong>  {{user.username}}</strong>
+            <br> Last login: user.lastlogin}}</div>
+
+
+
+        <div class="collapse navbar-collapse" id="navbarNew">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-primary " href="#"> New Projects<span class="badge badge-light"></span></a>
+                </li>
+                </li>
+
+                <span class="col-md-1"></span>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-primary " href="#"> Active Projects<span class="badge badge-light"></span></a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle btn-outline-primary btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            &nbsp; Payment &nbsp;
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Project</a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <a class="dropdown-item" href="#">Refund</a>
+
+                    </div>
+
+
+            </ul>
+
+            <div class="nav-item dropdown" style="padding-right: 10%;">
+                <a class="nav-link dropdown-toggle btn-outline-danger btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          &nbsp; Profile &nbsp;
+        </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Change password</a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" >Signout</a>
+
+                </div>
+
+
+            </div>
+    </nav>
+    <hr style="height:1px; border:none;color:#000;background-color:#000;">
+
+
+    
+    </div>
+ -->
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <hr class="sidebar-divider my-2"><br>
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="">
+            <!-- <i class="fa fa-user-circle-o"></i> -->
+            <img src="{% static 'images/posocologo.png' %}" style="max-width:50%; max-height:50%;">
+        </div>
+
+
+    </a>
+    <br>
+    <!-- Divider -->
+    <hr class="sidebar-divider my-2">
+    <div class="sidebar-heading">
+        Last Login:
+    </div>
+    <li class="nav-item active">
+        <a class="nav-link" href="/">
+            <i class="fa fa-clock-o"></i>
+            <span>{{user.lastlogin}}</span></a>
+    </li>
+    <hr class="sidebar-divider my-0">
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="/">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+
+    <hr class="sidebar-divider my-0">
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'newdpr' %}">
+            <i class="fa fa-plus-square"></i>
+            <span>Apply new DPR</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Interface
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Pending Projects</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Projects:</h6>
+                <a class="collapse-item" href="buttons.html">Under examination</a>
+                <a class="collapse-item" href="cards.html">Under TESG</a>
+                <a class="collapse-item" href="cards.html">Under Appraisal</a>
+                <a class="collapse-item" href="cards.html">Under Monitoring</a>
+
+                <h6><a class="collapse-item" href="cards.html">View All</a></h6>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Projects</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">File new request:</h6>
+                <a class="collapse-item" href="cards.html">Ongoing projects</a>
+                <div class="collapse-divider"></div>
+                <h6 class="collapse-header">View</h6>
+
+
+                <a class="collapse-item" href="cards.html">Completed projects</a>
+                <a class="collapse-item" href="cards.html">Rejected projects</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Addons
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Account</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">view</h6>
+                <a class="collapse-item" href="login.html">Personal details</a>
+                <h6 class="collapse-header">Change</h6>
+                <a class="collapse-item" href="forgot-password.html">Change Password</a>
+                <div class="collapse-divider"></div>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+        <a class="nav-link" href="charts.html">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Charts</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Tables</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <a class="btn btn-lg btn-outline-light btn-wrap-text" href="{% url 'logout' %}"> Logout</a>
+    </div>
+
+    <!-- Sidebar Message -->
+
+
+</ul>
