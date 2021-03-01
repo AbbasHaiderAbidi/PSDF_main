@@ -1,10 +1,53 @@
 {% extends 'psdf_main/includes/layout.html'%} {% load static %} {% block body %}
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Apply a new DPR</h1>
+<div class="row">
+    <div class="col-md-4">
+        <h1 class="h3 mb-2 text-gray-800">Apply for new project</h1>
+    </div>
+    <div class="col-md-2">
+
+    </div>
+    <div class="col-md-6">
+        {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show col-md-8" role="alert" style="margin: auto;">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    </div>
 </div>
+
+<hr>
+<br>
 <div class="row">
 
+
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#format" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-danger">View Format</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="format">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">Download form formats from A1 to A6.</div>
+                        <div class="col-md-6">
+                            <a href="{% url 'downloadformat' %}" class="btn btn-danger btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-download"></i>
+                            </span>
+                                <span class="text">Download form A1 to A6 in zip format</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-lg-6">
 
         <div class="card shadow mb-4">
@@ -12,29 +55,98 @@
                 <h6 class="m-0 font-weight-bold text-primary">Instructions</h6>
             </div>
             <div class="card-body">
-                Give all the instructions hereGive all the instructions hereGive all the instructions hereGive all the instructions hereGive all the instructions hereGive all the instructions hereGive all the instructions hereGive all the instructions hereGive all the
-                instructions hereGive all the instructions hereGive all the instructions hereGive all the instructions here Give all the instructions hereGive all the instructions here
+                The Appraisal Committee, in its seventh meeting had suggested to bring uniformity, that a model DPR along with suggested guidelines with regard to spares, taxes etc may be made available to the entities through NLDC website. The matter was deliberated
+                by the Appraisal Committee in the meeting held on 8.9.2015. The committee had recommended the following guidelines:
+                <ul>
+                    <li>Spares as specified under the Tariff Regulations for 2014-19 notified by CERC</li>
+                    <li>Non consideration of state taxes, entry tax, etc in the project cost</li>
+                    <li>Placement of the Letter of Award (LOA) only after approval of the scheme.</li>
+                    <li>Supply and erection shall commensurate with each other.</li>
+                    <li>Opening of a separate bank account for each scheme for linking of the same with Public Finance Management System (PFMS) of Ministry of Finance</li>
+                </ul>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-lg-6">
+        <form action="{% url 'newdpr' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Enter following details</h6>
+                </div>
+                <div class="card-body">
+
+                    <div class="input-group">
+
+                        Enter project name: &nbsp;&nbsp;{{form.proname}}
+
+                    </div><br>
+                    <div class="input-group">
+                        Enter requested amount: &nbsp;&nbsp;{{form.amountasked}}
+                    </div><br>
+                    <div class="input-group">
+                        Enter schedule: &nbsp;&nbsp;{{form.schedule}}
+                    </div>
+                </div><br>
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Uploads</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">Upload the zip file containing all A1 to A6 forms duly filled.</div>
+                        <div class="col-md-6">
+                            <label class=" btn btn-primary" for="dpr" id="dpr-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload form A1 to A6 in zip format</span></label>
+                            <input type="file" class="custom-file-input " name="dpr" id="dpr">
 
 
+                            </span>
 
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Upload any other supporting documents</div>
+                        <div class="col-md-6">
+                            <label class=" btn btn-primary" for="otherdoc" id="otherdoc-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload supporting documents</span></label>
+                            <input type="file" class="custom-file-input " name="otherdoc" id="otherdoc">
 
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
     <div class="col-lg-6">
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                <h6 class="m-0 font-weight-bold text-primary">View Format</h6>
+                <h6 class="m-0 font-weight-bold text-success">Confirm Submission</h6>
             </a>
             <!-- Card Content - Collapse -->
             <div class="collapse show" id="collapseCardExample">
                 <div class="card-body">
-                    download forms A1 tpo C
+                    <div class="row">
+
+                        <label for="confirmbox">&nbsp;&nbsp;
+                            <input id="field_terms" type="checkbox" required name="terms">
+                            &nbsp; &nbsp; I confirm that the details given by me are of best of my knowledge.
+                        </label>
+                    </div><br>
+                    <hr>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6" style="margin: auto;">
+                            <input type="submit" class="btn btn-user btn-success btn-block" value="Submit">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    </form>
 
+</div>
 {% endblock %}

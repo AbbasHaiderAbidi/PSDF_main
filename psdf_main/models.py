@@ -9,11 +9,12 @@ class users(models.Model):
     utilname = models.CharField(max_length=400, null = True)
     contact = models.CharField(max_length=10, null = True)
     address = models.CharField(max_length=500, null = True)
-    reqdate = models.DateTimeField(null = True)
-    aprdate = models.DateTimeField(auto_now_add=True, null = True)
+    reqdate = models.DateTimeField(auto_now_add=True,null = True)
+    aprdate = models.DateTimeField( null = True)
     lastlogin = models.DateTimeField(null = True)
     admin = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
+    activate = models.BooleanField(default=False)
 
 class temp_projects(models.Model):
     userid = models.ForeignKey(users, null = True, on_delete = models.CASCADE)
@@ -21,9 +22,10 @@ class temp_projects(models.Model):
     dprsubdate = models.DateTimeField(auto_now_add=True, null = True)
     amountasked = models.FloatField(null = False)
     projectpath = models.CharField(max_length=600, null = True)
-    deny = models.CharField(max_length=1, null = True)
+    deny = models.BooleanField(max_length=1, null = True, default = False)
     remark = models.CharField(max_length=1000, null = True)
-    removed = models.CharField(max_length=1, null = True)
+    schedule = models.IntegerField(null = False, default=0)
+    removed = models.BooleanField(max_length=1, null = True, default=False)
 
 
     def __str__(self):
@@ -42,16 +44,36 @@ class projects(models.Model):
     schedule = models.IntegerField(null = True)
     fundcategory = models.CharField(max_length=20, null = True)
     projectpath = models.CharField(max_length=600, null = True)
+    grant_eligible_percent = models.FloatField(null = True)
     approved = models.CharField(max_length=1, null = True)
     remark = models.CharField(max_length=1000, null = True)
+    extension = models.CharField(max_length = 1000, null = True)
     status = models.CharField(max_length=1, null = True)
     ##################################
     ## 0 - Rejected
     ## 1 - DPR approved
     ## 2 - TESG
-    ## 3 - Approval
+    ## 3 - Appraisal
     ## 4 - Monitoring
     ## 5 - Final approval
     ## 6 - Document Signed
     ## 7 - Payment
+    
+
+class TESG(models.Model):
+    projid = models.ForeignKey(projects, null = True, on_delete = models.CASCADE)
+    total_TESG = models.IntegerField(null=True, default = 0)
+    R_path_user = models.CharField(max_length = 1000, null  = True)
+    R_path_admin = models.CharField(max_length = 1000, null  = True)
+    status = models.CharField(max_length = 1000, null = True)
+    comment = models.CharField(max_length = 1000, null = True)
+    TESG_filepath = models.CharField(max_length = 1000, null = True)
+    message = models.TextField(max_length = 200000, null = True) # stores a string of message communications admin - msg$user-msg$admin - msg
+    complete = models.BooleanField(default=False, null=False) #set to True when admin approves from TESG
+    tesg_open = models.BooleanField(default=False, null=False) # set true if admin files TESG, and false if user replies
+    user_tesg_date = models.TextField(max_length =  20000, null = True)   #store like {'TESG1': ' 01-04-2021 ', 'TESG2' : '23-05-2021', .. , ..}
+    admin_tesg_date = models.TextField(max_length = 20000, null = True)   #store like {'TESG1': ' 01-04-2021 ', 'TESG2' : '23-05-2021', .. , ..}
+class monitoring(models.Model):
+    projid =  models.ForeignKey(projects, null = True, on_delete = models.CASCADE)
+    
     

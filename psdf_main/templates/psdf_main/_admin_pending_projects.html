@@ -1,0 +1,279 @@
+{% extends 'psdf_main/includes/admin_layout.html'%} {% load static %} {% block body %}
+
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">New projects pending for verfication</h1>
+</div>
+<div class="row">
+
+    <div class="col-lg-6">
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Pending Projects
+                    <input type="text" id="temp_proj_search" class="form-control input-text pull-right border-left-warning" onkeyup="get_temp_proj('temp_proj_search','dataTable')" placeholder="Search projects" title="Search" style="margin:auto; width: 30%;">
+                </h6>
+            </div>
+            <div class="card-body">
+                {% for message in messages %}
+                <div class="alert alert-info alert-dismissible fade show col-md-8" role="alert" style="margin: auto;">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                {% endfor %}<br>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="table-layout: fixed;
+                    width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Amount</th>
+                                <th>User</th>
+                                <th>Region</th>
+                                <th>Entity</th>
+                                <th>View</th>
+                                <th>Download</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Amount</th>
+                                <th>User</th>
+                                <th>Region</th>
+                                <th>Entity</th>
+                                <th>View</th>
+                                <th>Download</th>
+
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% if not projectobj %}
+                            <tr>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+
+
+
+                            </tr>
+
+                            {% else %} {% for proj in projectobj %}
+                            <tr>
+                                <td>{{proj.name}}</td>
+                                <td>{{proj.amt_asked}}</td>
+                                <td>{{proj.user_username}}</td>
+                                <td>{{proj.user_region}}</td>
+                                <td>{{proj.user_utilname}}</td>
+
+
+                                <td class="text-center">
+                                    <a class="btn btn-outline-primary btn-wrap-text btn-md" data-toggle="collapse" href="#collapseExample{{proj.id}}" role="button" aria-expanded="false" aria-controls="collapseExample" id="togglebtn{{proj.id}}" onClick="changeColor('togglebtn{{proj.id}}', 'openclose{{proj.id}}')">
+                                        <!-- <i class="fas fa-info-circle"></i> -->
+                                        <p class="m-0 font-weight-bold text-center " id="openclose{{proj.id}}">Open</p>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-info btn-circle" href="/download_temp_project/{{proj.id}}">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                            {% endfor %} {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+
+
+            <!-- Card Header - Accordion -->
+            <!-- <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">User Details</h6>
+            </a> -->
+            <!-- Card Content - Collapse -->
+            {% for proj in projectobj %}
+            <div class="collapse" id="collapseExample{{proj.id}}">
+                <div class="card-body border-left-primary">
+                    <div class="row">
+                        <div class="col-md-6 text-primary"><strong>Project name :  </strong>
+                            <h6 class="m-0 font-weight-bold text-dark">{{proj.name}}</h6>
+                        </div>
+                        <div class="col-md-6">
+
+                            <a class="btn btn-info btn-circle btn-lg" href="/download_temp_project/{{proj.id}}">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            &nbsp;&nbsp;&nbsp;
+
+                            <button type="button" class="btn btn-success btn-circle btn-lg" data-toggle="modal" data-target="#modalforT{{proj.id}}">
+                                <i class="fa fa-check"></i>
+                            </button> &nbsp;&nbsp;&nbsp;
+                            <a class="btn btn-danger btn-circle btn-lg" href="/reject_user/{{proj.id}}">
+                                <i class="fas fa-trash"></i>
+                            </a>
+
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-6 text-primary"><strong>Amount requested :</strong>
+                            <h6 class="m-0 font-weight-bold text-dark">{{proj.amt_asked}}</h6>
+                        </div>
+
+                        <div class="col-md-6 text-primary"><strong>DPR Submission Date :</strong>
+                            <h6 class="m-0 font-weight-bold text-dark">{{proj.dprsubdate}}</h6>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6 text-primary"><strong>Username :</strong>
+                            <h6 class="m-0 font-weight-bold  text-dark">{{proj.user_username}}</h6>
+                        </div>
+
+                        <div class="col-md-6 text-primary"><strong>Region :</strong>
+                            <h6 class="m-0 font-weight-bold text-dark">{{proj.user_region}}</h6>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6 text-primary"><strong>Nodal Officer :</strong>
+                            <h6 class="m-0 font-weight-bold text-dark ">{{proj.user_nodal}}</h6>
+                        </div>
+
+                        <div class="col-md-6 text-primary"><strong>Contact :</strong>
+                            <h6 class="m-0 font-weight-bold text-dark">{{proj.user_contact}}</h6>
+                        </div>
+
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-6 text-primary"><strong>Address :</strong>
+                            <h6 class="m-0 font-weight-bold text-dark">{{proj.user_address}}</h6>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div class="modal fade" id="modalforT{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforT{{proj.id}}" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id=""> <strong>{{proj.name}}</strong></h3>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6 text-primary"><strong>Amount requested :</strong>
+                                    <h6 class="m-0 font-weight-bold text-dark">{{proj.amt_asked}}</h6>
+                                </div>
+
+                                <div class="col-md-6 text-primary"><strong>DPR Submission Date :</strong>
+                                    <h6 class="m-0 font-weight-bold text-dark">{{proj.dprsubdate}}</h6>
+                                </div>
+
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6 text-primary"><strong>Username :</strong>
+                                    <h6 class="m-0 font-weight-bold  text-dark">{{proj.user_username}}</h6>
+                                </div>
+
+                                <div class="col-md-6 text-primary"><strong>Region :</strong>
+                                    <h6 class="m-0 font-weight-bold text-dark">{{proj.user_region}}</h6>
+                                </div>
+
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6 text-primary"><strong>Nodal Officer :</strong>
+                                    <h6 class="m-0 font-weight-bold text-dark ">{{proj.user_nodal}}</h6>
+                                </div>
+
+                                <div class="col-md-6 text-primary"><strong>Contact :</strong>
+                                    <h6 class="m-0 font-weight-bold text-dark">{{proj.user_contact}}</h6>
+                                </div>
+
+                            </div><br>
+                            <div class="row">
+                                <div class="col-md-6 text-primary"><strong>Address :</strong>
+                                    <h6 class="m-0 font-weight-bold text-dark">{{proj.user_address}}</h6>
+                                </div>
+                                <div class="col-md-6">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script>
+    function changeColor(thisbtn, openclose) {
+
+        var golbtn = document.getElementById(thisbtn);
+        var openclose = document.getElementById(openclose)
+        if (golbtn.classList.contains('btn-outline-primary')) {
+            openclose.innerText = "Close"
+            golbtn.classList.remove('btn-outline-primary');
+            golbtn.classList.add('btn-outline-danger');
+
+        } else {
+            openclose.innerText = "Open"
+            golbtn.classList.remove('btn-outline-danger');
+            golbtn.classList.add('btn-outline-primary');
+
+        }
+    }
+
+
+
+    function get_temp_proj(btnID, rpc) {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById(btnID);
+        filter = input.value.toUpperCase();
+        table = document.getElementById(rpc);
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
