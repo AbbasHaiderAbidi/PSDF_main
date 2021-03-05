@@ -33,6 +33,10 @@ def userDetails(username):
         user['aprdate'] = user1.aprdate
         user['admin'] = user1.admin
         user['active'] = user1.active
+        if user1.notification:
+            user['notifications'] = user1.notification.split(']*[')[1:]
+        else:
+            user['notifications'] = ""
         user['activate'] = user1.activate
     return user
 
@@ -47,10 +51,12 @@ def projectDetails(projid):
         proj['amt_released'] = proj1.amt_released
         proj['schedule'] = proj1.schedule
         proj['fundcategory'] = proj1.fundcategory
-        proj['grant_eligible_percent'] = proj1.grant_eligible_percent
+        proj['quantum'] = proj1.quantumOfFunding
         proj['extension'] = proj1.extension
         proj['status'] = proj1.status
         proj['remark'] = proj1.remark
+        proj['submitted_boq'] = proj1.submitted_boq
+        proj['approved_boq'] = proj1.approved_boq
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal
         proj['user_region'] = proj1.userid.region
@@ -77,6 +83,30 @@ def temp_projectDetails(projid):
         proj['schedule'] = proj1.schedule
         proj['remark'] = proj1.remark
         proj['removed'] = proj1.removed
+        eachboq = proj1.submitted_boq[2:-2].split('}, {')
+        
+        abc = []
+        for boq in eachboq :
+            attrlist = boq.split(', ')
+            
+            one_boq={}
+            for attr in attrlist:
+                attrname = attr.split(':')[0][1:-1]
+                attrvalue = attr.split(':')[1][2:-1]
+                one_boq[attrname] = attrvalue
+            abc.append(one_boq)
+        item_Gtotal = {}
+        Gtotal_list = []
+        for boq in abc:
+            if boq['itemname'] in item_Gtotal.keys():
+                item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
+            else:
+                 item_Gtotal[boq['itemname']] = boq['itemcost']
+        for key, value in item_Gtotal.items():
+            Gtotal_list.append({'itemname':key, 'grandtotal':value})
+        
+        proj['submitted_boq_Gtotal'] = Gtotal_list
+        proj['submitted_boq_list'] = abc
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal
         proj['user_region'] = proj1.userid.region
@@ -165,10 +195,9 @@ def handle_uploaded_file(path, f):
 def getTempProjects(request):
     if adminonline(request):
         temp_project_list = []
-        temp_project = temp_projects.objects.all()
+        temp_project = temp_projects.objects.all().exclude(deny = True)
         for proj in temp_project:
             temp_project_list.append(temp_projectDetails(proj.id))
         return temp_project_list
     return False
-
 

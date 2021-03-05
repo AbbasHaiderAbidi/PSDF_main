@@ -1,0 +1,85 @@
+{% extends 'psdf_main/includes/admin_layout.html'%} {% load static %} {% block body %}
+
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Administrator Control Panel</h1>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <form action="{% url 'uploadformat' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <a href="#format" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-warning">Upload Format Documents</h6>
+                </a>
+
+                <div class="collapse" id="format">
+                    <div class="card-body">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-4">Upload format documents:</div>
+
+                            <div class="col-md-2">
+                                <label class=" btn btn-outline-danger" for="format" id="format-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">DPR Format</span></label>
+                                <input type="file" class="custom-file-input " name="format" id="format">
+
+
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class=" btn btn-outline-danger" for="support" id="support-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Supporting Docuemnts</span></label>
+                                <input type="file" class="custom-file-input " name="support" id="support">
+
+
+                            </div>
+
+                        </div>
+                        <hr>
+                        <br> PSDF Sectt. has the right to upload new format documents as well as 3 sample DPRs, this upload will be available to the entity for their refernce.
+                        <ul>
+                            <li>DPR Format must contain the forms which are to be filled by the entity while filing for a new DPR</li>
+                            <li>Supporting Documents must contain the documents which could prove helpful to the user while filing new DPR</li>
+                            <li>3 Sample DPRs are to be made available to the user for refernce purposes.</li>
+
+                        </ul>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-4 font-weight-bolder">Upload sample DPRs: </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class=" btn btn-outline-primary" for="sample1" id="sample1-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Sample 1</span></label>
+                                        <input type="file" class="custom-file-input " name="sample1" id="sample1">
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class=" btn btn-outline-warning" for="sample2" id="sample2-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Sample 2</span></label>
+                                        <input type="file" class="custom-file-input " name="sample2" id="sample2">
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="/uploadformat/sample3" class="btn btn-info btn-icon-split">
+                                            <span class="icon text-white-50">
+                                    <i class="fa fa-upload"></i>
+                            </span>
+                                            <span class="text">Sample 3</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

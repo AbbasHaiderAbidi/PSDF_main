@@ -11,6 +11,11 @@
         color: #000;
     }
     
+    .btn-responsive {
+        white-space: normal !important;
+        word-wrap: break-word;
+    }
+    
     .bg-img {
         background-image: url("../images/nav-back.jpg");
         min-height: 150px;

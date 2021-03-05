@@ -1,3 +1,4 @@
-from django.test import TestCase
 
-# Create your tests here.
+
+path = ']*[abcd]*[kil'
+print(path.split(']*[')[1:])

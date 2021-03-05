@@ -21,52 +21,88 @@
 
 <hr>
 <br>
+
 <div class="row">
 
 
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#format" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                <h6 class="m-0 font-weight-bold text-danger">View Format</h6>
+                <h6 class="m-0 font-weight-bold text-warning">View Format</h6>
             </a>
             <!-- Card Content - Collapse -->
-            <div class="collapse show" id="format">
+            <div class="collapse" id="format">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">Download form formats from A1 to A6.</div>
-                        <div class="col-md-6">
-                            <a href="{% url 'downloadformat' %}" class="btn btn-danger btn-icon-split">
+                        <div class="col-md-4">Download forms and formats for filing of a new DPR: </div>
+
+                        <div class="col-md-2">
+                            <a href="/downloadformat/format" class="btn btn-danger btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fa fa-download"></i>
                             </span>
-                                <span class="text">Download form A1 to A6 in zip format</span>
+                                <span class="text">Form A1 to A6</span>
                             </a>
+
+                        </div>
+
+                        <div class="col-md-2">
+                            <a href="/downloadformat/support" class="btn btn-danger btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-download"></i>
+                            </span>
+                                <span class="text">Other Supporting Docs</span>
+                            </a>
+
+                        </div>
+
+                    </div>
+                    <br> The Appraisal Committee, in its seventh meeting had suggested to bring uniformity, that a model DPR along with suggested guidelines with regard to spares, taxes etc may be made available to the entities through NLDC website. The
+                    matter was deliberated by the Appraisal Committee in the meeting held on 8.9.2015. The committee had recommended the following guidelines:
+                    <ul>
+                        <li>Spares as specified under the Tariff Regulations for 2014-19 notified by CERC</li>
+                        <li>Non consideration of state taxes, entry tax, etc in the project cost</li>
+                        <li>Placement of the Letter of Award (LOA) only after approval of the scheme.</li>
+                        <li>Supply and erection shall commensurate with each other.</li>
+                        <li>Opening of a separate bank account for each scheme for linking of the same with Public Finance Management System (PFMS) of Ministry of Finance</li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-md-4">Download sample DPRs: </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <a href="/downloadformat/sample1" class="btn btn-warning btn-icon-split">
+                                        <span class="icon text-white-50">
+                                    <i class="fa fa-download"></i>
+                            </span>
+                                        <span class="text">Sample 1</span>
+                                    </a>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="/downloadformat/sample2" class="btn btn-success btn-icon-split">
+                                        <span class="icon text-white-50">
+                                    <i class="fa fa-download"></i>
+                            </span>
+                                        <span class="text">Sample 2</span>
+                                    </a>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="/downloadformat/sample3" class="btn btn-info btn-icon-split">
+                                        <span class="icon text-white-50">
+                                    <i class="fa fa-download"></i>
+                            </span>
+                                        <span class="text">Sample 3</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
 
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Instructions</h6>
-            </div>
-            <div class="card-body">
-                The Appraisal Committee, in its seventh meeting had suggested to bring uniformity, that a model DPR along with suggested guidelines with regard to spares, taxes etc may be made available to the entities through NLDC website. The matter was deliberated
-                by the Appraisal Committee in the meeting held on 8.9.2015. The committee had recommended the following guidelines:
-                <ul>
-                    <li>Spares as specified under the Tariff Regulations for 2014-19 notified by CERC</li>
-                    <li>Non consideration of state taxes, entry tax, etc in the project cost</li>
-                    <li>Placement of the Letter of Award (LOA) only after approval of the scheme.</li>
-                    <li>Supply and erection shall commensurate with each other.</li>
-                    <li>Opening of a separate bank account for each scheme for linking of the same with Public Finance Management System (PFMS) of Ministry of Finance</li>
-                </ul>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="row">
 
@@ -95,11 +131,27 @@
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Uploads</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body"><br>
+
                     <div class="row">
                         <div class="col-md-6">Upload the zip file containing all A1 to A6 forms duly filled.</div>
                         <div class="col-md-6">
-                            <label class=" btn btn-primary" for="dpr" id="dpr-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload form A1 to A6 in zip format</span></label>
+                            <label class=" btn btn-primary" for="a1" id="a1-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload form A1 to A6 in zip format</span></label>
+                            <input type="file" class="custom-file-input " name="a1" id="a1">
+
+
+                            </span>
+
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-md-6">Upload DPR</div>
+                        <div class="col-md-6">
+                            <label class=" btn btn-primary" for="dpr" id="dpr-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload DPR</span></label>
                             <input type="file" class="custom-file-input " name="dpr" id="dpr">
 
 
@@ -108,18 +160,26 @@
                             </a>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-6">Upload any other supporting documents</div>
                         <div class="col-md-6">
-                            <label class=" btn btn-primary" for="otherdoc" id="otherdoc-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload supporting documents</span></label>
+                            <label class=" btn btn-primary" for="otherdoc" id="otherdoc-label"><i class="fa fa-upload"></i> &nbsp;<span class="text">Upload other supporting documents</span></label>
                             <input type="file" class="custom-file-input " name="otherdoc" id="otherdoc">
 
                         </div>
                     </div>
+
                 </div>
             </div>
     </div>
     <div class="col-lg-6">
+        <div class="card shadow mb-4 border-left-danger border-bottom-danger"><strong>
+            
+            <a href="#boq" class="d-block card-header py-3 font-weight-bold text-danger" data-toggle="modal" data-target="#boq">
+            Fill BoQ details
+            </a></strong>
+        </div>
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
@@ -138,15 +198,102 @@
                     <hr>
                     <br>
                     <div class="row">
-                        <div class="col-lg-6" style="margin: auto;">
-                            <input type="submit" class="btn btn-user btn-success btn-block" value="Submit">
+                        <div class="col-lg-8" style="margin: auto;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a href="deletetpd/" class="btn btn-outline-danger ">Clear draft</a></div>
+                                <div class="col-md-0"></div>
+                                <div class="col-md-4">
+                                    <a href="savetpd/" class="btn btn-outline-info">Save as draft</a></div>
+                                <div class="col-md-0"></div>
+                                <div class="col-md-4">
+                                    <input type="submit" class="btn btn-user btn-success " value="Submit DPR"></div>
+                            </div>
+
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade border-bottom-info" id="boq" tabindex="-1" role="dialog" aria-labelledby="BoQ" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id=""> <strong>Fill BoQ Details</strong></h3>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="row2" id="nextrow">
+                    <a class="btn btn-outline-success pull-right" onclick="showrow()"><i class="fa fa-plus"></i>&nbsp;Add new row</a>
+
+                    <br> {% for i in n%}
+                    <div id="row{{i}}" style="display:none">
+                        <br>
+                        <hr>
+                        <div class="row">
+
+                            <div class="col-md-2 text-primary"><strong>Item name :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemname{{i}}" id="itemname{{i}}">
+                            </div>
+                            <div class="col-md-2 text-danger"><strong>Item no. in the BOQ :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemno{{i}}" id="itemno{{i}}">
+                            </div>
+                            <div class="col-md-4 text-warning"><strong>Item Description :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemdesc{{i}}" id="itemdesc{{i}}">
+                            </div>
+                            <div class="col-md-2 text-info"><strong>Quantity :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemqty{{i}}" id="itemqty{{i}}">
+                            </div>
+                            <div class="col-md-2 text-dark"><strong>Unit Price :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemprice{{i}}" id="itemprice{{i}}">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success btn-lg" data-dismiss="modal">Save</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
     </form>
 
 </div>
+<script>
+    document.getElementById('row1').style.display = "block"
+
+    function showrow() {
+        var rownum = document.getElementById('nextrow');
+        thisstr = rownum.value;
+        document.getElementById(thisstr).style.display = 'block';
+        rownum.value = 'row' + (parseInt(thisstr.substring(3, thisstr.length + 1)) + 1)
+
+
+
+    }
+
+    $('.save-draft').on(click, function() {
+                var data =
+                    $.ajax({
+                        url: 'save-draft/',
+                        data: data,
+                        type: 'POST',
+                        success: function() {
+                            alert('success')
+                        }
+                    });
+</script>
+
 {% endblock %}

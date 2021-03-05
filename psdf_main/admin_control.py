@@ -10,15 +10,12 @@ def admin_dashboard(request):
 
     
 def admin_users(request):
+    
     user = userDetails(request.session['user'])
-    nopendingprojects = len(getTempProjects(request))
     nopendingusers = pen_users_num(request)
     if not nopendingusers:
         nopendingusers = 0
-    if not nopendingprojects:
-        nopendingprojects = 0
-        
-    context = {'allusers' : get_all_users(request), 'user':user, 'userobj' : pen_users(request), 'nopendingusers' : nopendingusers, 'nopendingprojects' : nopendingprojects }
+    context = {'allusers' : get_all_users(request), 'user':user, 'userobj' : pen_users(request), 'nopendingusers' : nopendingusers, 'nopendingprojects' : len(getTempProjects(request)) }
     return render(request, 'psdf_main/_admin_users.html', context)
 
 
@@ -38,8 +35,9 @@ def admin_pending_users(request):
 def admin_pending_projects(request):
     if adminonline(request):
         user = userDetails(request.session['user'])
-        
-        context = {'user':user, 'projectobj' : getTempProjects(request), 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(getTempProjects(request)) }
+        projectobj = getTempProjects(request)
+        # print(projectobj[1]['submitted_boq_list'][1])
+        context = {'user':user, 'projectobj' : projectobj, 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(getTempProjects(request)) }
         return render(request, 'psdf_main/_admin_pending_projects.html', context)
     
 def approve_user(request, userid):
@@ -96,11 +94,3 @@ def ban_user(request, userid):
     else:
         return oops(request)
 
-def download_temp_project(request, projid):
-    return oops(request)
-
-def approve_project(request, projid):
-    return oops(request)
-
-def reject_project(request, projid):
-    return oops(request)

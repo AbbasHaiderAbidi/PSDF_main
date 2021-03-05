@@ -50,12 +50,15 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Projects</span>
+            <span>Projects
+                
+            </span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Projects:</h6>
-                <a class="collapse-item" href="{% url 'admin_pending_projects' %}">Under examination</a>
+                <a class="collapse-item" href="{% url 'admin_pending_projects' %}">Under examination &nbsp;&nbsp;&nbsp;{% if nopendingprojects > 0 %}
+                    <span class="badge badge-danger badge-counter">{{nopendingprojects}}</span> {% endif %}</a>
                 <a class="collapse-item" href="cards.html">Under TESG</a>
                 <a class="collapse-item" href="cards.html">Under Appraisal</a>
                 <a class="collapse-item" href="cards.html">Under Monitoring</a>
@@ -126,7 +129,7 @@
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="{% url 'admin_control_panel' %}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Control Panel</span></a>
     </li>

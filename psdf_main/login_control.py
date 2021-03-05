@@ -4,12 +4,13 @@ from .helpers import *
 def loginPage(request):
     if adminonline(request):
         user_m = userDetails(request.session['user'])
-        context = {'user':user_m, 'nopendingusers' : users.objects.filter(activate = False).count()}
+        context = {'user':user_m, 'nopendingusers' : users.objects.filter(activate = False).count(), 'nopendingprojects' : temp_projects.objects.all().count()}
         return render(request, 'psdf_main/_admin_dashboard.html', context)
     elif useronline(request):
         user_m = userDetails(request.session['user'])
+        print(user_m['notifications'])
         context =  {'user':user_m}
-        return render(request, 'psdf_main/dashboard.html')
+        return render(request, 'psdf_main/dashboard.html', context)
     else:
         if request.method == "POST":
             username = request.POST.get('username')
@@ -22,7 +23,7 @@ def loginPage(request):
             for item in user:
                 r_username = item.username
             if not user.values('activate')[0]['activate']:
-                messages.error(request, 'User ' + username + ' is pending for verification. Please contact administrator.')
+                messages.error(request, 'User ' + username + ' is pending for verification. Please contact PSDF Sectt.')
                 return render(request, 'psdf_main/login.html')
             if user.values('active')[0]['active']:
                 if check_password(password,user.values('password')[0]['password']):
