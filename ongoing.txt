@@ -2,3 +2,6 @@ save as draft wala karna hai
 tpd naam ki field may store karlo sara data , donot buttons bana diye hain. save as draft aur clear wala
 ab ajax ke through ek post request bhejni hai bas
 read XMLHttprequest
+
+
+max smart saket, gate 6 entry, room C1

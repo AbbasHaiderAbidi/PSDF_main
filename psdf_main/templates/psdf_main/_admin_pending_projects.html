@@ -223,73 +223,28 @@
                                                     <td>{{submitted_boq.itemqty}}</td>
                                                     <td>{{submitted_boq.itemprice}}</td>
                                                     <td>₹ {{submitted_boq.itemcost}}</td>
-
                                                     {% endfor %}
 
 
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        {% for item in proj.submitted_boq_Gtotal %}
+
+                                        <div class="{{proj.id}}totalcost" style="display:none">{{item.grandtotal}}</div>
 
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card mb-4 border-left-primary">
-                                <!-- Card Header - Accordion -->
-                                <a href="#grandtotal" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="BoQList">
-                                    <h6 class="m-0 font-weight-bold text-primary">Item Cost summary</h6>
-                                </a>
-                                <!-- Card Content - Collapse -->
-                                <div class="collapse" id="grandtotal">
-                                    <div class="card-body">
-                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="table-layout: fixed; width: 100%;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Item Name</th>
-                                                    <th>Total Cost</th>
+                                        {% endfor %}
 
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                                {% for item in proj.submitted_boq_Gtotal %}
-                                                <tr>
-                                                    <td>{{item.itemname}}</td>
-                                                    <td>
-                                                        <div class="row">
-                                                            <div class="col-md-1"></div>₹
-                                                            <div class="{{proj.id}}totalcost">{{item.grandtotal}}</div>
-                                                        </div>
-                                                    </td>
-
-
-                                                    {% endfor %}
-
-
-                                                </tr>
-                                                <tr>
-                                                    <td class="font-weight-bold">Total Cost: &nbsp;&nbsp;&nbsp; </td>
-                                                    <td id="{{proj.id}}totalcost1" class="font-weight-bold text-primary"><button class="btn btn-sm btn-outline-success" id="{{proj.id}}totalcostbtn" onclick="dototal('{{proj.id}}totalcost')">get Grand Total</button>{{item.grandtotal}}</td>
-
-
-
-
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
+                                        <div class="font-weight-bold">Total Cost: &nbsp;&nbsp;&nbsp; </div>
+                                        <div id="{{proj.id}}totalcost1" class="font-weight-bold text-primary"><button class="btn btn-sm btn-outline-success" id="{{proj.id}}totalcostbtn" onclick="dototal('{{proj.id}}totalcost')">get Grand Total</button></div>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <hr>
                     <div class="row">
                         <div class="col-lg-12">
@@ -313,11 +268,7 @@
                                                 <input type="number" class="form-control border-left-success bg-gray-200  col-md-6" name="quantum{{proj.id}}" id="quantum{{proj.id}}" placeholder="Enter value between 0 to 100" max='100' min='0' required>
                                             </div>
                                             <br>
-                                            <div class="row">
-                                                <p class="col-md-6 font-weight-bold">Date of acceptance:</p>
-                                                <input type="datetime-local" class="form-control border-left-success bg-gray-200 col-md-6" name="acceptdate{{proj.id}}" id="acceptdate{{proj.id}}" required>
-                                            </div>
-                                            <br>
+
                                             <div class="row">
                                                 <p class="col-md-6 font-weight-bold">Remarks:</p>
                                                 <input type="text" class="form-control border-left-success bg-gray-200 col-md-6" name="remark{{proj.id}}" id="remark{{proj.id}}" placeholder="Enter Remarks (if any)">
@@ -351,11 +302,7 @@
                                         <form method="POST" action="/rejectdpr/{{proj.id}}">
                                             {% csrf_token %}
 
-                                            <div class="row">
-                                                <p class="col-md-6 font-weight-bold">Date of rejection:</p>
-                                                <input type="datetime-local" class="form-control bg-gray-200 border-left-danger col-md-6" name="rejectdate{{proj.id}}" id="rejectdate{{proj.id}}" required>
-                                            </div>
-                                            <br>
+
                                             <div class="row">
                                                 <p class="col-md-6 font-weight-bold">Remark:</p>
                                                 <input type="text" class="form-control bg-gray-200 border-left-danger col-md-6" name="rremark{{proj.id}}" id="rremark{{proj.id}}" placeholder="Enter Remarks" required>
@@ -409,15 +356,15 @@
                     <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-3">
-                            <a class="btn btn-outline-info" href="/download_temp_project/DPR_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                            <a class="btn btn-outline-info" href="/download_temp_project/DPR_T_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
                         <div class="col-md-1"></div>
                         <div class="col-md-3 font-weight-bold">
-                            <a class="btn btn-outline-danger" href="/download_temp_project/forms_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                            <a class="btn btn-outline-danger" href="/download_temp_project/forms_T_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
                         <div class="col-md-1"></div>
                         <div class="col-md-3">
-                            <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                            <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_T_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
 
                     </div>

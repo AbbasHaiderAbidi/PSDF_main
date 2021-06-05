@@ -4,12 +4,12 @@ from .helpers import *
 def loginPage(request):
     if adminonline(request):
         user_m = userDetails(request.session['user'])
-        context = {'user':user_m, 'nopendingusers' : users.objects.filter(activate = False).count(), 'nopendingprojects' : temp_projects.objects.all().count()}
+        context = full_admin_context(request)
         return render(request, 'psdf_main/_admin_dashboard.html', context)
     elif useronline(request):
         user_m = userDetails(request.session['user'])
         print(user_m['notifications'])
-        context =  {'user':user_m}
+        context = full_user_context(request)
         return render(request, 'psdf_main/dashboard.html', context)
     else:
         if request.method == "POST":
@@ -22,21 +22,21 @@ def loginPage(request):
                 return render(request, 'psdf_main/login.html')
             for item in user:
                 r_username = item.username
-            if not user.values('activate')[0]['activate']:
-                messages.error(request, 'User ' + username + ' is pending for verification. Please contact PSDF Sectt.')
-                return render(request, 'psdf_main/login.html')
-            if user.values('active')[0]['active']:
-                if check_password(password,user.values('password')[0]['password']):
-                    user_m = userDetails(r_username)
-                    request.session['user'] = user_m['username']
-                    if user_m['admin']:
-                        request.session['admin'] = "admin"
-                        context = {'user':user_m, 'nopendingusers' : users.objects.filter(activate = False).count()}
-                        return render(request, 'psdf_main/_admin_dashboard.html', context)
-                    return render(request, 'psdf_main/dashboard.html', {'user':user_m})
-                else:
-                    messages.error(request, 'Invalid username or password. Please try again.')
+                if not user.values('activate')[0]['activate']:
+                    messages.error(request, 'User ' + username + ' is pending for verification. Please contact PSDF Sectt.')
                     return render(request, 'psdf_main/login.html')
+                if user.values('active')[0]['active']:
+                    if check_password(password,user.values('password')[0]['password']):
+                        user_m = userDetails(r_username)
+                        request.session['user'] = user_m['username']
+                        if user_m['admin']:
+                            request.session['admin'] = "admin"
+                            context = full_admin_context(request)
+                            return render(request, 'psdf_main/_admin_dashboard.html', context)
+                        return render(request, 'psdf_main/dashboard.html', {'user':user_m})
+                    else:
+                        messages.error(request, 'Invalid username or password. Please try again.')
+                        return render(request, 'psdf_main/login.html')
             else:
                 messages.error(request, 'User ' + username + ' is currently inactive. Please contact administrator.')
                 return render(request, 'psdf_main/login.html')

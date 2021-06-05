@@ -107,7 +107,7 @@
 <div class="row">
 
     <div class="col-lg-6">
-        <form action="{% url 'newdpr' %}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'newdpr' %}" method="POST" enctype="multipart/form-data" name="dprform" id="dprform">
             {% csrf_token %}
 
             <div class="card shadow mb-4">
@@ -118,14 +118,16 @@
 
                     <div class="input-group">
 
-                        Enter project name: &nbsp;&nbsp;{{form.proname}}
+                        Enter project name: &nbsp;&nbsp;<input type="text" class="form-control bg-gray-200 border-0 small" placeholder="Project name" aria-label="Project name" aria-describedby="basic-addon2" name="proname" id="proname" required value='{{user.temp_boq.proname}}'>
 
                     </div><br>
                     <div class="input-group">
-                        Enter requested amount: &nbsp;&nbsp;{{form.amountasked}}
+                        Enter requested amount (in Rupees): &nbsp;&nbsp;<input type="text" class="form-control bg-gray-200 border-0 small" placeholder="Amount (in Rupees)" aria-label="Requested amount" aria-describedby="basic-addon2" name="amount" id="amount"
+                            required value='{{user.temp_boq.amountasked}}'>
                     </div><br>
                     <div class="input-group">
-                        Enter schedule: &nbsp;&nbsp;{{form.schedule}}
+                        Enter schedule (in months): &nbsp;&nbsp; <input type="text" class="form-control bg-gray-200 border-0 small" placeholder="Schedule (in months)" aria-label="Schedule " aria-describedby="basic-addon2" name="schedule" id="schedule"
+                            required value='{{user.temp_boq.schedule}}'>
                     </div>
                 </div><br>
                 <div class="card-header py-3">
@@ -191,26 +193,73 @@
                     <div class="row">
 
                         <label for="confirmbox">&nbsp;&nbsp;
-                            <input id="field_terms" type="checkbox" required name="terms">
+                            <input id="field_terms" type="checkbox" required name="terms" id="terms">
                             &nbsp; &nbsp; I confirm that the details given by me are of best of my knowledge.
                         </label>
                     </div><br>
                     <hr>
                     <br>
+                    <input type="hidden" name="subtype" id="subtype">
                     <div class="row">
                         <div class="col-lg-8" style="margin: auto;">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <a href="deletetpd/" class="btn btn-outline-danger ">Clear draft</a></div>
+
+                                    <button type="button" class="btn btn-outline-danger btn-wrap-text" data-toggle="modal" data-target="#exampleModal">
+  Clear Data
+</button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Please confirm to clear the data filled in the Boq and DPR Fields.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button class="btn btn-outline-danger btn-wrap-text" onclick="check_n_submit('clear')">Clear Data</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div class="col-md-0"></div>
                                 <div class="col-md-4">
-                                    <a href="savetpd/" class="btn btn-outline-info">Save as draft</a></div>
+                                    <button class="btn btn-outline-info btn-wrap-text" onclick="check_n_submit('save')">Save as draft</button></div>
                                 <div class="col-md-0"></div>
                                 <div class="col-md-4">
-                                    <input type="submit" class="btn btn-user btn-success " value="Submit DPR"></div>
+                                    <button type="button" class="btn btn-success btn-wrap-text" data-toggle="modal" data-target="#exampleModal1">
+                                        Submit
+                                </button>
+                                </div>
+
+                                <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Please confirm to submit the DPR filled.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button class="btn btn-user btn-success btn-wrap-text " onclick="check_n_submit('submit')">Submit DPR</button></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-
 
                         </div>
                     </div>
@@ -231,29 +280,71 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" value="row2" id="nextrow">
-                    <a class="btn btn-outline-success pull-right" onclick="showrow()"><i class="fa fa-plus"></i>&nbsp;Add new row</a>
+                    <div class="row">
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="button" class="btn btn-outline-primary pull-left btn-sm" value="Grand Total" onclick="getGrand()">&nbsp;&nbsp;&nbsp;
+                        <h4 class="text-dark font-weight-bolder" id="grandTotal"></h4>
+                        <input type="hidden" value="row{{nboq}}" id="nextrow">
+                        <div class="col-md-6"></div>
+                        <a class="btn btn-outline-success pull-right" onclick="showrow()"><i class="fa fa-plus"></i>&nbsp;Add new row</a> </div>{% for i in user.temp_boq.boq%}
 
+                    <div id='row{{i.srno}}' name="boqWale">
+                        <br>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-2 text-danger"><strong>Item no. :</strong>
+                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemno{{i.srno}}" id="itemno{{i.srno}}" value="{{i.itemno}}">
+                            </div>
+
+                            <div class="col-md-2 text-primary"><strong>Item name :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemname{{i.srno}}" id="itemname{{i.srno}}" value="{{i.itemname}}">
+                            </div>
+                            <div class="col-md-3 text-warning"><strong>Item Description :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemdesc{{i.srno}}" id="itemdesc{{i.srno}}" value="{{i.itemdesc}}">
+                            </div>
+                            <div class="col-md-1 text-info"><strong>Qty :</strong>
+                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemqty{{i.srno}}" id="itemqty{{i.srno}}" value="{{i.itemqty}}">
+                            </div>
+                            <div class="col-md-2 text-dark"><strong>Unit Price :</strong>
+                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemprice{{i.srno}}" id="itemprice{{i.srno}}" value="{{i.itemprice}}">
+                            </div>
+                            <div class="col-md-1 text-dark"><strong>Get:</strong>
+                                <input type="button" class="btn btn-outline-primary btn-sm" onclick="calc_cost('{{i}}')" id="costbtn{{i}}" value="Get Cost">
+
+                            </div>
+                            <div class="col-md-1 text-dark"><strong>Cost :</strong>
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemcost{{i}}" id="itemcost{{i}}" style="display:none;" disabled></div>
+                        </div>
+                    </div>
+                    {% endfor %}
                     <br> {% for i in n%}
                     <div id="row{{i}}" style="display:none">
                         <br>
                         <hr>
                         <div class="row">
-
+                            <div class="col-md-2 text-danger"><strong>Item no. :</strong>
+                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemno{{i}}" id="itemno{{i}}">
+                            </div>
                             <div class="col-md-2 text-primary"><strong>Item name :</strong>
                                 <input type="text" class="form-control bg-gray-200 border-0 small" name="itemname{{i}}" id="itemname{{i}}">
                             </div>
-                            <div class="col-md-2 text-danger"><strong>Item no. in the BOQ :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemno{{i}}" id="itemno{{i}}">
-                            </div>
-                            <div class="col-md-4 text-warning"><strong>Item Description :</strong>
+
+                            <div class="col-md-3 text-warning"><strong>Item Description :</strong>
                                 <input type="text" class="form-control bg-gray-200 border-0 small" name="itemdesc{{i}}" id="itemdesc{{i}}">
                             </div>
-                            <div class="col-md-2 text-info"><strong>Quantity :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemqty{{i}}" id="itemqty{{i}}">
+                            <div class="col-md-1 text-info"><strong>Qty :</strong>
+                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemqty{{i}}" id="itemqty{{i}}">
                             </div>
                             <div class="col-md-2 text-dark"><strong>Unit Price :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemprice{{i}}" id="itemprice{{i}}">
+                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemprice{{i}}" id="itemprice{{i}}">
+                            </div>
+                            <div class="col-md-1 text-dark"><strong>Get:</strong>
+                                <input type="button" class="btn btn-outline-primary btn-sm" onclick="calc_cost('{{i}}')" id="costbtn{{i}}" value="Get Cost">
+
+                            </div>
+                            <div class="col-md-1 text-dark"><strong>Cost :</strong>
+
+                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemcost{{i}}" id="itemcost{{i}}" style="display:none;" disabled>
                             </div>
                         </div>
                     </div>
@@ -261,6 +352,7 @@
 
                 </div>
                 <div class="modal-footer">
+
                     <button type="button" class="btn btn-outline-success btn-lg" data-dismiss="modal">Save</button>
 
                 </div>
@@ -272,28 +364,70 @@
 
 </div>
 <script>
-    document.getElementById('row1').style.display = "block"
-
     function showrow() {
         var rownum = document.getElementById('nextrow');
         thisstr = rownum.value;
+        console.log(thisstr)
         document.getElementById(thisstr).style.display = 'block';
         rownum.value = 'row' + (parseInt(thisstr.substring(3, thisstr.length + 1)) + 1)
+    }
+
+    function calc_cost(i) {
+        var qty = parseInt(document.getElementById('itemqty' + i).value);
+        var price = parseFloat(document.getElementById('itemprice' + i).value);
+        var cost = document.getElementById('itemcost' + i);
+        console.log(qty)
+        console.log(price)
+        cost.value = qty * price;
+        cost.style.display = "block";
 
 
 
     }
 
-    $('.save-draft').on(click, function() {
-                var data =
-                    $.ajax({
-                        url: 'save-draft/',
-                        data: data,
-                        type: 'POST',
-                        success: function() {
-                            alert('success')
-                        }
-                    });
+    function getGrand() {
+        Gsum = 0;
+        var qty;
+        var price;
+        for (i = 1; i < 1000; i++) {
+            qty = document.getElementById('itemqty' + i).value
+            price = document.getElementById('itemprice' + i).value
+            if (qty == '') {
+                qty = 0;
+            }
+            if (price == '') {
+                price = 0;
+            }
+            Gsum = Gsum + parseInt(qty) * parseFloat(price);
+
+
+
+        }
+        document.getElementById('grandTotal').innerText = '₹ ' + Gsum
+    }
+
+    function check_n_submit(subtype) {
+        var subtypef = document.getElementById('subtype')
+
+        subtypef.value = subtype
+        if (document.getElementById('terms').checked) {
+
+            document.getElementById('dprform').submit()
+        }
+
+    }
+
+    function dototal(yehaiclass) {
+        var sum = 0;
+        console.log(yehaiclass);
+        $('.' + yehaiclass).each(function() {
+            sum += parseFloat($(this).text());
+        });
+        console.log(sum);
+        var totalfield = document.getElementById(yehaiclass + '1');
+        totalfield.innerHTML = '₹ ' + sum;
+        document.getElementById(yehaiclass + 'btn').style.display = 'none';
+    }
 </script>
 
 {% endblock %}

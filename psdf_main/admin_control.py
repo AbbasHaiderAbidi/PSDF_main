@@ -4,42 +4,32 @@ from .helpers import *
 
 def admin_dashboard(request):
     if adminonline(request):
-        return render(request, 'psdf_main/_admin_dashboard.html')
+        context = full_admin_context(request)
+        return render(request, 'psdf_main/_admin_dashboard.html', context)
     else:
         return redirect('')
 
     
 def admin_users(request):
-    
-    user = userDetails(request.session['user'])
-    nopendingusers = pen_users_num(request)
-    if not nopendingusers:
-        nopendingusers = 0
-    context = {'allusers' : get_all_users(request), 'user':user, 'userobj' : pen_users(request), 'nopendingusers' : nopendingusers, 'nopendingprojects' : len(getTempProjects(request)) }
+    context = full_admin_context(request)
+    context['allusers']= get_all_users(request)
     return render(request, 'psdf_main/_admin_users.html', context)
 
 
 def admin_pending_users(request):
     if adminonline(request):
-        user = userDetails(request.session['user'])
-        nopendingprojects = len(getTempProjects(request))
-        nopendingusers = pen_users_num(request)
-        if not nopendingusers:
-            nopendingusers = 0
-        if not nopendingprojects:
-            nopendingprojects = 0
-        context = {'user':user, 'userobj' : pen_users(request), 'nopendingusers' : nopendingusers, 'nopendingprojects' : nopendingprojects }
+        context = full_admin_context(request)
+        context['userobj'] = pen_users(request)
         return render(request, 'psdf_main/_admin_pending_users.html', context)
 
 
 def admin_pending_projects(request):
     if adminonline(request):
-        user = userDetails(request.session['user'])
-        projectobj = getTempProjects(request)
-        # print(projectobj[1]['submitted_boq_list'][1])
-        context = {'user':user, 'projectobj' : projectobj, 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(getTempProjects(request)) }
+        context = full_admin_context(request)
+        context['projectobj'] = getTempProjects(request) 
+        
         return render(request, 'psdf_main/_admin_pending_projects.html', context)
-    
+
 def approve_user(request, userid):
     if adminonline(request):
         user = users.objects.get(id = userid)
@@ -49,8 +39,8 @@ def approve_user(request, userid):
         user.active = True
         user.lastlogin = user.aprdate
         user.save(update_fields=['lastlogin','aprdate','activate','admin','active'])
-        user1 = userDetails(request.session['user'])
-        context = {'user':user1,'userobj':pen_users(request), 'nopendingusers' : pen_users_num(request)}
+        
+        context = full_admin_context(request)
         messages.error(request, 'User ' + user.username + ' has been approved.')
         return render(request, 'psdf_main/_admin_pending_users.html', context)
     else:
@@ -61,8 +51,7 @@ def reject_user(request, userid):
         userreject = users.objects.get(id=userid)
         usernamereject = userreject.username
         userreject.delete()
-        user = userDetails(request.session['user'])
-        context = {'user':user,'userobj':pen_users(request), 'nopendingusers' : pen_users_num(request)}
+        context = full_admin_context(request)
         messages.error(request, 'User ' + usernamereject + ' has been Rejected.')
         return render(request, 'psdf_main/_admin_pending_users.html', context)
     else:
@@ -74,8 +63,8 @@ def allow_user(request, userid):
         user.admin = False
         user.active = True
         user.save(update_fields=['admin','active'])
-        user1 = userDetails(request.session['user'])
-        context = {'allusers' : get_all_users(request),'user':user1, 'userobj' : pen_users(request), 'nopendingusers' : pen_users_num(request) }
+        context = full_admin_context(request)
+        context['allusers']= get_all_users(request)
         messages.success(request, 'User ' + user.username + ' has been allowed.')
         return render(request, 'psdf_main/_admin_users.html', context)
     else:
@@ -87,10 +76,36 @@ def ban_user(request, userid):
         user.admin = False
         user.active = False
         user.save(update_fields=['admin','active'])
-        user1 = userDetails(request.session['user'])
-        context = {'allusers' : get_all_users(request),'user':user1, 'userobj' : pen_users(request), 'nopendingusers' : pen_users_num(request) }
+        context = full_admin_context(request)
+        context['allusers']= get_all_users(request)
         messages.error(request, 'User ' + user.username + ' has been banned.')
         return render(request, 'psdf_main/_admin_users.html', context)
     else:
         return oops(request)
 
+
+
+def view_user(request, userid):
+    if adminonline(request):
+        context = full_admin_context(request)
+        context['THIS_USER'] = users.objects.get(id = userid)
+        context['THIS_PROJECTS'] = projects.objects.filter(userid = userid)
+        context['THIS_temp_PROJECTS'] = temp_projects.objects.filter(userid = userid)
+        context['numpending'] = temp_projects.objects.filter(userid = userid).count()
+        context['numaccept'] = projects.objects.filter(userid = context['THIS_USER']).count()
+        context['numapprove'] = projects.objects.filter(userid = userid, status = '5').count()
+        context['numreject'] = projects.objects.filter(userid = userid, deny = True).count() + temp_projects.objects.filter(userid = userid, deny = True).count()
+        print(context['numreject'])
+        # context['totalreq'] = projects.objects.filter(userid = userid, deny = True)
+        return render(request, 'psdf_main/_admin_view_user.html', context)
+    else:
+        return oops(request)
+    
+
+def view_TESGs(request):
+    if adminonline(request):
+        context = full_admin_context(request)
+        context['tesgs'] = TESG_admin.objects.all()
+        return render(request, 'psdf_main/_admin_view_tesgs.html', context)
+    else:
+        return oops(request)

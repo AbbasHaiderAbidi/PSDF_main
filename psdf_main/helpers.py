@@ -13,9 +13,22 @@ def adminonline(request):
     else:
         return False
 
+def proj_of_user(request, projid):
+    if useronline(request):
+        if (projects.objects.get(id = projid).userid.username == request.session['user']):
+            return True
+        else:
+            return False
+    else:
+        return False
 
 def oops(request):
     return render(request, 'psdf_main/404.html')
+
+def getadmin_id():
+    userobj = users.objects.filter(admin = True)[:1]
+    for user in userobj:
+        return user.id
 
 def userDetails(username):
     user = {}
@@ -23,6 +36,7 @@ def userDetails(username):
     for user1 in userobj:
         user['id'] = user1.id
         user['username'] = user1.username
+        user['password'] = user1.password
         user['nodal'] = user1.nodal
         user['contact'] = user1.contact
         user['address'] = user1.address
@@ -37,6 +51,10 @@ def userDetails(username):
             user['notifications'] = user1.notification.split(']*[')[1:]
         else:
             user['notifications'] = ""
+        if user1.tpd:
+            user['temp_boq'] = yaml.load(user1.tpd, yaml.FullLoader)
+        else:
+            user['temp_boq'] = ''
         user['activate'] = user1.activate
     return user
 
@@ -124,22 +142,19 @@ def temp_projectDetails(projid):
 def pen_users(request):
     if adminonline(request):
         penuser = users.objects.filter(activate = False)
-        if penuser:
-            return penuser
-        else:
-            return False
+        return penuser
     else:
-        return False
+        return oops(request)
 
 def pen_users_num(request):
     if adminonline(request):
         penuser = pen_users(request)
         if penuser:
-            penuser.count()
+            return penuser.count()
         else:
-            return False
+            return 0
     else:
-        return False
+        return oops(request)
 
 
 def get_all_users(request):
@@ -190,7 +205,14 @@ def handle_uploaded_file(path, f):
         destination.write(chunk)
     destination.close()
 
-
+def handle_download_file(filepath, request):
+    if os.path.exists(filepath):
+        with open(filepath,'rb') as fh:
+            response = HttpResponse(fh.read(), content_type = "application/adminupload")
+            response['Content-Disposition'] = 'inline;filename =' + filepath.split('/')[-1]
+            return response
+    else:
+        return oops(request)
 
 def getTempProjects(request):
     if adminonline(request):
@@ -200,4 +222,47 @@ def getTempProjects(request):
             temp_project_list.append(temp_projectDetails(proj.id))
         return temp_project_list
     return False
+
+
+
+def full_admin_context(request):
+    if adminonline(request):
+        # return {'user':userDetails(request.session['user']), 'nopendingusers' : users.objects.filter(activate = False).count(), 'nopendingprojects' : temp_projects.objects.all().count()}
+        context = {'user':userDetails(request.session['user']) , 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(getTempProjects(request))}
+        context['tesgprojects'] = projects.objects.filter(status = '1', deny = False)
+        context['appraisal_projects'] = projects.objects.filter(status = '2', deny = False)
+        context['noTESG'] = context['tesgprojects'].count()
+        context['noappr'] = context['appraisal_projects'].count()
+        
+        return context 
+    else:
+        return {}
+
+
+
+def full_user_context(request):
+    if useronline(request):
+        context = {'user':userDetails(request.session['user'])}
+        
+        return context 
+    else:
+        return {}
+    
+def notification(userid, notification):
+    project_user = users.objects.get(id = userid)
+    project_user.notification = str(project_user.notification) + ']*[' + str(notification)
+    project_user.save(update_fields=['notification'])
+    
+    
+    
+def get_TESG_id(request,tesgnum, projid):
+    if adminonline(request):
+        # print(tesgnum)
+        # print(projid)
+        # print("HELLOOO")
+        # print(TESG_admin.objects.filter(TESG_no = int(tesgnum))[:1].get())
+        # print(projects.objects.get(id = projid))
+        return TESG_master.objects.filter(tesgnum = TESG_admin.objects.filter(TESG_no = int(tesgnum))[:1].get(), project = projects.objects.get(id = projid))[:1].get().id
+    else:
+        return oops(request)
 
