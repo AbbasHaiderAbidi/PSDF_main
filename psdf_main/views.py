@@ -8,4 +8,6 @@ from .user_pending_projects import *
 from .user_TESG import *
 from .admin_project_details import *
 from .admin_appraisal import *
-
+from .admin_monitoring import *
+from .user_appraisal_projects import *
+from .user_monitoring_projects import *

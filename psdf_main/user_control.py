@@ -60,7 +60,7 @@ def newdpr(request):
                     a1 = request.FILES['a1']
                     if 'otherdoc' in request.FILES:
                         otherdoc = request.FILES['otherdoc']
-                    newdprpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'),os.path.join(request.session['user'],'temp/'+proname+'_'+amount+'_'+schedle))
+                    newdprpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'),os.path.join(request.session['user'],'temp/'+proname+'_'+amount+'_'+schedle))
                     if smkdir(newdprpath):
                         try:
                             dpr_filename = secure_filename("DPR."+dpr.name.split('.')[1])
@@ -135,13 +135,13 @@ def newdpr(request):
 def downloadformat(request,thisdoc):
     filelist = {'support':'DPR_Supporting_documents.zip', 'format':'DPR_Forms.zip','sample1':'sample1.zip','sample2':'sample2.zip','sample3':'sample3.zip'}
     if useronline(request) and not adminonline(request):
-        formatpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/Formats/'+filelist[thisdoc])
-        if os.path.exists(formatpath):
-            with open(formatpath,'rb') as fh:
-                response = HttpResponse(fh.read(), content_type = "application/adminupload")
-                response['Content-Disposition'] = 'inline;filename =' + filelist[thisdoc]
-                return response
-        return oops(request)
+        formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/'+filelist[thisdoc])
+        # if os.path.exists(formatpath):
+        with open(formatpath,'rb') as fh:
+            response = HttpResponse(fh.read(), content_type = "application/adminupload")
+            response['Content-Disposition'] = 'inline;filename =' + filelist[thisdoc]
+            return response
+        # return oops(request)
     else:
         return oops(request)
 

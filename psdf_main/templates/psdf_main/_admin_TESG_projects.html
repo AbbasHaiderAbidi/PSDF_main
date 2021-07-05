@@ -35,6 +35,7 @@
                                 <th>User</th>
                                 <th>Entity</th>
                                 <th>View TESG Chain</th>
+                                <th>Update BoQ</th>
                                 <th>Approve TESG</th>
                                 <th>Reject Project</th>
                             </tr>
@@ -48,6 +49,7 @@
                                 <th>User</th>
                                 <th>Entity</th>
                                 <th>View TESG Chain</th>
+                                <th>Update BoQ</th>
                                 <th>Approve TESG</th>
                                 <th>Reject Project</th>
 
@@ -56,6 +58,7 @@
                         <tbody>
                             {% if not tesgprojects %}
                             <tr>
+                                <td>Not Available</td>
                                 <td>Not Available</td>
                                 <td>Not Available</td>
                                 <td>Not Available</td>
@@ -78,43 +81,35 @@
                                 <td>{{proj.schedule}}</td>
                                 <td>{{proj.userid.username}}</td>
                                 <td>{{proj.userid.region}}</td>
-
-
-
                                 <td>
                                     <a class="btn btn-outline-primary btn-responsive" href="/TESG_chain/{{proj.id}}">
                                         <i class="fa fa-eye"></i> View TESG Chain
                                     </a>
                                 </td>
-
-
+                                <td class=" text-center">
+                                    <a class="btn btn-outline-warning btn-responsive" href="/update_boq/{{proj.id}}">
+                                        <i class="fa fa-pencil"></i> Update
+                                    </a>
+                                </td>
                                 <td class="text-center"><button type="button" class="btn btn-outline-success btn-responsive" data-toggle="modal" data-target="#modalforAppr{{proj.id}}">
                                         <i class="fa fa-check"></i> Approve
                                     </button></td>
-
                                 <td class="text-center"><button type="button" class="btn btn-outline-danger btn-responsive" data-toggle="modal" data-target="#modalforreject{{proj.id}}">
                                     <i class="fa fa-close"></i> Reject
                                 </button></td>
-
                             </tr>
-
-
                             <div class="modal fade" id="modalforreject{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforreject{{proj.id}}" aria-hidden="true">
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h3 class="modal-title" id=""> <strong>Reject project: {{proj.name}} ({{proj.id}})</strong></h3>
-
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                                 </button>
                                         </div>
-
-
                                         <div class="modal-body">
                                             <form method="POST" action="/rejectproject/TESG_{{proj.id}}">
                                                 {% csrf_token %}
-
                                                 <div class="row">
                                                     <p class="col-md-6 font-weight-bold">Date of rejection:</p>
                                                     <input type="datetime-local" class="form-control bg-gray-200 border-left-danger col-md-6" name="rejectdate{{proj.id}}" id="rejectdate{{proj.id}}" required>
@@ -132,21 +127,15 @@
                                                 <div class="row">
                                                     <div class="col-md-8">
                                                     </div>
-
                                                 </div>
-
-
                                                 <div class="modal-footer">
-
                                                     <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">Close</button>&nbsp;&nbsp;
                                                     <input type="submit" class="btn btn-outline-danger btn-lg" value="Reject project">
-
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="modal fade" id="modalforAppr{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforAppr{{proj.id}}" aria-hidden="true">
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">

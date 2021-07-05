@@ -30,27 +30,27 @@ def uploadformat(request):
                 files = request.FILES
                 if 'support' in files.keys():
                     naam = 'support'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/Formats/')
+                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
                     handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
                     messages.success(request, 'Supporting Documents updated.')
                 if 'format' in files.keys():
                     naam = 'format'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/Formats/')
+                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
                     handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
                     messages.success(request, 'Format updated.')
                 if 'sample1' in files.keys():
                     naam = 'sample1'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/Formats/')
+                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
                     handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
                     messages.success(request, 'Sample 1 updated.')
                 if 'sample2' in files.keys():
                     naam = 'sample2'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/Formats/')
+                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
                     handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
                     messages.success(request, 'Sample 2 updated.')
                 if 'sample3' in files.keys():
                     naam = 'sample3'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/Formats/')
+                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
                     handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
                     messages.success(request, 'Sample 3 updated.')
                 return control_panel(request)
@@ -80,7 +80,7 @@ def TESG_upload(request):
                 if 'momupload' in files.keys():
                     mompload = files['momupload']
                     naam = 'TESG_'+tesgnum + '.'+mompload.name.split('.')[1]
-                    tesgpath =os.path.join(os.path.join(BASE_DIR, 'Data Bank'), 'Admin/TESG/')
+                    tesgpath =os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/TESG/')
                     if smkdir(tesgpath):
                         tesgpath = os.path.join(tesgpath, naam)
                         handle_uploaded_file(tesgpath,files['momupload'])

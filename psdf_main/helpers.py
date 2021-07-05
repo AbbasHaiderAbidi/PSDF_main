@@ -89,6 +89,32 @@ def projectDetails(projid):
     else:
         return False
 
+def get_boq_details(submitted_boq):
+    eachboq = submitted_boq[2:-2].split('}, {')
+    abc = []
+    for boq in eachboq :
+        attrlist = boq.split(', ')
+        
+        one_boq={}
+        for attr in attrlist:
+            attrname = attr.split(':')[0][1:-1]
+            attrvalue = attr.split(':')[1][2:-1]
+            one_boq[attrname] = attrvalue
+        abc.append(one_boq)
+    return abc
+
+def get_Gtotal_list(abc):
+    item_Gtotal = {}
+    Gtotal_list = []
+    for boq in abc:
+        if boq['itemname'] in item_Gtotal.keys():
+            item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
+        else:
+                item_Gtotal[boq['itemname']] = boq['itemcost']
+    for key, value in item_Gtotal.items():
+        Gtotal_list.append({'itemname':key, 'grandtotal':value})
+    return Gtotal_list
+
 def temp_projectDetails(projid):
     proj = {}
     proj1 = temp_projects.objects.get(id = projid)
@@ -101,30 +127,29 @@ def temp_projectDetails(projid):
         proj['schedule'] = proj1.schedule
         proj['remark'] = proj1.remark
         proj['removed'] = proj1.removed
-        eachboq = proj1.submitted_boq[2:-2].split('}, {')
-        
-        abc = []
-        for boq in eachboq :
-            attrlist = boq.split(', ')
+        proj['submitted_boq_list'] = get_boq_details(proj1.submitted_boq)
+        # eachboq = proj1.submitted_boq[2:-2].split('}, {')
+        # abc = []
+        # for boq in eachboq :
+        #     attrlist = boq.split(', ')
             
-            one_boq={}
-            for attr in attrlist:
-                attrname = attr.split(':')[0][1:-1]
-                attrvalue = attr.split(':')[1][2:-1]
-                one_boq[attrname] = attrvalue
-            abc.append(one_boq)
-        item_Gtotal = {}
-        Gtotal_list = []
-        for boq in abc:
-            if boq['itemname'] in item_Gtotal.keys():
-                item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
-            else:
-                 item_Gtotal[boq['itemname']] = boq['itemcost']
-        for key, value in item_Gtotal.items():
-            Gtotal_list.append({'itemname':key, 'grandtotal':value})
+        #     one_boq={}
+        #     for attr in attrlist:
+        #         attrname = attr.split(':')[0][1:-1]
+        #         attrvalue = attr.split(':')[1][2:-1]
+        #         one_boq[attrname] = attrvalue
+        #     abc.append(one_boq)
+        # item_Gtotal = {}
+        # Gtotal_list = []
+        # for boq in abc:
+        #     if boq['itemname'] in item_Gtotal.keys():
+        #         item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
+        #     else:
+        #          item_Gtotal[boq['itemname']] = boq['itemcost']
+        # for key, value in item_Gtotal.items():
+        #     Gtotal_list.append({'itemname':key, 'grandtotal':value})
         
-        proj['submitted_boq_Gtotal'] = Gtotal_list
-        proj['submitted_boq_list'] = abc
+        proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq_list'])
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal
         proj['user_region'] = proj1.userid.region
@@ -191,6 +216,12 @@ def smkdir(dir_path):
     except:
         return False
 
+def sremove(filepath):
+    try:
+        os.remove(filepath)
+        return True
+    except OSError:
+        return False
 
 def srmdir(filename):
     try:
@@ -198,6 +229,7 @@ def srmdir(filename):
         return True
     except OSError:
         return False
+
 
 def handle_uploaded_file(path, f):
     destination = open(path, 'wb+')
@@ -212,6 +244,7 @@ def handle_download_file(filepath, request):
             response['Content-Disposition'] = 'inline;filename =' + filepath.split('/')[-1]
             return response
     else:
+        print("DOES NOT EXISTS")
         return oops(request)
 
 def getTempProjects(request):
@@ -231,9 +264,10 @@ def full_admin_context(request):
         context = {'user':userDetails(request.session['user']) , 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(getTempProjects(request))}
         context['tesgprojects'] = projects.objects.filter(status = '1', deny = False)
         context['appraisal_projects'] = projects.objects.filter(status = '2', deny = False)
+        context['monitoring_projects'] = projects.objects.filter(status = '3', deny = False)
         context['noTESG'] = context['tesgprojects'].count()
         context['noappr'] = context['appraisal_projects'].count()
-        
+        context['nomon'] = context['monitoring_projects'].count()
         return context 
     else:
         return {}
@@ -243,7 +277,16 @@ def full_admin_context(request):
 def full_user_context(request):
     if useronline(request):
         context = {'user':userDetails(request.session['user'])}
-        
+        context['tesgprojects'] = projects.objects.filter(status = '1', userid = users.objects.filter(username = request.session['user'])[:1].get(), deny = False)
+        context['appraisal_projects'] = projects.objects.filter(status = '2', userid = users.objects.filter(username = request.session['user'])[:1].get(), deny = False)
+        context['monitoring_projects'] = projects.objects.filter(status = '3', userid = users.objects.filter(username = request.session['user'])[:1].get(), deny = False)
+        context['noTESG'] = context['tesgprojects'].count()
+        context['noappr'] = context['appraisal_projects'].count()
+        context['nomon'] = context['monitoring_projects'].count()
+        userobj = users.objects.get(id = context['user']['id'])
+        projectobj = temp_projects.objects.filter(userid = userobj, deny = False)
+        context['projectobj']= projectobj
+        context['noprojobj']= projectobj.count()
         return context 
     else:
         return {}

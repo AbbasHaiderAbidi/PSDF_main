@@ -4,3 +4,113 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Projects under Appraisal committee</h1>
 </div>
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Under Appraisal
+                    <input type="text" id="temp_proj_search" class="form-control input-text pull-right border-left-warning" onkeyup="get_temp_proj('temp_proj_search','dataTable')" placeholder="Search projects" title="Search" style="margin:auto; width: 30%;">
+                </h6>
+            </div>
+            <div class="card-body">
+                {% for message in messages %}
+                <div class="alert alert-info alert-dismissible fade show col-md-8 text-center" role="alert" style="margin: auto;">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                {% endfor %}<br>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="table-layout: fixed;
+                    width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Project Name</th>
+                                <th>Amount</th>
+
+                                <th>User</th>
+                                <th>Date of Appraisal</th>
+                                <th>View Appraisal Report</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Project Name</th>
+                                <th>Amount</th>
+
+                                <th>User</th>
+                                <th>Date of Appraisal</th>
+                                <th>View Appraisal Report</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% if not appraisal_projs %}
+                            <tr>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
+
+                            </tr>
+                            {% else %} {% for proj in appraisal_projs %}
+                            <tr>
+                                <td class="font-weight-bolder">{{proj.project.id}}</td>
+                                <td><a href="/view_project/{{proj.id}}" class="font-weight-bold text-danger">{{proj.project.name}}</a></td>
+                                <td>{{proj.project.amt_asked}}</td>
+
+                                <td>{{proj.userid.username}}</td>
+                                <td>{{proj.appr_date}}</td>
+                                <td>
+                                    <a class="btn btn-outline-primary btn-responsive" href="/user_appraisal_report/{{proj.id}}">
+                                        <i class="fa fa-eye"></i> View Report
+                                    </a>
+                                </td>
+                                <td>{{proj.remarks}}</td>
+                            </tr>
+
+
+
+                            {% endfor %} {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function get_temp_proj(btnID, rpc) {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById(btnID);
+        filter = input.value.toUpperCase();
+        table = document.getElementById(rpc);
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+{% endblock %}

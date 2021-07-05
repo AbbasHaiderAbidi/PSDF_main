@@ -4,7 +4,6 @@ from .helpers import *
 def user_tesg(request):
     if useronline(request):
         context = full_user_context(request)
-        context['tesgprojects'] = projects.objects.filter(status = '1', userid = users.objects.filter(username = request.session['user'])[:1].get())
         return render(request, 'psdf_main/_user_TESG_projects.html', context)
     else:
         return oops(request)
@@ -46,12 +45,10 @@ def user_tesg_response(request):
                         print("file2")
                         try:
                             extension = str(responses.name.split(".")[1])
-                            print("file3")
                         except:
                             extension = ''
-                            print("file4")
                         handle_uploaded_file(os.path.join(tesgpath,str(str(tesg_no)+'_response'+ "." +extension )),responses)
-                        print("file5")
+                        
                 this_tesg.user_res_date = datetime.now()
                 this_tesg.user_response = tesg_response
                 this_tesg.user_filepath = tesgpath

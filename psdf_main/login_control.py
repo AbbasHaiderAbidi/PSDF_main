@@ -7,8 +7,6 @@ def loginPage(request):
         context = full_admin_context(request)
         return render(request, 'psdf_main/_admin_dashboard.html', context)
     elif useronline(request):
-        user_m = userDetails(request.session['user'])
-        print(user_m['notifications'])
         context = full_user_context(request)
         return render(request, 'psdf_main/dashboard.html', context)
     else:
@@ -33,7 +31,7 @@ def loginPage(request):
                             request.session['admin'] = "admin"
                             context = full_admin_context(request)
                             return render(request, 'psdf_main/_admin_dashboard.html', context)
-                        return render(request, 'psdf_main/dashboard.html', {'user':user_m})
+                        return render(request, 'psdf_main/dashboard.html', context = full_user_context(request))
                     else:
                         messages.error(request, 'Invalid username or password. Please try again.')
                         return render(request, 'psdf_main/login.html')

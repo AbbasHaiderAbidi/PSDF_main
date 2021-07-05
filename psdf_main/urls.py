@@ -22,7 +22,7 @@ urlpatterns = [
 
     #Project_handling
     path('download_temp_project/<str:projid>', views.download_temp_project, name="download_temp_project"),
-    path('download_pending_project/<str:projid>', views.download_pending_project, name="download_pending_project"),
+    path('download_project/<str:projid>', views.download_project, name="download_project"),
     path('acceptdpr/<str:projid>', views.acceptdpr, name="acceptdpr"),
     path('rejectdpr/<str:projid>', views.rejectdpr, name="rejectdpr"),
     path('notificationread/<str:userid>', views.notificationread, name="notificationread"),
@@ -51,9 +51,28 @@ urlpatterns = [
     path('download_tesg_user_response/<str:tesg_str>', views.download_tesg_user_response, name = "download_tesg_user_response"),
     path('admin_project_details/<str:projectid>', views.admin_project_details, name = "admin_project_details"),
     path('view_TESGs', views.view_TESGs, name = "view_TESGs"),
+    path('download_tesg_report/<str:tesgid>', views.download_tesg_report, name = "download_tesg_report"),
+    path('update_appraisal/<str:projid>', views.update_appraisal, name = "update_appraisal"),
 
     #Appraisal
     path('appraisal_projects/', views.appraisal_projects, name="appraisal_projects"),
     path('approve_appraisal/<str:projectid>', views.approve_appraisal, name="approve_appraisal"),
+    path('delete_appr_doc/<str:projid>', views.delete_appr_doc, name = 'delete_appr_doc'),
+    path('send_to_tesg/<str:projid>', views.send_to_tesg, name = 'send_to_tesg'),
+    path('update_appraisal/<str:projid>', views.update_appraisal, name = 'update_appraisal'),
+    path('create_appraisal/<str:projid>', views.create_appraisal, name = 'create_appraisal'),
+    
+    path('user_appraisal_projects/', views.user_appraisal_projects, name="user_appraisal_projects"),
+    
+    
+    #monitoring
+    path('monitoring_projects/', views.monitoring_projects, name="monitoring_projects"),
+    path('approve_monitoring/<str:projectid>', views.approve_monitoring, name="approve_monitoring"),
+    path('send_to_appr/<str:projid>', views.send_to_appr, name="send_to_appr"),
+    path('send_to_tesg/<str:projid>', views.send_to_tesg, name="send_to_tesg"),
+    path('user_monitoring_projects/', views.user_monitoring_projects, name="user_monitoring_projects"),
 
+ 
+ 
+    
 ]

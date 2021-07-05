@@ -31,6 +31,7 @@ def acceptdpr(request, projid):
             if not remark == '':
                 newproject.remark = remark
             newproject.submitted_boq = temp_proj.submitted_boq
+            newproject.workflow = 'DPR accepted on '+ datetime.now()
             newproject.save()
             newentry = projects.objects.filter(name = temp_proj.proname, amt_asked = temp_proj.amountasked, userid = temp_proj.userid, schedule = temp_proj.schedule, dprsubdate = temp_proj.dprsubdate)[0]
             newpath = '/'.join(temp_proj.projectpath.split('/')[:-2])+'/'+ str(newentry.id)
@@ -45,13 +46,13 @@ def acceptdpr(request, projid):
                 project_user = users.objects.get(id = temp_proj.userid.id)
                 project_user.notification = str(project_user.notification) + ']*[' + 'Your project : '+ newentry.name +' has been accepted with project ID:' + str(newentry.id)
                 project_user.save(update_fields=['notification'])
-                context = {'user':userDetails(request.session['user']), 'projectobj' : projectobj, 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(projectobj) }
+                context = full_admin_context(request)
                 messages.error(request, 'Project: '+newentry.name+' has been successfully accepted with ID: '+str(newentry.id)+'.')
                 return render(request, 'psdf_main/_admin_pending_projects.html', context)
 
             else:
                 print("Error Creating directory")
-                context = {'user':userDetails(request.session['user']), 'projectobj' : projectobj, 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(projectobj) }
+                context = full_admin_context(request)
                 messages.error(request, 'Error creating a record.')
                 return render(request, 'psdf_main/_admin_pending_projects.html', context)
             return oops(request)
@@ -74,6 +75,7 @@ def rejectdpr(request, projid):
                 return redirect('/admin_pending_projects')
             temp_proj.deny = True
             temp_proj.remark = rremark
+            
             temp_proj.save(update_fields=['dprdenydate','deny','remark'])
             messages.success(request, 'Project : '+ temp_proj.proname + ' has been rejected.')
             return redirect('/admin_pending_projects')
@@ -81,73 +83,67 @@ def rejectdpr(request, projid):
         return oops(request)
 
 
+# def download_temp_project(request, projid):
+#     if adminonline(request):
+#         if projid:
+#             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
+#             type_n_id = projid.split('_')
+#             file_type = type_n_id[0]
+#             proid = type_n_id[2]
+#             temp_perm = type_n_id[1]
+#             if temp_perm == 'T':
+#                 proj_path = temp_projects.objects.get(id = proid).projectpath
+#             elif temp_perm == 'P':
+#                 proj_path = projects.objects.get(id = proid).projectpath
+#             else:
+#                 return oops(request)
+#             # print(file_type)
+#             # print(glob.glob(temp_proj_path+'/'+filelist[file_type]+'*'))
+#             filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
+            
+#             handle_download_file(filepath, request)
+#         else:
+#             return oops(request)
+#     else:
+#         return oops(request)
+
+
 def download_temp_project(request, projid):
-    if adminonline(request):
+    try:
+        type_n_id = projid.split('_')
+        file_type = type_n_id[0]
+        proid = type_n_id[1]
+    except:
+        return oops(request)
+    print(temp_projects.objects.get(id = proid).userid.username)
+    print(request.session['user'])
+    if (adminonline(request) or (temp_projects.objects.get(id = proid).userid.username == request.session['user'])):
         if projid:
             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
-            type_n_id = projid.split('_')
-            file_type = type_n_id[0]
-            proid = type_n_id[2]
-            temp_perm = type_n_id[1]
-            if temp_perm == 'T':
-                proj_path = temp_projects.objects.get(id = proid).projectpath
-            elif temp_perm == 'P':
-                proj_path = projects.objects.get(id = proid).projectpath
-            else:
-                return oops(request)
-            # print(file_type)
-            # print(glob.glob(temp_proj_path+'/'+filelist[file_type]+'*'))
-            filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
-            
-            handle_download_file(filepath, request)
-        else:
-            return oops(request)
-    else:
+            proj_path = temp_projects.objects.get(id = proid)
+            if proj_path :
+                proj_path = proj_path.projectpath
+                filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
+                handle_download_file(filepath, request)
+    return oops(request)
+
+def download_project(request, projid):
+    try:
+        type_n_id = projid.split('_')
+        file_type = type_n_id[0]
+        proid = type_n_id[1]
+    except:
         return oops(request)
 
-
-
-def download_pending_project(request, projid):
-    if adminonline(request):
+    if (adminonline(request) or (projects.objects.get(id = proid).userid.username == request.session['user'])):
         user = userDetails(request.session['user'])
         if projid:
             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
-            type_n_id = projid.split('_')
-            file_type = type_n_id[0]
-            proid = type_n_id[1]
             proj_path = projects.objects.get(id = proid)
             if proj_path :
                 proj_path = proj_path.projectpath
-            else:
-                return oops(request)
-            filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
-            print(filepath)
-            if os.path.exists(filepath):
-                with open(filepath,'rb') as fh:
-                    response = HttpResponse(fh.read(), content_type = "application/adminupload")
-                    response['Content-Disposition'] = 'inline;filename =' + filepath.split('/')[-1]
-                    return response
-        else:
-            return oops(request)
-    elif useronline(request):
-        user = userDetails(request.session['user'])
-        if projid:
-            filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
-            type_n_id = projid.split('_')
-            file_type = type_n_id[0]
-            proid = type_n_id[1]
-            proj = projects.objects.get(id = proid)
-            if proj:
-                if proj.userid.id == user['id']:
-                    proj_path = proj.projectpath
-                    filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
-                    if os.path.exists(filepath):
-                        with open(filepath,'rb') as fh:
-                            response = HttpResponse(fh.read(), content_type = "application/adminupload")
-                            response['Content-Disposition'] = 'inline;filename =' + filepath.split('/')[-1]
-                            return response
-            else:
-                return oops(request)
+                filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
+                handle_download_file(filepath, request)
     return oops(request)
 
 
@@ -166,7 +162,7 @@ def rejectproject(request, projid):
             if remark == '':
                 messages.success(request, 'Aborted! Remarks cannot be empty')
 
-            activeTESG = TESG_master.objects.filter(project = projects.objects.get(id = projid), active = True)
+            activeTESG = TESG_master.objects.filter(project = projects.objects.get(id = proid), active = True)
             if activeTESG:
                 messages.success(request, 'A TESG chain is active for this project.')
                 return redirect('/TESG_projects/')
@@ -176,8 +172,9 @@ def rejectproject(request, projid):
                 project.deny = True
                 project.denydate = denydate
                 project.remark = remark
-                project.save(update_fields=['denydate','deny','remark'])
-                messages.success(request, 'Project : '+ project.name + ' has been rejected.')
+                project.workflow = project.workflow + ']*[' + 'Project rejected on ' + denydate
+                project.save(update_fields=['denydate' , 'deny' , 'remark' , 'workflow'])
+                messages.success(request, 'Project : ' + project.name + ' has been rejected.')
                 notification(projects.objects.get(id = projid).userid.id, 'Project ID: '+projid+' has been rejected in '+page+' phase')
             else:
                 messages.success(request, 'Aborted! Invalid administrator password.')
@@ -213,48 +210,21 @@ def update_boq(request, projectid):
                         messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
                         return redirect('/update_boq/0')
             boq_project.submitted_boq = boq
+            boq_project.workflow = boq_project.workflow + ']*[' + 'BoQ updated on ' + datetime.now()
             boq_project.save(update_fields=['submitted_boq'])
             notification(boq_project.userid.id, 'BoQ submitted for project: ' + boq_project.name + ' has been updated by PSDF Sectt.' )
             messages.success(request, 'BoQ successfully updated and intimated to user.')
             return redirect('/update_boq/0')
         if projid == '0':
-            context['project_list'] = projects.objects.filter(Q(status = '1') | Q(status = '2')| Q(status = '3')| Q(status = '4'))
+            context['project_list'] = projects.objects.filter(status = '1')
             return render(request, 'psdf_main/_admin_boq.html', context)
         else:
             thisproject = projects.objects.get(id = projid)
             if thisproject:
-                eachboq = thisproject.submitted_boq[2:-2].split('}, {')
-                abc = []
-                for boq in eachboq :
-                    attrlist = boq.split(', ')
-                    one_boq={}
-                    for attr in attrlist:
-                        attrname = attr.split(':')[0][1:-1]
-                        attrvalue = attr.split(':')[1][2:-1]
-                        one_boq[attrname] = attrvalue
-                    abc.append(one_boq)
-                # item_Gtotal = {}
-                # Gtotal_list = []
-                # for boq in abc:
-                #     if boq['itemname'] in item_Gtotal.keys():
-                #         item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
-                #     else:
-                #         item_Gtotal[boq['itemname']] = boq['itemcost']
-                # for key, value in item_Gtotal.items():
-                #     Gtotal_list.append({'itemname':key, 'grandtotal':value})
-                context['sub_boq'] = abc
+                context['sub_boq'] = get_boq_details(thisproject.submitted_boq)
                 context['proj'] = thisproject
                 context['range'] = range(len(context['sub_boq'])+1,1000)
                 return render(request, 'psdf_main/_admin_update_boq.html', context)
             return render(request, 'psdf_main/_admin_boq.html', context)
     else:
         return oops(request)
-
-# def do_boq_update(request, projid):
-#     if adminonline(request):
-#         if request.method == 'POST':
-#             pass
-#         else:
-#             return oops(request)
-#     else:
-#         return oops(request)

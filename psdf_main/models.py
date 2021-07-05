@@ -37,7 +37,6 @@ class temp_projects(models.Model):
 
 
 class projects(models.Model):
-    
     userid = models.ForeignKey(users, null = True, on_delete = models.SET_NULL)
     name = models.CharField(max_length=200, null = False)
     dprsubdate = models.DateTimeField(null = True)
@@ -58,6 +57,7 @@ class projects(models.Model):
     denydate = models.DateTimeField(null = True)
     approvedate = models.DateTimeField(null = True)
     tesg_list = models.TextField(null=True)
+    workflow = models.TextField(null=True)
 
     ##################################
     ## 1 - DPR approved
@@ -88,7 +88,12 @@ class TESG_master(models.Model):
     active = models.BooleanField(default=True)
     accepted = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
-    
 
-# class appraisal(models.Model):
-#     project = models.ForeignKey(projects, null = True, on_delete= models.SET_NULL)
+
+class Appraisal_admin(models.Model):
+    project = models.ForeignKey(projects, null = True, on_delete= models.SET_NULL)
+    userid = models.ForeignKey(users, null = True, on_delete= models.SET_NULL)
+    projid = models.IntegerField(null=False, unique=True)
+    remarks = models.TextField(null=True)
+    filepath = models.TextField(null=True)
+    appr_date = models.DateTimeField(null = True)

@@ -182,13 +182,20 @@ def approveTESG(request, projid):
             req = request.POST
             adminpass = req['adminpass']
             activeTESG = TESG_master.objects.filter(project = projects.objects.get(id = projid), active = True)
+            aretheretesg = TESG_master.objects.filter(project = projects.objects.get(id = projid))
+            
             if activeTESG:
-                messages.success(request, 'A TESG chain is active for this project.')
+                messages.error(request, 'A TESG chain is active for this project.')
+                return redirect('/TESG_projects/')
+            
+            if not aretheretesg:
+                messages.error(request, 'No TESG has been submitted for this project.')
                 return redirect('/TESG_projects/')
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projid)
                 project.status = '2'
-                project.save(update_fields=['status'])
+                project.workflow = project.workflow + ']*[' + 'Project approved in TESG phase on '+ datetime.now()
+                project.save(update_fields=['status','workflow'])
                 messages.success(request, 'Project : '+ project.name + ' has been approved in TESG phase.')
                 notification(projects.objects.get(id = projid).userid.id, 'Project ID: '+projid+' has been approved in TESG phase')
             else:

@@ -109,3 +109,12 @@ def view_TESGs(request):
         return render(request, 'psdf_main/_admin_view_tesgs.html', context)
     else:
         return oops(request)
+    
+def download_tesg_report(request, tesgid):
+    if adminonline(request):
+        try:
+            return handle_download_file(TESG_admin.objects.get(id = tesgid).filepath, request)
+        except:
+            return oops(request)
+    else:
+        return oops(request)

@@ -1,70 +1,8 @@
 {% load static %}
-<!-- <div class="bg-img">
-
-    <nav class="navbar navbar-expand-md navbar-inverse transparent row no-gutters">
-        <div class="navbar-brand posocologo">
-            <img class="navbar-brand posocologo" src="{% static 'images/posocologo.png' %}">
-            <i>Welcome</i>,<strong>  {{user.username}}</strong>
-            <br> Last login: user.lastlogin}}</div>
-
-
-
-        <div class="collapse navbar-collapse" id="navbarNew">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-primary " href="#"> New Projects<span class="badge badge-light"></span></a>
-                </li>
-                </li>
-
-                <span class="col-md-1"></span>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-primary " href="#"> Active Projects<span class="badge badge-light"></span></a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle btn-outline-primary btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            &nbsp; Payment &nbsp;
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Project</a>
-
-                        <div class="dropdown-divider"></div>
-
-                        <a class="dropdown-item" href="#">Refund</a>
-
-                    </div>
-
-
-            </ul>
-
-            <div class="nav-item dropdown" style="padding-right: 10%;">
-                <a class="nav-link dropdown-toggle btn-outline-danger btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          &nbsp; Profile &nbsp;
-        </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Change password</a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <a class="dropdown-item" >Signout</a>
-
-                </div>
-
-
-            </div>
-    </nav>
-    <hr style="height:1px; border:none;color:#000;background-color:#000;">
-
-
-    
-    </div>
- -->
-
-<!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <hr class="sidebar-divider my-2"><br>
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url ''%}">
         <div class="">
             <!-- <i class="fa fa-user-circle-o"></i> -->
             <img src="{% static 'images/posocologo.png' %}" style="max-width:50%; max-height:50%;">
@@ -116,10 +54,22 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Projects:</h6>
-                <a class="collapse-item" href="{% url 'under_examination' %}">Project Accepted</a>
-                <a class="collapse-item" href="{% url 'user_tesg' %}">Under TESG</a>
-                <a class="collapse-item" href="cards.html">Under Appraisal</a>
-                <a class="collapse-item" href="cards.html">Under Monitoring</a>
+
+                <a class="collapse-item" href="{% url 'under_examination' %}">Project submitted
+                {% if noprojobj > 0 %}<span class="badge badge-danger badge-counter">{{noprojobj}}</span> {% endif %}
+            </a>
+                <a class="collapse-item" href="{% url 'user_tesg' %}">Under TESG &nbsp; &nbsp; &nbsp;
+                    {% if noTESG > 0 %}<span class="badge badge-danger badge-counter">{{noTESG}}</span> {% endif %}
+                </a>
+                <a class="collapse-item" href="{% url 'user_appraisal_projects' %}">Under Appraisal
+                    &nbsp; &nbsp; &nbsp;
+                    {% if noappr > 0 %}<span class="badge badge-danger badge-counter">{{noappr}}</span> {% endif %}
+                </a>
+                <a class="collapse-item" href="{% url 'user_monitoring_projects' %}">Under Monitoring
+                    &nbsp; &nbsp; &nbsp;
+                    {% if nomon > 0 %}<span class="badge badge-danger badge-counter">{{nomon}}</span> {% endif %}
+                </a>
+
 
                 <h6><a class="collapse-item" href="cards.html">View All</a></h6>
             </div>

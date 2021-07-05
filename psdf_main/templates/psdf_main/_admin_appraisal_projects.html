@@ -11,9 +11,9 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-success">Under Appraisal Comiitee
+                <h5 class="m-0 font-weight-bold text-success">Under Appraisal Committee
                     <input type="text" id="temp_proj_search" class="form-control input-text pull-right border-left-danger" onkeyup="get_temp_proj('temp_proj_search','dataTable')" placeholder="Search projects by ID" title="Search" style="margin:auto; width: 30%;">
-                </h6>
+                </h5>
             </div>
             <div class="card-body">
                 {% for message in messages %}
@@ -33,9 +33,8 @@
                                 <th>Project Name</th>
                                 <th>User</th>
                                 <th>Entity</th>
-                                <th>Upload Appraisal Committee Report</th>
-                                <th>Update BOQ</th>
                                 <th>Approve</th>
+                                <th>Send back to TESG</th>
                                 <th>Reject</th>
                             </tr>
                         </thead>
@@ -45,9 +44,8 @@
                                 <th>Project Name</th>
                                 <th>User</th>
                                 <th>Entity</th>
-                                <th>Upload Appraisal Committee Report</th>
-                                <th>Update BOQ</th>
                                 <th>Approve</th>
+                                <th>Send back to TESG</th>
                                 <th>Reject</th>
                             </tr>
                         </tfoot>
@@ -61,13 +59,7 @@
                                 <td>Not Available</td>
                                 <td>Not Available</td>
                                 <td>Not Available</td>
-                                <td>Not Available</td>
-
-
-
-
                             </tr>
-
                             {% else %} {% for proj in appraisal_projects %}
                             <tr>
                                 <td class="font-weight-bolder">{{proj.id}}</td>
@@ -76,69 +68,14 @@
                                 <td>{{proj.userid.region}}</td>
 
 
-
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-outline-warning btn-responsive" data-toggle="modal" data-target="#modalforUpload{{proj.id}}">
-                                        <i class="fa fa-upload"></i> Upload
-                                    </button>
-                                </td>
-
-                                <!-- <td class="text-center"><button type="button" class="btn btn-outline-primary btn-responsive" data-toggle="modal" data-target="#modalforBOQ{{proj.id}}">
-                                        <i class="fa fa-pencil"></i> Update
-                                    </button></td> -->
-                                <td class="text-center">
-                                    <a class="btn btn-outline-primary btn-responsive" href="/update_boq/{{proj.id}}">
-                                        <i class="fa fa-pencil"></i> Update
-                                    </a>
-                                </td>
                                 <td class="text-center"><button type="button" class="btn btn-outline-success btn-responsive" data-toggle="modal" data-target="#modalforAppr{{proj.id}}">
                                         <i class="fa fa-check"></i> Approve
                                     </button></td>
-
+                                <td class="text-center"><a href='/send_to_tesg/{{proj.id}}' class="btn btn-outline-info">Revert to TESG</a></td>
                                 <td class="text-center"><button type="button" class="btn btn-outline-danger btn-responsive" data-toggle="modal" data-target="#modalforreject{{proj.id}}">
                                         <i class="fa fa-close"></i> Reject
                                     </button></td>
                             </tr>
-
-                            <div class="modal fade" id="modalforUpload{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforUpload{{proj.id}}" aria-hidden="true">
-                                <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="">
-                                                Document upload in appraisal phase</h3>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form method="POST" action="/approve_appraisal/{{proj.id}}" enctype="multipart/form-data" name="appraisalDoc" id="appraisalDoc">
-                                                {% csrf_token %}
-                                                <div class="row">
-                                                    <div class="col-md-2"></div>
-                                                    <p><i>NOTE: </i> Kindly upload only one file, if you wish to upload multiple files, please ensure to upload a zip file containing all files.</p>
-                                                </div>
-                                                <hr>
-                                                <div class="row">
-                                                    <p class="text-primary col-md-4 font-weight-bold">Select Document.</p>
-                                                    <div class="col-md-2"></div>
-                                                    <input type="file" class="form-control-file btn btn-outline-success col-md-4" name="observations" id="observations">
-
-                                                </div><br>
-                                                <div class="row">
-                                                    <p class="col-md-6 font-weight-bold">Enter Administrator password to proceed:
-                                                    </p>
-                                                    <input type="password" class="form-control bg-gray-200 border-left-success col-md-6" name="adminpass" id="adminpass" placeholder="Enter administrator password" required>
-                                                </div><br>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">Close</button>&nbsp;&nbsp;
-                                                    <input type="submit" class="btn btn-outline-success btn-lg" value="Upload">
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="modal fade" id="modalforAppr{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforAppr{{proj.id}}" aria-hidden="true">
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -155,8 +92,9 @@
                                                 <p><i>NOTE: </i> Kindly make sure that all requirements are fulfilled before approving the project in approval phase, this action cannot be undone.</p>
                                             </div>
                                             <hr>
-                                            <form method="POST" action="/approve_appraisal/{{proj.id}}">
+                                            <form method="POST" action="/approve_appraisal/{{proj.id}}" enctype="multipart/form-data" name="appraisalDoc" id="appraisalDoc">
                                                 {% csrf_token %}
+                                                <br>
 
                                                 <div class="row">
                                                     <p class="col-md-6 font-weight-bold">Enter Administrator password to proceed:
@@ -176,8 +114,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                             <div class="modal fade" id="modalforreject{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforreject{{proj.id}}" aria-hidden="true">
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -229,8 +165,6 @@
                                 </div>
 
                             </div>
-
-
                             {% endfor %} {% endif %}
                         </tbody>
                     </table>
