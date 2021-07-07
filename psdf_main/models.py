@@ -50,12 +50,15 @@ class projects(models.Model):
     quantumOfFunding = models.FloatField(null = True)
     approved = models.BooleanField(default = False)
     remark = models.TextField(null = True)
-    extension = models.CharField(max_length = 1000, null = True)
+    # extension = models.CharField(max_length = 1000, null = True)
     status = models.CharField(max_length=1, null = True, default = '1')
     submitted_boq  = models.TextField(null=True)
+    
     deny = models.BooleanField(default = False)
     denydate = models.DateTimeField(null = True)
+    
     approvedate = models.DateTimeField(null = True)
+    
     tesg_list = models.TextField(null=True)
     workflow = models.TextField(null=True)
 
@@ -92,8 +95,10 @@ class TESG_master(models.Model):
 
 class Appraisal_admin(models.Model):
     project = models.ForeignKey(projects, null = True, on_delete= models.SET_NULL)
-    userid = models.ForeignKey(users, null = True, on_delete= models.SET_NULL)
-    projid = models.IntegerField(null=False, unique=True)
-    remarks = models.TextField(null=True)
-    filepath = models.TextField(null=True)
-    appr_date = models.DateTimeField(null = True)
+    apprpath = models.TextField(null=True)
+    apprdate = models.DateTimeField(null = True)
+
+class Monitoring_admin(models.Model):
+    project = models.ForeignKey(projects, null = True, on_delete= models.SET_NULL)
+    monipath = models.TextField(null=True)
+    monidate = models.DateTimeField(null = True)

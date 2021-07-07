@@ -83,31 +83,6 @@ def rejectdpr(request, projid):
         return oops(request)
 
 
-# def download_temp_project(request, projid):
-#     if adminonline(request):
-#         if projid:
-#             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
-#             type_n_id = projid.split('_')
-#             file_type = type_n_id[0]
-#             proid = type_n_id[2]
-#             temp_perm = type_n_id[1]
-#             if temp_perm == 'T':
-#                 proj_path = temp_projects.objects.get(id = proid).projectpath
-#             elif temp_perm == 'P':
-#                 proj_path = projects.objects.get(id = proid).projectpath
-#             else:
-#                 return oops(request)
-#             # print(file_type)
-#             # print(glob.glob(temp_proj_path+'/'+filelist[file_type]+'*'))
-#             filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
-            
-#             handle_download_file(filepath, request)
-#         else:
-#             return oops(request)
-#     else:
-#         return oops(request)
-
-
 def download_temp_project(request, projid):
     try:
         type_n_id = projid.split('_')
@@ -172,7 +147,7 @@ def rejectproject(request, projid):
                 project.deny = True
                 project.denydate = denydate
                 project.remark = remark
-                project.workflow = project.workflow + ']*[' + 'Project rejected on ' + denydate
+                project.workflow = str(project.workflow) + ']*[' + 'Project rejected on ' + denydate
                 project.save(update_fields=['denydate' , 'deny' , 'remark' , 'workflow'])
                 messages.success(request, 'Project : ' + project.name + ' has been rejected.')
                 notification(projects.objects.get(id = projid).userid.id, 'Project ID: '+projid+' has been rejected in '+page+' phase')
@@ -210,7 +185,7 @@ def update_boq(request, projectid):
                         messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
                         return redirect('/update_boq/0')
             boq_project.submitted_boq = boq
-            boq_project.workflow = boq_project.workflow + ']*[' + 'BoQ updated on ' + datetime.now()
+            boq_project.workflow = str(boq_project.workflow) + ']*[' + 'BoQ updated on ' + datetime.now()
             boq_project.save(update_fields=['submitted_boq'])
             notification(boq_project.userid.id, 'BoQ submitted for project: ' + boq_project.name + ' has been updated by PSDF Sectt.' )
             messages.success(request, 'BoQ successfully updated and intimated to user.')

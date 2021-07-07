@@ -194,7 +194,7 @@ def approveTESG(request, projid):
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projid)
                 project.status = '2'
-                project.workflow = project.workflow + ']*[' + 'Project approved in TESG phase on '+ datetime.now()
+                project.workflow = str(project.workflow) + ']*[' + 'Project approved in TESG phase on '+ str(datetime.now())
                 project.save(update_fields=['status','workflow'])
                 messages.success(request, 'Project : '+ project.name + ' has been approved in TESG phase.')
                 notification(projects.objects.get(id = projid).userid.id, 'Project ID: '+projid+' has been approved in TESG phase')

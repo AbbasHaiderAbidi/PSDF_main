@@ -300,11 +300,6 @@ def notification(userid, notification):
     
 def get_TESG_id(request,tesgnum, projid):
     if adminonline(request):
-        # print(tesgnum)
-        # print(projid)
-        # print("HELLOOO")
-        # print(TESG_admin.objects.filter(TESG_no = int(tesgnum))[:1].get())
-        # print(projects.objects.get(id = projid))
         return TESG_master.objects.filter(tesgnum = TESG_admin.objects.filter(TESG_no = int(tesgnum))[:1].get(), project = projects.objects.get(id = projid))[:1].get().id
     else:
         return oops(request)

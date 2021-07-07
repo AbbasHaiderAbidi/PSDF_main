@@ -49,28 +49,38 @@ urlpatterns = [
     path('approveTESG/<str:projid>', views.approveTESG, name = "approveTESG"),
     path('download_tesg_user_outcome/<str:tesg_str>', views.download_tesg_user_outcome, name = "download_tesg_user_outcome"),
     path('download_tesg_user_response/<str:tesg_str>', views.download_tesg_user_response, name = "download_tesg_user_response"),
-    path('admin_project_details/<str:projectid>', views.admin_project_details, name = "admin_project_details"),
+    
     path('view_TESGs', views.view_TESGs, name = "view_TESGs"),
     path('download_tesg_report/<str:tesgid>', views.download_tesg_report, name = "download_tesg_report"),
-    path('update_appraisal/<str:projid>', views.update_appraisal, name = "update_appraisal"),
 
     #Appraisal
     path('appraisal_projects/', views.appraisal_projects, name="appraisal_projects"),
     path('approve_appraisal/<str:projectid>', views.approve_appraisal, name="approve_appraisal"),
     path('delete_appr_doc/<str:projid>', views.delete_appr_doc, name = 'delete_appr_doc'),
     path('send_to_tesg/<str:projid>', views.send_to_tesg, name = 'send_to_tesg'),
-    path('update_appraisal/<str:projid>', views.update_appraisal, name = 'update_appraisal'),
-    path('create_appraisal/<str:projid>', views.create_appraisal, name = 'create_appraisal'),
-    
     path('user_appraisal_projects/', views.user_appraisal_projects, name="user_appraisal_projects"),
+    path('APPR_upload/', views.APPR_upload, name="APPR_upload"),
+    path('view_apprs/', views.view_apprs, name="view_apprs"),
+    path('download_appr_mom/<str:apprid>', views.download_appr_mom, name = 'download_appr_mom'),
+    
+    
     
     
     #monitoring
     path('monitoring_projects/', views.monitoring_projects, name="monitoring_projects"),
     path('approve_monitoring/<str:projectid>', views.approve_monitoring, name="approve_monitoring"),
     path('send_to_appr/<str:projid>', views.send_to_appr, name="send_to_appr"),
-    path('send_to_tesg/<str:projid>', views.send_to_tesg, name="send_to_tesg"),
+    path('msend_to_tesg/<str:projid>', views.msend_to_tesg, name="msend_to_tesg"),
     path('user_monitoring_projects/', views.user_monitoring_projects, name="user_monitoring_projects"),
+    path('MONI_upload/', views.MONI_upload, name="MONI_upload"),
+    path('view_monis/', views.view_monis, name="view_monis"),
+    path('download_moni_mom/<str:moniid>', views.download_moni_mom, name = 'download_moni_mom'),
+
+
+    #ViewAll
+    path('view_all_projs/', views.view_all_projs, name="view_all_projs"),
+    path('admin_project_details/<str:projectid>', views.admin_project_details, name = "admin_project_details"),
+    path('admin_temp_project_details/<str:projectid>', views.admin_temp_project_details, name = "admin_temp_project_details"),
 
  
  
