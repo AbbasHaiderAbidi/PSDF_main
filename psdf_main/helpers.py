@@ -70,11 +70,10 @@ def projectDetails(projid):
         proj['schedule'] = proj1.schedule
         proj['fundcategory'] = proj1.fundcategory
         proj['quantum'] = proj1.quantumOfFunding
-        proj['extension'] = proj1.extension
         proj['status'] = proj1.status
         proj['remark'] = proj1.remark
-        proj['submitted_boq'] = proj1.submitted_boq
-        proj['approved_boq'] = proj1.approved_boq
+        proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
+        proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq'])
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal
         proj['user_region'] = proj1.userid.region
@@ -115,6 +114,19 @@ def get_Gtotal_list(abc):
         Gtotal_list.append({'itemname':key, 'grandtotal':value})
     return Gtotal_list
 
+def get_Gtotal(abc):
+    item_Gtotal = {}
+    Gtotal_list = []
+    totalval = 0
+    for boq in abc:
+        if boq['itemname'] in item_Gtotal.keys():
+            item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
+        else:
+                item_Gtotal[boq['itemname']] = boq['itemcost']
+    for key, value in item_Gtotal.items():
+        totalval = totalval + value
+    return totalval
+
 def temp_projectDetails(projid):
     proj = {}
     proj1 = temp_projects.objects.get(id = projid)
@@ -127,7 +139,7 @@ def temp_projectDetails(projid):
         proj['schedule'] = proj1.schedule
         proj['remark'] = proj1.remark
         proj['removed'] = proj1.removed
-        proj['submitted_boq_list'] = get_boq_details(proj1.submitted_boq)
+        proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
         # eachboq = proj1.submitted_boq[2:-2].split('}, {')
         # abc = []
         # for boq in eachboq :
@@ -149,7 +161,7 @@ def temp_projectDetails(projid):
         # for key, value in item_Gtotal.items():
         #     Gtotal_list.append({'itemname':key, 'grandtotal':value})
         
-        proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq_list'])
+        proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq'])
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal
         proj['user_region'] = proj1.userid.region
@@ -239,6 +251,7 @@ def handle_uploaded_file(path, f):
 
 def handle_download_file(filepath, request):
     if os.path.exists(filepath):
+        print("EXISTS")
         with open(filepath,'rb') as fh:
             response = HttpResponse(fh.read(), content_type = "application/adminupload")
             response['Content-Disposition'] = 'inline;filename =' + filepath.split('/')[-1]
@@ -251,6 +264,16 @@ def getTempProjects(request):
     if adminonline(request):
         temp_project_list = []
         temp_project = temp_projects.objects.all().exclude(deny = True)
+        for proj in temp_project:
+            temp_project_list.append(temp_projectDetails(proj.id))
+        return temp_project_list
+    return False
+
+
+def getTempProjects_user(request, userid):
+    if useronline(request):
+        temp_project_list = []
+        temp_project = temp_projects.objects.filter(userid = userid).exclude(deny = True)
         for proj in temp_project:
             temp_project_list.append(temp_projectDetails(proj.id))
         return temp_project_list
@@ -277,9 +300,9 @@ def full_admin_context(request):
 def full_user_context(request):
     if useronline(request):
         context = {'user':userDetails(request.session['user'])}
-        context['tesgprojects'] = projects.objects.filter(status = '1', userid = users.objects.filter(username = request.session['user'])[:1].get(), deny = False)
-        context['appraisal_projects'] = projects.objects.filter(status = '2', userid = users.objects.filter(username = request.session['user'])[:1].get(), deny = False)
-        context['monitoring_projects'] = projects.objects.filter(status = '3', userid = users.objects.filter(username = request.session['user'])[:1].get(), deny = False)
+        context['tesgprojects'] = projects.objects.filter(status = '1', userid = users.objects.get(id = context['user']['id']), deny = False)
+        context['appraisal_projects'] = projects.objects.filter(status = '2', userid =  users.objects.get(id = context['user']['id']), deny = False)
+        context['monitoring_projects'] = projects.objects.filter(status = '3', userid =  users.objects.get(id = context['user']['id']), deny = False)
         context['noTESG'] = context['tesgprojects'].count()
         context['noappr'] = context['appraisal_projects'].count()
         context['nomon'] = context['monitoring_projects'].count()

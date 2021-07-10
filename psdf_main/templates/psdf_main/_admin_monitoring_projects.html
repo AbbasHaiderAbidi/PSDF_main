@@ -34,7 +34,9 @@
                                 <th>User</th>
                                 <th>Entity</th>
                                 <th>Approve</th>
+                                <th>TESG approval date</th>
                                 <th>Send back to TESG</th>
+                                <th>Appraisal approval date</th>
                                 <th>Send back to Appraisal</th>
                                 <th>Reject</th>
                             </tr>
@@ -46,7 +48,9 @@
                                 <th>User</th>
                                 <th>Entity</th>
                                 <th>Approve</th>
+                                <th>TESG approval date</th>
                                 <th>Send back to TESG</th>
+                                <th>Appraisal approval date</th>
                                 <th>Send back to Appraisal</th>
                                 <th>Reject</th>
                             </tr>
@@ -54,6 +58,8 @@
                         <tbody>
                             {% if not monitoring_projects %}
                             <tr>
+                                <td>Not Available</td>
+                                <td>Not Available</td>
                                 <td>Not Available</td>
                                 <td>Not Available</td>
                                 <td>Not Available</td>
@@ -74,7 +80,9 @@
                                 <td class="text-center"><button type="button" class="btn btn-outline-success btn-responsive" data-toggle="modal" data-target="#modalforAppr{{proj.id}}">
                                         <i class="fa fa-check"></i> Approve
                                     </button></td>
+                                <td>{{proj.tesgaprdate}}</td>
                                 <td class="text-center"><a href='/msend_to_tesg/{{proj.id}}' class="btn btn-outline-info">Revert to TESG</a></td>
+                                <td>{{proj.appraprdate}}</td>
                                 <td class="text-center"><a href='/send_to_appr/{{proj.id}}' class="btn btn-outline-info">Revert to Appraisal</a></td>
                                 <td class="text-center"><button type="button" class="btn btn-outline-danger btn-responsive" data-toggle="modal" data-target="#modalforreject{{proj.id}}">
                                         <i class="fa fa-close"></i> Reject

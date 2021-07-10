@@ -64,13 +64,15 @@ def register(request):
 
 
 def logout(request):
-    
-    if useronline(request):
+    try:
         user = users.objects.get(username = request.session['user'])
         user.lastlogin = datetime.now()
         user.save(update_fields=['lastlogin'])
-        if adminonline(request):
-            del request.session['admin']
+    except:
+        pass
+    if request.session.has_key('user'):
         del request.session['user']
+    if request.session.has_key('admin'):
+        del request.session['admin']
     return redirect('/')
 

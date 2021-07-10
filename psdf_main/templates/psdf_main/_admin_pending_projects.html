@@ -215,7 +215,7 @@
                                             </thead>
 
                                             <tbody>
-                                                {% for submitted_boq in proj.submitted_boq_list %}
+                                                {% for submitted_boq in proj.submitted_boq %}
                                                 <tr>
                                                     <td>{{submitted_boq.itemname}}</td>
                                                     <td>{{submitted_boq.itemno}}</td>
@@ -356,15 +356,15 @@
                     <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-3">
-                            <a class="btn btn-outline-info" href="/download_temp_project/DPR_T_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                            <a class="btn btn-outline-info" href="/download_temp_project/DPR_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
                         <div class="col-md-1"></div>
                         <div class="col-md-3 font-weight-bold">
-                            <a class="btn btn-outline-danger" href="/download_temp_project/forms_T_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                            <a class="btn btn-outline-danger" href="/download_temp_project/forms_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
                         <div class="col-md-1"></div>
                         <div class="col-md-3">
-                            <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_T_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                            <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
 
                     </div>

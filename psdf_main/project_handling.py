@@ -16,7 +16,6 @@ def acceptdpr(request, projid):
             if not check_password(adminpass,checkingpass):
                 messages.error(request, 'Invalid admin password, acceptance of project: '+temp_proj.proname+' ABORTED.')
                 return redirect('/admin_pending_projects')
-            
             newproject = projects()
             newproject.name = temp_proj.proname
             newproject.dprsubdate = temp_proj.dprsubdate
@@ -26,12 +25,13 @@ def acceptdpr(request, projid):
             newproject.fundcategory = fundcategory
             # newproject.projectpath = newprojectpath
             newproject.quantumOfFunding = quantum
+            newproject.amt_approved = (float(quantum)/100)*float(temp_proj.amountasked)
             newproject.userid = temp_proj.userid
             newproject.tesglist = ''
             if not remark == '':
                 newproject.remark = remark
             newproject.submitted_boq = temp_proj.submitted_boq
-            newproject.workflow = 'DPR accepted on '+ datetime.now()
+            newproject.workflow = 'DPR accepted on '+ str(datetime.now())
             newproject.save()
             newentry = projects.objects.filter(name = temp_proj.proname, amt_asked = temp_proj.amountasked, userid = temp_proj.userid, schedule = temp_proj.schedule, dprsubdate = temp_proj.dprsubdate)[0]
             newpath = '/'.join(temp_proj.projectpath.split('/')[:-2])+'/'+ str(newentry.id)
@@ -99,7 +99,7 @@ def download_temp_project(request, projid):
             if proj_path :
                 proj_path = proj_path.projectpath
                 filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
-                handle_download_file(filepath, request)
+                return handle_download_file(filepath, request)
     return oops(request)
 
 def download_project(request, projid):
@@ -185,6 +185,7 @@ def update_boq(request, projectid):
                         messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
                         return redirect('/update_boq/0')
             boq_project.submitted_boq = boq
+            boq_project.amget_Gtotal
             boq_project.workflow = str(boq_project.workflow) + ']*[' + 'BoQ updated on ' + datetime.now()
             boq_project.save(update_fields=['submitted_boq'])
             notification(boq_project.userid.id, 'BoQ submitted for project: ' + boq_project.name + ' has been updated by PSDF Sectt.' )

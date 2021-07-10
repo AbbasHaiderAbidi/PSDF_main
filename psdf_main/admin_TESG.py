@@ -47,10 +47,10 @@ def tesgchain_form(request):
             context['proj_tesg'] = TESG_master.objects.filter(project = context['proj'])
             alreadyactive = False
             activetesg = TESG_master.objects.filter(project = projects.objects.get(id = projid), active = True)
-            print(activetesg)
+            
             if activetesg.exists():
                 alreadyactive = True
-            print(alreadyactive)
+            
             if alreadyactive:
                 messages.error(request, 'Already a TESG chain is active, please wait.')
                 return redirect('/TESG_chain/'+projid)
@@ -58,30 +58,23 @@ def tesgchain_form(request):
                 messages.error(request, 'TESG entry already made.')
                 return redirect('/TESG_chain/'+projid)
             if 'observations' in request.FILES:
-                print("file1")
                 observations = request.FILES['observations']
                 tesgpath = projects.objects.get(id = projid).projectpath + '/TESG/'
                 smkdir(tesgpath)
-                print("file2")
                 try:
                     extension = str(observations.name.split(".")[1])
-                    print("file3")
                 except:
                     extension = ''
-                    print("file4")
                 handle_uploaded_file(os.path.join(tesgpath,str(str(tesgnum) + "." +extension )),observations)
-                print("file5")
             tesg = TESG_master()
             tesg.project = projects.objects.get(id = projid)
             tesg.tesgnum = TESG_admin.objects.filter(TESG_no = tesgnum)[:1].get()
             tesg.admin_outcome = tesg_outcome
             tesg.admin_filepath = tesgpath
             tesg.save()
-            
             messages.error(request, 'Outcome of TESG '+tesgnum+' have been intimated to the user.')
             notification(str(tesg.project.userid.id), 'TESG #'+tesgnum+' updated for project ID : '+str(tesg.project.id))
             return redirect('/TESG_chain/'+projid)
-        
     else:
         return oops(request)
     
@@ -194,8 +187,10 @@ def approveTESG(request, projid):
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projid)
                 project.status = '2'
-                project.workflow = str(project.workflow) + ']*[' + 'Project approved in TESG phase on '+ str(datetime.now())
-                project.save(update_fields=['status','workflow'])
+                tesgaprdate = datetime.now()
+                project.workflow = str(project.workflow) + ']*[' + 'Project approved in TESG phase on '+ str(tesgaprdate)
+                project.tesgaprdate = tesgaprdate
+                project.save(update_fields=['status','workflow','tesgaprdate'])
                 messages.success(request, 'Project : '+ project.name + ' has been approved in TESG phase.')
                 notification(projects.objects.get(id = projid).userid.id, 'Project ID: '+projid+' has been approved in TESG phase')
             else:

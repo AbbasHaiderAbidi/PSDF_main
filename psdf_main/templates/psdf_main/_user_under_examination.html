@@ -50,8 +50,7 @@
                             <th>Amount</th>
                             <th>Schedule</th>
                             <th>DPR Submission Date</th>
-                            <th>DPR Approval Date</th>
-                            <th>Remark</th>
+                            <th>View BoQ</th>
                             <th>Download Documents</th>
 
 
@@ -64,8 +63,7 @@
                             <th>Amount</th>
                             <th>Schedule</th>
                             <th>DPR Submission Date</th>
-                            <th>DPR Approval Date</th>
-                            <th>Remark</th>
+                            <th>View BoQ</th>
                             <th>Download Documents</th>
 
 
@@ -74,7 +72,6 @@
                     <tbody>
                         {% if not projectobj %}
                         <tr>
-                            <td>Not Available</td>
                             <td>Not Available</td>
                             <td>Not Available</td>
                             <td>Not Available</td>
@@ -94,16 +91,12 @@
                             <td>{{proj.amountasked}}</td>
                             <td>{{proj.schedule}}</td>
                             <td>{{proj.dprsubdate}}</td>
-                            <td>{{proj.dpraprdate}}</td>
-
-
-
-                            <td>
-                                {{proj.remark}}
+                            <td class="text-center">
+                                <a class="btn btn-outline-warning btn-responsive" href="/user_boq_view/{{proj.id}}_underexamination">
+                                    <i class="fas fa-eye"></i> View BoQ
+                                </a>
                             </td>
 
-                            <!-- <a class="btn btn-outline-info" href="/download_temp_project/{{proj.id}}">
-                                        <i class="fas fa-download"></i> Download -->
                             <td class="text-center"><button type="button" class="btn btn-outline-info btn-responsive" data-toggle="modal" data-target="#modalforDown{{proj.id}}">
                                             <i class="fas fa-download"></i> Download
                                         </button></td>
@@ -112,7 +105,56 @@
 
 
                         </tr>
+
+
+
+                        <div class="modal fade" id="modalforDown{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforDown{{proj.id}}" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id=""> <strong>{{proj.name}}</strong></h3>
+
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3 font-weight-bold">Download DPR :</div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3 font-weight-bold">Download Forms by user :</div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3 font-weight-bold">Download Supporting Docs:</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3">
+                                                <a class="btn btn-outline-info" href="/download_temp_project/DPR_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3 font-weight-bold">
+                                                <a class="btn btn-outline-danger" href="/download_temp_project/forms_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-3">
+                                                <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
                         {% endfor %} {% endif %}
+
                     </tbody>
                 </table>
             </div>
@@ -121,54 +163,6 @@
     </div>
 </div>
 
-{% for proj in projectobj %}
-
-
-<div class="modal fade" id="modalforDown{{proj.id}}" tabindex="-1" role="dialog" aria-labelledby="modalforDown{{proj.id}}" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id=""> <strong>{{proj.name}}</strong></h3>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3 font-weight-bold">Download DPR :</div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3 font-weight-bold">Download Forms by user :</div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3 font-weight-bold">Download Supporting Docs:</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3">
-                        <a class="btn btn-outline-info" href="/download_temp_project/DPR_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3 font-weight-bold">
-                        <a class="btn btn-outline-danger" href="/download_temp_project/forms_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3">
-                        <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-{% endfor %}
 </div>
 </div>
 </div>

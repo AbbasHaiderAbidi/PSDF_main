@@ -28,7 +28,7 @@ urlpatterns = [
     path('notificationread/<str:userid>', views.notificationread, name="notificationread"),
 
     #pending_projects
-    path('under_examination/', views.underexamination, name="under_examination"),
+    path('under_examination/', views.under_examination, name="under_examination"),
 
     #view Users
     path('view_user/<str:userid>', views.view_user, name="view_user/"),
@@ -79,10 +79,11 @@ urlpatterns = [
 
     #ViewAll
     path('view_all_projs/', views.view_all_projs, name="view_all_projs"),
+    path('user_view_all_projs/', views.user_view_all_projs, name="user_view_all_projs"),
     path('admin_project_details/<str:projectid>', views.admin_project_details, name = "admin_project_details"),
     path('admin_temp_project_details/<str:projectid>', views.admin_temp_project_details, name = "admin_temp_project_details"),
 
- 
- 
+    path('user_boq_view/<str:projid>', views.user_boq_view, name = "user_boq_view"),
+    path('user_back/<str:backpage>', views.user_back, name = "user_back"),
     
 ]

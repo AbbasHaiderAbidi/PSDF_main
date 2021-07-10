@@ -15,8 +15,7 @@ def admin_dashboard(request):
 def admin_pending_projects(request):
     if adminonline(request):
         context = full_admin_context(request)
-        context['projectobj'] = getTempProjects(request) 
-        
+        context['projectobj'] = getTempProjects(request)
         return render(request, 'psdf_main/_admin_pending_projects.html', context)
 
 
@@ -34,7 +33,7 @@ def control_panel(request):
     
     
 def uploadformat(request):
-    filelist = {'support':'DPR_Supporting_documents.zip', 'format':'DPR_Forms.zip','sample1':'sample1.zip','sample2':'sample2.zip','sample3':'sample3.zip'}
+    filelist = {'support':'DPR_Supporting_documents', 'format':'DPR_Forms','sample1':'sample1','sample2':'sample2','sample3':'sample3'}
     if adminonline(request):
         if request.method == 'POST':
             req = request.POST
@@ -47,30 +46,65 @@ def uploadformat(request):
                 return control_panel(request)
             if request.FILES:
                 files = request.FILES
+                formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
+                smkdir(formatpath)
                 if 'support' in files.keys():
                     naam = 'support'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
-                    handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
+                    support = files['support']
+                    try:
+                        ext = '.' + support.name.split('.')[1]
+                    except:
+                        ext = ''
+                    name = filelist[naam] + ext
+                    handle_uploaded_file(os.path.join(formatpath,name),files[naam])
                     messages.success(request, 'Supporting Documents updated.')
                 if 'format' in files.keys():
                     naam = 'format'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
-                    handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
+                    support = files[naam]
+                    try:
+                        ext = '.' + support.name.split('.')[1]
+                    except:
+                        ext = ''
+                    name = filelist[naam] + ext
+                    handle_uploaded_file(os.path.join(formatpath,name),files[naam])
+                    # formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
+                    
                     messages.success(request, 'Format updated.')
                 if 'sample1' in files.keys():
                     naam = 'sample1'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
-                    handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
+                    support = files[naam]
+                    try:
+                        ext = '.' + support.name.split('.')[1]
+                    except:
+                        ext = ''
+                    name = filelist[naam] + ext
+                    handle_uploaded_file(os.path.join(formatpath,name),files[naam])
+                    # formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
+                    
                     messages.success(request, 'Sample 1 updated.')
                 if 'sample2' in files.keys():
                     naam = 'sample2'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
-                    handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
+                    support = files[naam]
+                    try:
+                        ext = '.' + support.name.split('.')[1]
+                    except:
+                        ext = ''
+                    name = filelist[naam] + ext
+                    handle_uploaded_file(os.path.join(formatpath,name),files[naam])
+                    # formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
+                    
                     messages.success(request, 'Sample 2 updated.')
                 if 'sample3' in files.keys():
                     naam = 'sample3'
-                    formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
-                    handle_uploaded_file(os.path.join(formatpath,filelist[naam]),files[naam])
+                    support = files[naam]
+                    try:
+                        ext = '.' + support.name.split('.')[1]
+                    except:
+                        ext = ''
+                    name = filelist[naam] + ext
+                    handle_uploaded_file(os.path.join(formatpath,name),files[naam])
+                    # formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
+                    
                     messages.success(request, 'Sample 3 updated.')
                 return control_panel(request)
             else:
@@ -173,11 +207,12 @@ def APPR_upload(request):
                     handle_uploaded_file(apprpath,files['momupload'])
                 else:
                     return oops(request)
+            thisproj = projects.objects.get(id = projid)
             appr = Appraisal_admin()
-            appr.project = projects.objects.get(id = projid)
-            
+            appr.project = thisproj
             appr.apprpath = apprpath
             appr.apprdate = apprdate
+            appr.userid = thisproj.userid
             appr.save()
             messages.success(request, 'Appraisal committee entry added for project '+ appr.project.name)
             return control_panel(request)
@@ -222,8 +257,10 @@ def MONI_upload(request):
                     handle_uploaded_file(apprpath,files['momupload'])
                 else:
                     return oops(request)
+            thisproj = projects.objects.get(id = projid)
             moni = Monitoring_admin()
-            moni.project = projects.objects.get(id = projid)
+            moni.project = thisproj
+            moni.userid = thisproj.userid
             moni.monipath = apprpath
             moni.monidate = apprdate
             moni.save()

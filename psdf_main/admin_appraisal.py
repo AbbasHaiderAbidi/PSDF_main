@@ -4,7 +4,7 @@ from .helpers import *
 def appraisal_projects(request):
     if adminonline(request):
         context = full_admin_context(request)
-        context['appr_admin'] = Appraisal_admin.objects.values_list('projid', flat = True).all()[:]
+        
         context['appr_projects'] = Appraisal_admin.objects.all()
         return render(request, 'psdf_main/_admin_appraisal_projects.html', context)
     else:
@@ -16,14 +16,16 @@ def approve_appraisal(request, projectid):
         if request.method == 'POST':
             req = request.POST
             adminpass = req['adminpass']
-            if not Appraisal_admin.objects.filter(projid = projectid)[:1].get():
-                messages.success(request, 'Aborted! No entry regarding appraisal exists.')
-                return redirect('/appraisal_projects/')
+            # if not Appraisal_admin.objects.filter(projid = projectid)[:1].get():
+            #     messages.success(request, 'Aborted! No entry regarding appraisal exists.')
+            #     return redirect('/appraisal_projects/')
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projectid)
                 project.status = '3'
-                project.workflow = str(project.workflow) + ']*[' + 'Project approved in Appraisal phase on '+ str(datetime.now())
-                project.save(update_fields=['status'])
+                appraprdate =  datetime.now()
+                project.workflow = str(project.workflow) + ']*[' + 'Project approved in Appraisal phase on ' + str(appraprdate)
+                project.appraprdate = appraprdate
+                project.save(update_fields=['status','appraprdate'])
                 messages.success(request, 'Project : '+ project.name + ' has been approved Appraisal Committee.')
                 notification(projects.objects.get(id = projectid).userid.id, 'Project ID: '+projectid+' has been approved by Appraisal committee')
             else:
@@ -58,7 +60,9 @@ def send_to_tesg(request, projid):
         thisproject = projects.objects.get(id = projid)
         thisproject.status = '1'
         thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Reverted back to TESG by Appraisal committee on ' + str(datetime.now())
-        thisproject.save(update_fields = ['status', 'workflow'])
+        thisproject.appraprdate = None
+        thisproject.tesgaprdate = None
+        thisproject.save(update_fields = ['status', 'workflow','appraprdate','tesgaprdate'])
         notification(thisproject.userid.id, 'Project '+ thisproject.name +' sent back to TESG by PSDF Sectt.')
         messages.success(request, 'Project '+ thisproject.name +' sent back to TESG.')
         return redirect('/appraisal_projects')

@@ -133,17 +133,18 @@ def newdpr(request):
 
 
 def downloadformat(request,thisdoc):
-    filelist = {'support':'DPR_Supporting_documents.zip', 'format':'DPR_Forms.zip','sample1':'sample1.zip','sample2':'sample2.zip','sample3':'sample3.zip'}
+    filelist = {'support':'DPR_Supporting_documents', 'format':'DPR_Forms','sample1':'sample1','sample2':'sample2','sample3':'sample3'}
+    # try:
     if useronline(request) and not adminonline(request):
-        formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/'+filelist[thisdoc])
-        # if os.path.exists(formatpath):
-        with open(formatpath,'rb') as fh:
-            response = HttpResponse(fh.read(), content_type = "application/adminupload")
-            response['Content-Disposition'] = 'inline;filename =' + filelist[thisdoc]
-            return response
-        # return oops(request)
+        formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), os.path.join('Admin/Formats/',filelist[thisdoc]))
+        formatpath = glob.glob(formatpath+'*')[0]
+        print(formatpath)
+        return handle_download_file(formatpath, request)
     else:
         return oops(request)
+    # except:
+    #     messages.error(request, 'Function unavailable.')
+    #     return redirect('/newdpr')
 
 
 def notificationread(request, userid):
@@ -160,3 +161,51 @@ def notificationread(request, userid):
     else:
         return oops(request)
 
+def user_boq_view(request, projid):
+    if useronline(request):
+        splits = projid.split('_')
+        projid = splits[0]
+        backpage = splits[1]
+        if backpage == 'underexamination':
+            proj = temp_projects.objects.get(id = projid)
+        else:
+            proj = projects.objects.get(id = projid)
+        backpages = {'underexamination' : 'under_examination', 'usermonitoringprojects':'user_monitoring_projects','userappraisalprojects':'user_appraisal_projects','usertesgprojects':'user_tesg'}
+        if proj.userid.username == request.session['user']:
+            
+            context = full_user_context(request)
+            if backpage == 'underexamination':
+                project = temp_projectDetails(proj.id)
+            else:
+                project = projectDetails(proj.id)
+            context['proj'] = project
+            context['backpage'] = backpages[backpage]
+            return render(request, 'psdf_main/_user_view_boq.html', context)
+    else:
+        return oops(request)
+    
+def user_back(request, backpage):
+    if useronline(request):
+        return redirect('/'+backpage)
+    else:
+        return oops(request)
+    
+def user_view_all_projs(request):
+    if useronline(request):
+        context = full_user_context(request)
+        userid = context['user']['id']
+        userobj = users.objects.get(id = userid)
+        context['all_projs'] = projects.objects.filter(deny = False, userid = userobj)
+        context['all_rprojs'] = projects.objects.filter(deny = True, userid = userobj)
+        context['all_rpprojs'] = temp_projects.objects.filter(deny = True, userid = userobj)
+        context['all_temps'] = temp_projects.objects.filter(userid = userobj)
+        context['npending'] = temp_projects.objects.filter(deny = False, userid = userobj).count()
+        context['ntesg'] = projects.objects.filter(status = '1', deny = False, userid = userobj).count()
+        context['nappr'] = projects.objects.filter(status = '2', deny = False, userid = userobj).count()
+        context['nmoni'] = projects.objects.filter(status = '3', deny = False, userid = userobj).count()
+        context['nfinal'] = projects.objects.filter(status = '4', deny = False, userid = userobj).count()
+        context['nreject'] = projects.objects.filter(deny = True, userid = userobj).count() + temp_projects.objects.filter(deny = True, userid = userobj).count()
+        
+        return render(request, 'psdf_main/_user_view_all_projects.html', context)
+    else:
+        return oops(request)
