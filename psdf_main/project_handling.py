@@ -185,9 +185,8 @@ def update_boq(request, projectid):
                         messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
                         return redirect('/update_boq/0')
             boq_project.submitted_boq = boq
-            boq_project.amget_Gtotal
-            boq_project.workflow = str(boq_project.workflow) + ']*[' + 'BoQ updated on ' + datetime.now()
-            boq_project.save(update_fields=['submitted_boq'])
+            boq_project.workflow = str(boq_project.workflow) + ']*[' + 'BoQ updated on ' + str(datetime.now())
+            boq_project.save(update_fields=['submitted_boq', 'workflow'])
             notification(boq_project.userid.id, 'BoQ submitted for project: ' + boq_project.name + ' has been updated by PSDF Sectt.' )
             messages.success(request, 'BoQ successfully updated and intimated to user.')
             return redirect('/update_boq/0')

@@ -14,7 +14,7 @@ def user_TESG_chain(request, projid):
             context = full_user_context(request)
             context['proj'] = projects.objects.get(id = projid)
             context['proj_tesg'] = TESG_master.objects.filter(project = context['proj'])
-            context['current_tesg'] = TESG_master.objects.filter(project = context['proj'])[:1].get()
+            context['current_tesg'] = TESG_master.objects.filter(project = context['proj'], active = True)[:1].get()
             return render(request, 'psdf_main/_user_TESG.html', context)
         else:
             return oops(request)
@@ -31,7 +31,7 @@ def user_tesg_response(request):
             tesg_response = req['tesg_response']
             if proj_of_user(request, projid):
                 if not check_password(userpass,userDetails(request.session['user'])['password']):
-                    messages.error(request, 'Invalid Administrator password.')
+                    messages.error(request, 'Invalid user password.')
                     return user_TESG_chain(request, projid)
                 
                 admin_tesg = TESG_admin.objects.filter(TESG_no = tesg_no)[:1].get()
@@ -42,7 +42,15 @@ def user_tesg_response(request):
                         responses = request.FILES['responses']
                         tesgpath = projects.objects.get(id = projid).projectpath + '/TESG/'
                         smkdir(tesgpath)
-                        print("file2")
+                        try:
+                            alreadyfile = glob.glob(os.path.join(tesgpath,str(tesg_no)+'_response')+'*')[0]
+                            
+                            if os.path.exists(alreadyfile):
+                                sremove(alreadyfile)
+                            else:
+                                print("NOT EXISTS")
+                        except:
+                            pass
                         try:
                             extension = str(responses.name.split(".")[1])
                         except:
@@ -93,17 +101,21 @@ def download_tesg_user_response(request, tesg_str):
         projid = tesgstr[2]
         username = TESG_master.objects.get(id = tesgid).project.userid.username
         if not username == request.session['user']:
+
             return oops(request)
         
         tesgpath = TESG_master.objects.get(id = tesgid).user_filepath
+
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/TESG_chain/'+projid)
+            return redirect('/user_TESG_chain/'+projid)
         try:
             filepath = os.path.join(glob.glob(tesgpath+'/'+str(tesgnum)+'_response.*')[0])
+            
         except :
             messages.error(request, 'Function is not available.')
-            return redirect('/TESG_chain/'+projid)
+            return redirect('/user_TESG_chain/'+projid)
         return handle_download_file(filepath, request)
     else:
+        
         return oops(request)

@@ -250,6 +250,7 @@ def handle_uploaded_file(path, f):
     destination.close()
 
 def handle_download_file(filepath, request):
+    print("DOWNLOAD STARTED")
     if os.path.exists(filepath):
         print("EXISTS")
         with open(filepath,'rb') as fh:

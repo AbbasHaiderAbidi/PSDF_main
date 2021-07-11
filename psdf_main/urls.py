@@ -75,7 +75,7 @@ urlpatterns = [
     path('MONI_upload/', views.MONI_upload, name="MONI_upload"),
     path('view_monis/', views.view_monis, name="view_monis"),
     path('download_moni_mom/<str:moniid>', views.download_moni_mom, name = 'download_moni_mom'),
-
+    path('approve_monitoring/<str:projectid>', views.approve_monitoring, name = "approve_monitoring"),
 
     #ViewAll
     path('view_all_projs/', views.view_all_projs, name="view_all_projs"),
@@ -85,5 +85,6 @@ urlpatterns = [
 
     path('user_boq_view/<str:projid>', views.user_boq_view, name = "user_boq_view"),
     path('user_back/<str:backpage>', views.user_back, name = "user_back"),
+    
     
 ]

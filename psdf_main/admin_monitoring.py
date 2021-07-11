@@ -15,16 +15,13 @@ def approve_monitoring(request, projectid):
         if request.method == 'POST':
             req = request.POST
             adminpass = req['adminpass']
-            if not Appraisal_admin.objects.filter(projid = projectid)[:1].get():
-                messages.success(request, 'Aborted! No entry regarding Monitoring exists.')
-                return redirect('/monitoring_projects/')
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projectid)
                 project.status = '4'
                 moniaprdate = datetime.now()
                 project.workflow = str(project.workflow) + ']*[' + 'Project approved in Monitoring Phase on '+ str(moniaprdate)
                 project.moniaprdate = moniaprdate
-                project.save(update_fields=['status','moniaprdate'])
+                project.save(update_fields=['status','moniaprdate', 'workflow'])
                 messages.success(request, 'Project : '+ project.name + ' has been approved Appraisal Committee.')
                 notification(projects.objects.get(id = projectid).userid.id, 'Project ID: '+ projectid +' has been approved by Appraisal committee')
             else:
