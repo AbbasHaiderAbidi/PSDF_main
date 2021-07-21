@@ -66,7 +66,10 @@ def newdpr(request):
                             dpr_filename = secure_filename("DPR."+dpr.name.split('.')[1])
                             a1_filename = secure_filename("forms."+a1.name.split('.')[1])
                             if 'otherdoc' in request.FILES:
-                                otherdoc_filename = secure_filename("otherdocs."+otherdoc.name.split('.')[1])
+                                try:
+                                    otherdoc_filename = secure_filename("otherdocs."+otherdoc.name.split('.')[1])
+                                except:
+                                    otherdoc_filename = secure_filename("otherdocs")
                         except:
                             dpr_filename = secure_filename("DPR")
                             a1_filename = secure_filename("forms")

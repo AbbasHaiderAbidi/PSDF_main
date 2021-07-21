@@ -14,7 +14,7 @@ def user_TESG_chain(request, projid):
             context = full_user_context(request)
             context['proj'] = projects.objects.get(id = projid)
             context['proj_tesg'] = TESG_master.objects.filter(project = context['proj'])
-            context['current_tesg'] = TESG_master.objects.filter(project = context['proj'], active = True)[:1].get()
+            context['current_tesg'] = TESG_master.objects.filter(project = context['proj'])[:1].get()
             return render(request, 'psdf_main/_user_TESG.html', context)
         else:
             return oops(request)
