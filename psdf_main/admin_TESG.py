@@ -65,12 +65,13 @@ def tesgchain_form(request):
                     extension = str(observations.name.split(".")[1])
                 except:
                     extension = ''
-                handle_uploaded_file(os.path.join(tesgpath,str(str(tesgnum) + "." +extension )),observations)
+                fullpath = os.path.join(tesgpath,str(str(tesgnum) + "." +extension ))
+                handle_uploaded_file(fullpath,observations)
             tesg = TESG_master()
             tesg.project = projects.objects.get(id = projid)
             tesg.tesgnum = TESG_admin.objects.filter(TESG_no = tesgnum)[:1].get()
             tesg.admin_outcome = tesg_outcome
-            tesg.admin_filepath = tesgpath
+            tesg.admin_filepath = fullpath
             tesg.save()
             messages.error(request, 'Outcome of TESG '+tesgnum+' have been intimated to the user.')
             notification(str(tesg.project.userid.id), 'TESG #'+tesgnum+' updated for project ID : '+str(tesg.project.id))
@@ -131,40 +132,33 @@ def rejectTESG(request):
         return oops(request)
     
 def downloadTESGresponse(request, tesgid_projid):
-    if adminonline(request):
-        tesgstr = tesgid_projid.split('_')
-        tesgnum = tesgstr[0]
-        tesgid = tesgstr[1]
-        projid = tesgstr[2]
-        
-        tesgpath = TESG_master.objects.get(id = tesgid).user_filepath
+    if adminonline(request) or auditoronline(request):
+        thisisimp = TESG_master.objects.get(id = tesgid_projid)
+        tesgpath = TESG_master.objects.get(id = tesgid_projid).user_filepath
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/TESG_chain/'+projid)
-        try:
-            filepath = os.path.join(glob.glob(tesgpath+'/'+str(tesgnum)+'_response'+'*')[0])
-        except :
+            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+        if not os.path.exists(thisisimp.user_filepath):
             messages.error(request, 'Function is not available.')
-            return redirect('/TESG_chain/'+projid)
-        return handle_download_file(filepath, request)
+            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+        
+        return handle_download_file(thisisimp.user_filepath, request)
+    else:
+        return oops(request)
             
 def downloadTESGrequest(request, tesgid_projid):
-    if adminonline(request):
-        tesgstr = tesgid_projid.split('_')
-        tesgnum = tesgstr[0]
-        tesgid = tesgstr[1]
-        projid = tesgstr[2]
+    if adminonline(request) or auditoronline(request):
+        thisisimp = TESG_master.objects.get(id = tesgid_projid)
 
-        tesgpath = TESG_master.objects.get(id = tesgid).admin_filepath
+        tesgpath = TESG_master.objects.get(id = tesgid_projid).admin_filepath
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/TESG_chain/'+projid)
-        try:
-            filepath = os.path.join(glob.glob(tesgpath+'/'+str(tesgnum)+'*')[0])
-        except :
+            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+        if not os.path.exists(thisisimp.admin_filepath):
             messages.error(request, 'Function is not available.')
-            return redirect('/TESG_chain/'+projid)
-        return handle_download_file(filepath, request)
+            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+        
+        return handle_download_file(thisisimp.admin_filepath, request)
     else:
         return oops(request)
 
@@ -187,7 +181,7 @@ def approveTESG(request, projid):
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projid)
                 project.status = '2'
-                tesgaprdate = datetime.now()
+                tesgaprdate = datetime.now().date()
                 project.workflow = str(project.workflow) + ']*[' + 'Project approved in TESG phase on '+ str(tesgaprdate)
                 project.tesgaprdate = tesgaprdate
                 project.save(update_fields=['status','workflow','tesgaprdate'])

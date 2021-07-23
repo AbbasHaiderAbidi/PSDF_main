@@ -65,7 +65,7 @@
                             </tr>
                             {% else %} {% for proj in appraisal_projects %}
                             <tr>
-                                <td class="font-weight-bolder">{{proj.id}}</td>
+                                <td class="font-weight-bolder">{{proj.newid}}</td>
                                 <td><a href="/admin_project_details/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                 <td>{{proj.userid.username}}</td>
                                 <td>{{proj.userid.region}}</td>
@@ -85,7 +85,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h3 class="modal-title" id=""> <strong>Approval by Appraisal committee:
-                                                    {{proj.name}} ({{proj.id}})</strong></h3>
+                                                    {{proj.name}} ({{proj.newid}})</strong></h3>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -123,7 +123,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h3 class="modal-title" id=""> <strong>Reject project: {{proj.name}}
-                                                    ({{proj.id}})</strong></h3>
+                                                    ({{proj.newid}})</strong></h3>
 
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>

@@ -233,7 +233,7 @@
                                     </tr>
                                     {% else %} {% for proj in all_projs %}
                                     <tr>
-                                        <td class="font-weight-bolder">{{proj.id}}</td>
+                                        <td class="font-weight-bolder">{{proj.newid}}</td>
                                         <td><a href="/view_project/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                         <td>{{proj.userid.username}}</td>
                                         <td>{{proj.userid.region}}</td>
@@ -331,7 +331,7 @@
                                     </tr>
                                     {% else %} {% for proj in all_rprojs %}
                                     <tr>
-                                        <td class="font-weight-bolder">{{proj.id}}</td>
+                                        <td class="font-weight-bolder">{{proj.newid}}</td>
                                         <td><a href="/view_project/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                         <td>{{proj.userid.username}}</td>
                                         <td>{{proj.userid.region}}</td>

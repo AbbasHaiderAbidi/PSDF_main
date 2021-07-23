@@ -3,12 +3,14 @@ from .helpers import *
 
 def loginPage(request):
     if adminonline(request):
-        user_m = userDetails(request.session['user'])
         context = full_admin_context(request)
         return render(request, 'psdf_main/_admin_dashboard.html', context)
     elif useronline(request):
         context = full_user_context(request)
         return render(request, 'psdf_main/dashboard.html', context)
+    elif auditoronline(request):
+        context = full_auditor_context(request)
+        return render(request, 'psdf_main/_auditor_dashboard.html', context)
     else:
         if request.method == "POST":
             username = request.POST.get('username')
@@ -26,6 +28,10 @@ def loginPage(request):
                 if user.values('active')[0]['active']:
                     if check_password(password,user.values('password')[0]['password']):
                         user_m = userDetails(r_username)
+                        if user_m['auditor']:
+                            request.session['auditor'] = 'auditor'
+                            context = full_auditor_context(request)
+                            return render(request, 'psdf_main/_auditor_dashboard.html', context)
                         request.session['user'] = user_m['username']
                         if user_m['admin']:
                             request.session['admin'] = "admin"
@@ -74,5 +80,11 @@ def logout(request):
         del request.session['user']
     if request.session.has_key('admin'):
         del request.session['admin']
+    if request.session.has_key('auditor'):
+        user = users.objects.get(username = 'auditor')
+        user.lastlogin = datetime.now().date()
+        user.save(update_fields=['lastlogin'])
+        del request.session['auditor']
+    
     return redirect('/')
 

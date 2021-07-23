@@ -70,7 +70,7 @@
                             </tr>
                             {% else %} {% for proj in monitoring_projects %}
                             <tr>
-                                <td class="font-weight-bolder">{{proj.id}}</td>
+                                <td class="font-weight-bolder">{{proj.newid}}</td>
                                 <td><a href="/view_project/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                 <td>{{proj.amt_asked}}</td>
                                 <td>{{proj.fundcategory}}</td>
@@ -98,7 +98,7 @@
                     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h3 class="modal-title text-black-50" id=""> <strong>Trail for Project ID: {{work.id}}</strong></h3>
+                                <h3 class="modal-title text-black-50" id=""> <strong>Trail for Project</strong></h3>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>

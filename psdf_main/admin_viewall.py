@@ -12,8 +12,7 @@ def view_user(request, userid):
         context['numaccept'] = projects.objects.filter(userid = context['THIS_USER']).count()
         context['numapprove'] = projects.objects.filter(userid = userid, status = '5').count()
         context['numreject'] = projects.objects.filter(userid = userid, deny = True).count() + temp_projects.objects.filter(userid = userid, deny = True).count()
-        print(context['numreject'])
-        # context['totalreq'] = projects.objects.filter(userid = userid, deny = True)
+        
         return render(request, 'psdf_main/_admin_view_user.html', context)
     else:
         return oops(request)
@@ -51,9 +50,7 @@ def view_all_projs(request):
         context['all_projs'] = projects.objects.filter(deny = False)
         context['all_rprojs'] = projects.objects.filter(deny = True)
         context['all_rpprojs'] = temp_projects.objects.filter(deny = True)
-        
-        context['all_temps'] = temp_projects.objects.all()
-        
+        context['all_temps'] = temp_projects.objects.filter(deny = False)
         context['npending'] = temp_projects.objects.filter(deny = False).count()
         context['ntesg'] = projects.objects.filter(status = '1', deny = False).count()
         context['nappr'] = projects.objects.filter(status = '2', deny = False).count()
@@ -69,7 +66,7 @@ def view_all_projs(request):
 
 
 def download_tesg_report(request, tesgid):
-    if adminonline(request):
+    if adminonline(request) or auditoronline(request):
         try:
             return handle_download_file(TESG_admin.objects.get(id = tesgid).filepath, request)
         except:
@@ -78,7 +75,7 @@ def download_tesg_report(request, tesgid):
         return oops(request)
     
 def download_appr_mom(request, apprid):
-    if adminonline(request):
+    if adminonline(request) or auditoronline(request):
         try:
             return handle_download_file(Appraisal_admin.objects.get(id = apprid).apprpath, request)
         except:
@@ -88,7 +85,7 @@ def download_appr_mom(request, apprid):
     
     
 def download_moni_mom(request, moniid):
-    if adminonline(request):
+    if adminonline(request) or auditoronline(request):
         try:
             return handle_download_file(Monitoring_admin.objects.get(id = moniid).monipath, request)
         except:

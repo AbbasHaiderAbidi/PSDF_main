@@ -19,7 +19,7 @@ def admin_pending_users(request):
 def approve_user(request, userid):
     if adminonline(request):
         user = users.objects.get(id = userid)
-        user.aprdate = datetime.now()
+        user.aprdate = datetime.now().date()
         user.activate = True
         user.admin = False
         user.active = True

@@ -4,9 +4,9 @@ def acceptdpr(request, projid):
     if adminonline(request):
         if request.POST:
             req = request.POST
+            newid = req['newid'+projid]
             fundcategory = req['fundcategory'+projid]
             quantum = req['quantum'+projid]
-            # acceptdate = req['acceptdate'+projid]
             remark = ''
             if req['remark'+projid]:
                 remark = req['remark'+projid]
@@ -17,13 +17,12 @@ def acceptdpr(request, projid):
                 messages.error(request, 'Invalid admin password, acceptance of project: '+temp_proj.proname+' ABORTED.')
                 return redirect('/admin_pending_projects')
             newproject = projects()
+            newproject.newid = newid
             newproject.name = temp_proj.proname
             newproject.dprsubdate = temp_proj.dprsubdate
-            # newproject.dpraprdate = acceptdate
             newproject.amt_asked = temp_proj.amountasked
             newproject.schedule = temp_proj.schedule
             newproject.fundcategory = fundcategory
-            # newproject.projectpath = newprojectpath
             newproject.quantumOfFunding = quantum
             newproject.amt_approved = (float(quantum)/100)*float(temp_proj.amountasked)
             newproject.userid = temp_proj.userid
@@ -31,9 +30,9 @@ def acceptdpr(request, projid):
             if not remark == '':
                 newproject.remark = remark
             newproject.submitted_boq = temp_proj.submitted_boq
-            newproject.workflow = 'DPR accepted on '+ str(datetime.now())
+            newproject.workflow = 'DPR accepted on '+ str(datetime.now().date())
             newproject.save()
-            newentry = projects.objects.filter(name = temp_proj.proname, amt_asked = temp_proj.amountasked, userid = temp_proj.userid, schedule = temp_proj.schedule, dprsubdate = temp_proj.dprsubdate)[0]
+            newentry = projects.objects.filter(name = temp_proj.proname, amt_asked = temp_proj.amountasked, userid = temp_proj.userid, schedule = temp_proj.schedule, dprsubdate = temp_proj.dprsubdate, newid=newid)[0]
             newpath = '/'.join(temp_proj.projectpath.split('/')[:-2])+'/'+ str(newentry.id)
             if smkdir(newpath):
                 for f in glob.glob(temp_proj.projectpath+'/*'):
@@ -44,10 +43,10 @@ def acceptdpr(request, projid):
                 srmdir(temp_proj.projectpath)
                 projectobj = getTempProjects(request)
                 project_user = users.objects.get(id = temp_proj.userid.id)
-                project_user.notification = str(project_user.notification) + ']*[' + 'Your project : '+ newentry.name +' has been accepted with project ID:' + str(newentry.id)
+                project_user.notification = str(project_user.notification) + ']*[' + 'Your project : '+ newentry.name +' has been accepted with project ID:' + str(newentry.newid)
                 project_user.save(update_fields=['notification'])
                 context = full_admin_context(request)
-                messages.error(request, 'Project: '+newentry.name+' has been successfully accepted with ID: '+str(newentry.id)+'.')
+                messages.success(request, 'Project: '+newentry.name+' has been successfully accepted with ID: '+str(newentry.newid)+'.')
                 return render(request, 'psdf_main/_admin_pending_projects.html', context)
 
             else:
@@ -90,9 +89,8 @@ def download_temp_project(request, projid):
         proid = type_n_id[1]
     except:
         return oops(request)
-    print(temp_projects.objects.get(id = proid).userid.username)
-    print(request.session['user'])
-    if (adminonline(request) or (temp_projects.objects.get(id = proid).userid.username == request.session['user'])):
+    
+    if (adminonline(request) or (useronline(request) and (temp_projects.objects.get(id = proid).userid.username == request.session['user']))):
         if projid:
             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
             proj_path = temp_projects.objects.get(id = proid)
@@ -110,15 +108,14 @@ def download_project(request, projid):
     except:
         return oops(request)
 
-    if (adminonline(request) or (projects.objects.get(id = proid).userid.username == request.session['user'])):
-        user = userDetails(request.session['user'])
+    if (adminonline(request) or (useronline(request) and (projects.objects.get(id = proid).userid.username == request.session['user']))):
         if projid:
             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
             proj_path = projects.objects.get(id = proid)
             if proj_path :
                 proj_path = proj_path.projectpath
                 filepath = os.path.join(glob.glob(proj_path+'/'+filelist[file_type]+'*')[0])
-                handle_download_file(filepath, request)
+                return handle_download_file(filepath, request)
     return oops(request)
 
 
@@ -185,7 +182,7 @@ def update_boq(request, projectid):
                         messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
                         return redirect('/update_boq/0')
             boq_project.submitted_boq = boq
-            boq_project.workflow = str(boq_project.workflow) + ']*[' + 'BoQ updated on ' + str(datetime.now())
+            boq_project.workflow = str(boq_project.workflow) + ']*[' + 'BoQ updated on ' + str(datetime.now().date())
             boq_project.save(update_fields=['submitted_boq', 'workflow'])
             notification(boq_project.userid.id, 'BoQ submitted for project: ' + boq_project.name + ' has been updated by PSDF Sectt.' )
             messages.success(request, 'BoQ successfully updated and intimated to user.')

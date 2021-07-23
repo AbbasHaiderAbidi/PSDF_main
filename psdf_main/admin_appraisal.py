@@ -22,7 +22,7 @@ def approve_appraisal(request, projectid):
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projectid)
                 project.status = '3'
-                appraprdate =  datetime.now()
+                appraprdate =  datetime.now().date()
                 project.workflow = str(project.workflow) + ']*[' + 'Project approved in Appraisal phase on ' + str(appraprdate)
                 project.appraprdate = appraprdate
                 project.save(update_fields=['status','appraprdate'])
@@ -59,7 +59,7 @@ def send_to_tesg(request, projid):
     if adminonline(request):
         thisproject = projects.objects.get(id = projid)
         thisproject.status = '1'
-        thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Reverted back to TESG by Appraisal committee on ' + str(datetime.now())
+        thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Reverted back to TESG by Appraisal committee on ' + str(datetime.now().date())
         thisproject.appraprdate = None
         thisproject.tesgaprdate = None
         thisproject.save(update_fields = ['status', 'workflow','appraprdate','tesgaprdate'])

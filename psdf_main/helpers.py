@@ -13,6 +13,12 @@ def adminonline(request):
     else:
         return False
 
+def auditoronline(request):
+    if (request.session.has_key('auditor')):
+        return True
+    else:
+        return False
+
 def proj_of_user(request, projid):
     if useronline(request):
         if (projects.objects.get(id = projid).userid.username == request.session['user']):
@@ -46,6 +52,7 @@ def userDetails(username):
         user['reqdate'] = user1.reqdate
         user['aprdate'] = user1.aprdate
         user['admin'] = user1.admin
+        user['auditor'] = user1.auditor
         user['active'] = user1.active
         if user1.notification:
             user['notifications'] = user1.notification.split(']*[')[1:]
@@ -296,6 +303,17 @@ def full_admin_context(request):
     else:
         return {}
 
+def full_auditor_context(request):
+    if auditoronline(request):
+        context = {'user':userDetails('auditor')}
+        context['pending_projects'] = temp_projects.objects.all()
+        context['all_projs'] = projects.objects.all()
+        context['tesgs'] = TESG_admin.objects.all()
+        context['apprs'] = Appraisal_admin.objects.all()
+        context['monis'] = Monitoring_admin.objects.all()
+        return context
+    else:
+        return {}
 
 
 def full_user_context(request):

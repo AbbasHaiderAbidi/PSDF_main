@@ -156,9 +156,10 @@ def TESG_upload(request):
                 TESG_admin1.projects = projids
                 TESG_admin1.save()
                 tesgprojs = projids.split(',')
+                print(tesgprojs)
                 allprojs = projects.objects.all()
                 for proj in allprojs:
-                    if str(proj.id) in tesgprojs:
+                    if str(proj.newid) in tesgprojs:
                         projectid = projects.objects.get(id = proj.id)
                         if projectid.tesg_list:
                             projectid.tesg_list = str(projectid.tesg_list) +',' + str(tesgnum)

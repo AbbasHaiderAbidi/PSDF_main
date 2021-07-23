@@ -223,10 +223,8 @@
                                                     <td>{{submitted_boq.itemqty}}</td>
                                                     <td>{{submitted_boq.itemprice}}</td>
                                                     <td>₹ {{submitted_boq.itemcost}}</td>
-                                                    {% endfor %}
-
-
                                                 </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                         {% for item in proj.submitted_boq_Gtotal %}
@@ -258,6 +256,11 @@
                                     <div class="card-body">
                                         <form method="POST" action="/acceptdpr/{{proj.id}}">
                                             {% csrf_token %}
+                                            <div class="row">
+                                                <p class="col-md-6 font-weight-bold">Project ID:</p>
+                                                <input type="text" class="form-control border-left-success bg-gray-200 col-md-6" name="newid{{proj.id}}" id="newid{{proj.id}}" placeholder="Enter new project ID" required>
+                                            </div>
+                                            <br>
                                             <div class="row">
                                                 <p class="col-md-6 font-weight-bold">Category of funding:</p>
                                                 <input type="text" class="form-control border-left-success bg-gray-200 col-md-6" name="fundcategory{{proj.id}}" id="fundcategory{{proj.id}}" placeholder="Enter category of funding(eg. 5.1(c), 5.1(b) etc.)" required>
@@ -366,7 +369,6 @@
                         <div class="col-md-3">
                             <a class="btn btn-outline-warning" href="/download_temp_project/otherdocs_{{proj.id}}"><i class="fas fa-download"></i> Download</a>
                         </div>
-
                     </div>
 
                 </div>

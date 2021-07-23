@@ -31,7 +31,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-black-50" id=""> <strong>New TESG for {{proj.name}} ({{proj.id}})</strong></h3>
+                <h3 class="modal-title text-black-50" id=""> <strong>New TESG for {{proj.name}} ({{proj.newid}})</strong></h3>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -89,7 +89,7 @@
     <div class="card-header py-3">
         <h5 class="m-0 font-weight-bold text-primary">TESG details
 
-            <button type="button" class="btn btn-outline-secondary btn-responsive form-control input-text pull-right" data-toggle="modal" data-target="#modalfortesg" style="margin:auto; width: 30%;">
+            <button type="button" class="btn btn-outline-danger btn-responsive form-control input-text pull-right" data-toggle="modal" data-target="#modalfortesg" style="margin:auto; width: 30%;">
                 <i class="fa fa-plus"></i> &nbsp; New TESG outcome
             </button>
         </h5>
@@ -99,7 +99,7 @@
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0" style="table-layout: fixed;
                 width: 100%;">
-                <thead class="text-white bg-primary">
+                <thead class="font-weight-bold">
                     <tr>
                         <th>TESG number</th>
                         <th>TESG Date</th>
@@ -108,11 +108,11 @@
                         <th>Response</th>
                         <th>Date of response</th>
                         <th>Accept response</th>
-                        <th>Reject response</th>
+
 
                     </tr>
                 </thead>
-                <tfoot class="text-white bg-primary">
+                <tfoot class="font-weight-bold">
                     <tr>
                         <th>TESG number</th>
                         <th>TESG Date</th>
@@ -121,7 +121,7 @@
                         <th>Response</th>
                         <th>Date of response</th>
                         <th>Accept response</th>
-                        <th>Reject response</th>
+
                     </tr>
                 </tfoot>
                 <tbody>
@@ -133,7 +133,6 @@
                         <td>Not available</td>
                         <td>Not available</td>
 
-                        <td>Not available</td>
                         <td>Not available</td>
 
                     </tr>
@@ -159,7 +158,7 @@
                                     </div>
                                     <div class="modal-body">
                                         Download supporting files:
-                                        <a href="/downloadTESGrequest/{{tesg.tesgnum.TESG_no}}_{{tesg.id}}_{{proj.id}}" class="btn btn-outline-info">Download</a>
+                                        <a href="/downloadTESGrequest/{{tesg.id}}" class="btn btn-outline-info">Download</a>
                                         <br>
                                         <hr>
                                         <h2>TESG Committee observations : </h2>
@@ -191,7 +190,7 @@
                                     </div>
                                     <div class="modal-body">
                                         Download supporting files:
-                                        <a href="/downloadTESGresponse/{{tesg.tesgnum.TESG_no}}_{{tesg.id}}_{{proj.id}}" class="btn btn-outline-info">Download</a>
+                                        <a href="/downloadTESGresponse/{{tesg.id}}" class="btn btn-outline-info">Download</a>
                                         <br>
                                         <hr>
                                         <h2>Entity response: </h2>{{tesg.user_response}} <br><br>
@@ -240,49 +239,8 @@
                             </div>
                         </div>
                         {% else %}
-                        <td>{% if tesg.accepted %} ACCEPTED {% elif tesg.rejected%} REJECTED {% endif %}</td>{% endif %} {% if tesg.active %}
-                        <td><button type="button" class="btn btn-outline-danger btn-responsive" data-toggle="modal" data-target="#rjctres{{tesg.tesgnum.TESG_no}}">
-                            <i class="fa fa-close"></i> &nbsp; Reject
-                        </button></td>
-                        <div class="modal fade" id="rjctres{{tesg.tesgnum.TESG_no}}" tabindex="-1" role="dialog" aria-labelledby="rjctres{{tesg.tesgnum.TESG_no}}" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3 class="modal-title text-black-50" id=""> <strong>Reject TESG response</strong></h3>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{% url 'rejectTESG' %}" method="POST">
-
-                                            {% csrf_token %}
-                                            <input type="hidden" name="projid" id="projid" value="{{proj.id}}">
-                                            <input type="hidden" name="userid" id="userid" value="{{tesg.project.userid.id}}">
-                                            <input type="hidden" name="tesgnum" id="tesgnum" value="{{tesg.tesgnum.TESG_no}}">
-                                            <div class="row">
-                                                <div class="col-md-6">Remarks:</div>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" placeholder="Enter remarks" name="remarks" id="remarks"></div>
-                                            </div><br>
-                                            <div class="row">
-                                                <div class="col-md-6">Enter Administrator password to confirm</div>
-                                                <div class="col-md-6">
-                                                    <input type="password" class="form-control" placeholder="Enter Administrator password" name="adminpass" id="adminpass"></div>
-                                            </div>
-                                            <br>
-                                            <div class="modal-footer">
-                                                <input type="submit" class="btn btn-lg btn-outline-danger" value="Reject">
-                                                <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">Close</button>&nbsp;&nbsp;
-
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                        <td>{% if tesg.accepted %} ACCEPTED {% elif tesg.rejected%} REJECTED {% endif %}</td>{% endif %}
+                        <td class="alert-success"> ACCEPTED </td>
+                        {% endif %}
 
                     </tr>
                     {% endfor %} {% endif %}

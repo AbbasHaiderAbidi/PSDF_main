@@ -75,7 +75,7 @@
 
                             {% else %} {% for proj in tesgprojects %}
                             <tr>
-                                <td class="font-weight-bolder">{{proj.id}}</td>
+                                <td class="font-weight-bolder">{{proj.newid}}</td>
                                 <td><a href="/admin_project_details/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                 <td>{{proj.amt_asked}}</td>
                                 <td>{{proj.schedule}}</td>
@@ -102,7 +102,7 @@
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h3 class="modal-title" id=""> <strong>Reject project: {{proj.name}} ({{proj.id}})</strong></h3>
+                                            <h3 class="modal-title" id=""> <strong>Reject project: {{proj.name}} ({{proj.newid}})</strong></h3>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -141,7 +141,7 @@
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h3 class="modal-title" id=""> <strong>Approve TESG: {{proj.name}} ({{proj.id}})</strong></h3>
+                                            <h3 class="modal-title" id=""> <strong>Approve TESG: {{proj.name}} ({{proj.newid}})</strong></h3>
 
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>

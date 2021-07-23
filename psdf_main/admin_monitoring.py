@@ -18,7 +18,7 @@ def approve_monitoring(request, projectid):
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projectid)
                 project.status = '4'
-                moniaprdate = datetime.now()
+                moniaprdate = datetime.now().date()
                 project.workflow = str(project.workflow) + ']*[' + 'Project approved in Monitoring Phase on '+ str(moniaprdate)
                 project.moniaprdate = moniaprdate
                 project.save(update_fields=['status','moniaprdate', 'workflow'])
@@ -37,7 +37,7 @@ def send_to_appr(request, projid):
     if adminonline(request):
         thisproject = projects.objects.get(id = projid)
         thisproject.status = '2'
-        thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Project reverted back to Appraisal phase from Monitoring phase on ' + str(datetime.now())
+        thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Project reverted back to Appraisal phase from Monitoring phase on ' + str(datetime.now().date())
         thisproject.moniaprdate = None
         thisproject.appraprdate = None
         thisproject.save(update_fields = ['status','workflow','moniaprdate','appraprdate'])
@@ -52,7 +52,7 @@ def msend_to_tesg(request, projid):
     if adminonline(request):
         thisproject = projects.objects.get(id = projid)
         thisproject.status = '1'
-        thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Project reverted back to TESG phase from Monitoring phase on ' + str(datetime.now())
+        thisproject.workflow = str(thisproject.workflow) + ']*[' + 'Project reverted back to TESG phase from Monitoring phase on ' + str(datetime.now().date())
         thisproject.moniaprdate = None
         thisproject.appraprdate = None
         thisproject.tesgaprdate = None

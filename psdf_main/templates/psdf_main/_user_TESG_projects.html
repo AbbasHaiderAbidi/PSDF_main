@@ -67,7 +67,7 @@
                             </tr>
                             {% else %} {% for proj in tesgprojects %}
                             <tr>
-                                <td class="font-weight-bolder">{{proj.id}}</td>
+                                <td class="font-weight-bolder">{{proj.newid}}</td>
                                 <td><a href="/view_project/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                 <td>{{proj.amt_asked}}</td>
                                 <td>{{proj.schedule}}</td>

@@ -48,8 +48,8 @@ urlpatterns = [
     path('user_TESG_chain/<str:projid>', views.user_TESG_chain, name = "user_TESG_chain"),
     path('user_tesg_response', views.user_tesg_response, name = "user_tesg_response"),
     path('approveTESG/<str:projid>', views.approveTESG, name = "approveTESG"),
-    path('download_tesg_user_outcome/<str:tesg_str>', views.download_tesg_user_outcome, name = "download_tesg_user_outcome"),
-    path('download_tesg_user_response/<str:tesg_str>', views.download_tesg_user_response, name = "download_tesg_user_response"),
+    path('download_tesg_user_outcome/<str:tesgid>', views.download_tesg_user_outcome, name = "download_tesg_user_outcome"),
+    path('download_tesg_user_response/<str:tesgid>', views.download_tesg_user_response, name = "download_tesg_user_response"),
     
     path('view_TESGs', views.view_TESGs, name = "view_TESGs"),
     path('download_tesg_report/<str:tesgid>', views.download_tesg_report, name = "download_tesg_report"),
@@ -83,9 +83,21 @@ urlpatterns = [
     path('user_view_all_projs/', views.user_view_all_projs, name="user_view_all_projs"),
     path('admin_project_details/<str:projectid>', views.admin_project_details, name = "admin_project_details"),
     path('admin_temp_project_details/<str:projectid>', views.admin_temp_project_details, name = "admin_temp_project_details"),
+    path('appr_mom_download/<str:projid>', views.appr_mom_download, name = "appr_mom_download"),
+    path('moni_mom_download/<str:projid>', views.moni_mom_download, name = "moni_mom_download"),
 
     path('user_boq_view/<str:projid>', views.user_boq_view, name = "user_boq_view"),
     path('user_back/<str:backpage>', views.user_back, name = "user_back"),
+    
+    #Auditor
+    path('auditor_view_TESGs/', views.auditor_view_TESGs, name="auditor_view_TESGs"),
+    path('auditor_view_apprs/', views.auditor_view_apprs, name="auditor_view_apprs"),
+    path('auditor_view_monis/', views.auditor_view_monis, name="auditor_view_monis"),
+    path('auditor_view_projects/', views.auditor_view_projects, name="auditor_view_projects"),
+    path('auditor_project_details/<str:projid>', views.auditor_project_details, name="auditor_project_details"),
+    path('auditor_view_user/<str:userid>', views.auditor_view_user, name="auditor_view_user"),
+    path('auditor_download_project/<str:projid>', views.auditor_download_project, name="auditor_download_project"),
+    
     
     
 ]

@@ -68,7 +68,7 @@
 
                             {% else %} {% for appr in apprs %}
                             <tr>
-                                <td class="font-weight-bold text-danger">{{appr.project.id}}</td>
+                                <td class="font-weight-bold text-danger">{{appr.project.newid}}</td>
                                 <td>{{appr.project.name}}</td>
                                 <td>{{appr.apprdate}}</td>
                                 <td><a class="btn btn-outline-success" href="/download_appr_mom/{{appr.id}}"><i class="fas fa-download"></i> Download </a></td>
