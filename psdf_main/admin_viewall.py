@@ -92,3 +92,37 @@ def download_moni_mom(request, moniid):
             return oops(request)
     else:
         return oops(request)
+    
+
+def admin_boq_view(request, projid):
+    if adminonline(request):
+        splits = projid.split('_')
+        projid = splits[0]
+        backpage = splits[1]
+        if backpage == 'underexamination':
+            proj = temp_projects.objects.get(id = projid)
+        else:
+            proj = projects.objects.get(id = projid)
+        backpages = {'adminmonitoringprojects':'monitoring_projects','adminappraisalprojects':'appraisal_projects','admintesgprojects':'TESG_projects', 'adminallprojects':'view_all_projects'}
+        try:
+            a = backpages[backpage]
+        except:
+            return oops(request)
+        context = full_admin_context(request)
+        if backpage == 'underexamination':
+            project = temp_projectDetails(proj.id)
+            context['proj'] = project
+            
+            context['backpage'] = backpages[backpage]
+                
+            return render(request, 'psdf_main/_admin_view_boq.html', context)
+        else:
+            context['proj'] = proj
+            context['sub_boq'] = boqdata.objects.filter(project = context['proj'], boqtype = '1')
+            context['sub_boq_total'] = boq_grandtotal(context['sub_boq'])
+            context['approved_boq'] = boqdata.objects.filter(project = context['proj'], boqtype = '2')
+            context['approved_boq_total'] = boq_grandtotal(context['approved_boq'])
+            context['backpage'] = backpages[backpage]
+            return render(request, 'psdf_main/_admin_view_project_boq.html', context)
+    else:
+        return oops(request)

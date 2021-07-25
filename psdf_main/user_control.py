@@ -5,7 +5,6 @@ from .helpers import *
 def newdpr(request):
     # form = NewDPR_form()
     if useronline(request) and not adminonline(request):
-        
         user = userDetails(request.session['user'])
         if(user['temp_boq'] == ''):
             rboq = range(1,0)
@@ -174,16 +173,26 @@ def user_boq_view(request, projid):
         else:
             proj = projects.objects.get(id = projid)
         backpages = {'underexamination' : 'under_examination', 'usermonitoringprojects':'user_monitoring_projects','userappraisalprojects':'user_appraisal_projects','usertesgprojects':'user_tesg'}
+        try:
+            a = backpages[backpage]
+        except:
+            return oops(request)
         if proj.userid.username == request.session['user']:
             
             context = full_user_context(request)
             if backpage == 'underexamination':
                 project = temp_projectDetails(proj.id)
+                context['proj'] = project
+                context['backpage'] = backpages[backpage]
+                return render(request, 'psdf_main/_user_view_boq.html', context)
             else:
-                project = projectDetails(proj.id)
-            context['proj'] = project
-            context['backpage'] = backpages[backpage]
-            return render(request, 'psdf_main/_user_view_boq.html', context)
+                context['proj'] = proj
+                context['sub_boq'] = boqdata.objects.filter(project = context['proj'], boqtype = '1')
+                context['sub_boq_total'] = boq_grandtotal(context['sub_boq'])
+                context['approved_boq'] = boqdata.objects.filter(project = context['proj'], boqtype = '2')
+                context['approved_total'] = boq_grandtotal(context['approved_boq'])
+                context['backpage'] = backpages[backpage]
+                return render(request, 'psdf_main/_user_view_project_boq.html', context)
     else:
         return oops(request)
     

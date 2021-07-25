@@ -18,5 +18,4 @@ from django.db.models import Q
 
 
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent

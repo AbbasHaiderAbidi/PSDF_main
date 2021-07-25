@@ -1,4 +1,27 @@
-{% extends 'psdf_main/includes/layout.html'%} {% load static %} {% block body %}
+{% extends 'psdf_main/includes/layout.html'%} {% load custom_tags %}{% load static %} {% block body %}
+
+<h4 class="container-fluid">
+    <a href='/user_back/{{backpage}}'>Back</a>
+</h4>
+<div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-2">
+
+    </div>
+    <div class="col-md-6">
+        {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show col-md-8" role="alert" style="margin: auto;">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 
 <div class="row">

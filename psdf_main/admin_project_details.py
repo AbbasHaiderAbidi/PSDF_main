@@ -1,15 +1,18 @@
 from .helpers import *
 
 
-def admin_project_details(request, projectid):
+
+    
+def admin_project_details(request, projid):
     if adminonline(request):
         context = full_admin_context(request)
-        context['proj'] = projects.objects.get(id = projectid)
-        return render(request, 'psdf_main/_admin_project_details.html', context)
+        context['proj'] = projects.objects.get(id = projid)
+        context['proj'].workflow = context['proj'].workflow.split(']*[')[1:]
+        context['tesgs'] = TESG_master.objects.filter(project = context['proj'])
+        return render(request, 'psdf_main/_admin_view_project.html', context)
     else:
         return oops(request)
     
-
 def admin_temp_project_details(request, projectid):
     if adminonline(request):
         context = full_admin_context(request)

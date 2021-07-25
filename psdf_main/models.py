@@ -40,7 +40,7 @@ class temp_projects(models.Model):
 class projects(models.Model):
     userid = models.ForeignKey(users, null = True, on_delete = models.SET_NULL)
     name = models.CharField(max_length=200, null = False)
-    newid = models.IntegerField(null = True)
+    newid = models.IntegerField(null = True, unique=True)
     dprsubdate = models.DateField(null = True)
     amt_asked = models.FloatField(null = False)
     amt_approved = models.FloatField(null = True)
@@ -113,3 +113,13 @@ class Monitoring_admin(models.Model):
     userid = models.ForeignKey(users, null = True, on_delete= models.SET_NULL)
     monipath = models.TextField(null=True)
     monidate = models.DateField(null = True)
+
+class boqdata(models.Model):
+    project = models.ForeignKey(projects, null = True, on_delete= models.CASCADE)
+    boqtype = models.IntegerField(null=True)
+    itemno = models.IntegerField(null = True)
+    itemname = models.TextField(null=True)
+    itemdesc = models.TextField(null=True)
+    itemqty = models.IntegerField(null = True)
+    unitcost = models.FloatField(null = True)
+    

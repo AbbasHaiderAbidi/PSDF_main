@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.loginPage, name = ""),
-    path('register/', views.register , name = "register"),
+    path('registeruser/', views.registeruser , name = "registeruser"),
     path('newdpr/', views.newdpr , name = "newdpr"),
     path('upload_dpr_docs', views.upload_dpr_docs, name = 'upload_dpr_docs'),
     path('logout/', views.logout, name="logout"),
@@ -81,10 +81,11 @@ urlpatterns = [
     #ViewAll
     path('view_all_projs/', views.view_all_projs, name="view_all_projs"),
     path('user_view_all_projs/', views.user_view_all_projs, name="user_view_all_projs"),
-    path('admin_project_details/<str:projectid>', views.admin_project_details, name = "admin_project_details"),
+    path('admin_project_details/<str:projid>', views.admin_project_details, name = "admin_project_details"),
     path('admin_temp_project_details/<str:projectid>', views.admin_temp_project_details, name = "admin_temp_project_details"),
     path('appr_mom_download/<str:projid>', views.appr_mom_download, name = "appr_mom_download"),
     path('moni_mom_download/<str:projid>', views.moni_mom_download, name = "moni_mom_download"),
+    path('admin_boq_view/<str:projid>', views.admin_boq_view, name = "admin_boq_view"),
 
     path('user_boq_view/<str:projid>', views.user_boq_view, name = "user_boq_view"),
     path('user_back/<str:backpage>', views.user_back, name = "user_back"),

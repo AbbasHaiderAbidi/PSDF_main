@@ -46,7 +46,7 @@ def loginPage(request):
                 return render(request, 'psdf_main/login.html')
     return render(request, 'psdf_main/login.html')
 
-def register(request):
+def registeruser(request):
     form = UserForm()
     if request.method == 'POST':
         form = UserForm(request.POST)

@@ -31,7 +31,7 @@
                                 <th>Project ID</th>
                                 <th>Project Name</th>
                                 <th>Amount</th>
-                                <th>Schedule (in months)</th>
+                                <th>View BoQ</th>
                                 <th>User</th>
                                 <th>Entity</th>
                                 <th>View TESG Chain</th>
@@ -45,7 +45,7 @@
                                 <th>Project ID</th>
                                 <th>Project Name</th>
                                 <th>Amount</th>
-                                <th>Schedule (in months)</th>
+                                <th>View BoQ</th>
                                 <th>User</th>
                                 <th>Entity</th>
                                 <th>View TESG Chain</th>
@@ -67,6 +67,7 @@
                                 <td>Not Available</td>
                                 <td>Not Available</td>
                                 <td>Not Available</td>
+                                <td>Not Available</td>
 
 
 
@@ -78,8 +79,10 @@
                                 <td class="font-weight-bolder">{{proj.newid}}</td>
                                 <td><a href="/admin_project_details/{{proj.id}}" class="font-weight-bold text-danger">{{proj.name}}</a></td>
                                 <td>{{proj.amt_asked}}</td>
-                                <td>{{proj.schedule}}</td>
-                                <td>{{proj.userid.username}}</td>
+                                <td>
+                                    <a href="/admin_boq_view/{{proj.id}}_admintesgprojects" class="btn btn-outline-info">View</a>
+                                </td>
+                                <td><a href="/view_user/{{proj.userid.id}}" class="text-danger">{{proj.userid.username}}</a></td>
                                 <td>{{proj.userid.region}}</td>
                                 <td>
                                     <a class="btn btn-outline-primary btn-responsive" href="/TESG_chain/{{proj.id}}">
@@ -102,17 +105,17 @@
                                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h3 class="modal-title" id=""> <strong>Reject project: {{proj.name}} ({{proj.newid}})</strong></h3>
+                                            <h3 class="modal-title" id=""> Reject project #{{proj.newid}} {{proj.name}} </h3>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                                 </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="POST" action="/rejectproject/TESG_{{proj.id}}">
+                                            <form method="POST" action="/rejectproject/admintesgprojects_{{proj.id}}">
                                                 {% csrf_token %}
                                                 <div class="row">
                                                     <p class="col-md-6 font-weight-bold">Date of rejection:</p>
-                                                    <input type="datetime-local" class="form-control bg-gray-200 border-left-danger col-md-6" name="rejectdate{{proj.id}}" id="rejectdate{{proj.id}}" required>
+                                                    <input type="date" class="form-control bg-gray-200 border-left-danger col-md-6" name="rejectdate{{proj.id}}" id="rejectdate{{proj.id}}" required>
                                                 </div>
                                                 <br>
                                                 <div class="row">

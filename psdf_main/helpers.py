@@ -68,6 +68,8 @@ def userDetails(username):
 def projectDetails(projid):
     proj = {}
     proj1 = projects.objects.get(id = projid)
+    sub_boq = boqdata.objects.filter(project = proj1, boqtype = '1')
+    approved_boq = boqdata.objects.filter(project = proj1, boqtype = '2')
     if proj1:
         proj['id'] = proj1.id
         proj['name'] = proj1.name
@@ -79,8 +81,10 @@ def projectDetails(projid):
         proj['quantum'] = proj1.quantumOfFunding
         proj['status'] = proj1.status
         proj['remark'] = proj1.remark
-        proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
-        proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq'])
+        proj['submitted_boq'] = sub_boq
+        # proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
+        
+        proj['submitted_boq_Gtotal'] = Gtotal
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal
         proj['user_region'] = proj1.userid.region
@@ -134,6 +138,14 @@ def get_Gtotal(abc):
         totalval = totalval + value
     return totalval
 
+def boq_grandtotal(givenboq):
+    Gtotal = 0
+    for boq in givenboq:
+        
+        Gtotal = Gtotal + float(boq.itemqty)*float(boq.unitcost)
+    
+    return Gtotal
+
 def temp_projectDetails(projid):
     proj = {}
     proj1 = temp_projects.objects.get(id = projid)
@@ -147,27 +159,6 @@ def temp_projectDetails(projid):
         proj['remark'] = proj1.remark
         proj['removed'] = proj1.removed
         proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
-        # eachboq = proj1.submitted_boq[2:-2].split('}, {')
-        # abc = []
-        # for boq in eachboq :
-        #     attrlist = boq.split(', ')
-            
-        #     one_boq={}
-        #     for attr in attrlist:
-        #         attrname = attr.split(':')[0][1:-1]
-        #         attrvalue = attr.split(':')[1][2:-1]
-        #         one_boq[attrname] = attrvalue
-        #     abc.append(one_boq)
-        # item_Gtotal = {}
-        # Gtotal_list = []
-        # for boq in abc:
-        #     if boq['itemname'] in item_Gtotal.keys():
-        #         item_Gtotal[boq['itemname']] = item_Gtotal[boq['itemname']] + boq['itemcost']
-        #     else:
-        #          item_Gtotal[boq['itemname']] = boq['itemcost']
-        # for key, value in item_Gtotal.items():
-        #     Gtotal_list.append({'itemname':key, 'grandtotal':value})
-        
         proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq'])
         proj['user_username'] = proj1.userid.username
         proj['user_nodal'] = proj1.userid.nodal

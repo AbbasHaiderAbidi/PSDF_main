@@ -383,14 +383,14 @@
                             <th>TESG outcome download</th>
                             <th>Entity Response Description</th>
                             <th>Entity Reponse Download</th>
-                            <th>Reponse Date</th>
+                            <th>Response Date</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for tesg in tesgs %}
                         <tr>
-                            <td>{{tesg.tesgnum}}</td>
+                            <td>{{tesg.tesgnum.TESG_no}}</td>
                             <td>{{tesg.admin_outcome}}</td>
                             <td><a href="/downloadTESGrequest/{{tesg.id}}" class="btn btn-outline-info">Download</a></td>
                             <td>{{tesg.user_response}}</td>
