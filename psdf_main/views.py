@@ -18,3 +18,5 @@ from .user_appraisal_projects import *
 from .user_monitoring_projects import *
 
 from .auditor_control import *
+
+from .user_payment import *

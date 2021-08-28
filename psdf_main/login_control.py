@@ -54,12 +54,15 @@ def registeruser(request):
         password = request.POST['password']
         if(password != cnfpassword):
             form.add_error("password" ,"Both password fields must match")
-        elif(len(password)<6):
-            form.add_error("password" ,"Both password fields must match")
+        # elif(len(password)<6):
+        #     form.add_error("password" ,"Password must be of atleast 6 characters")
         else:
             if form.is_valid():
                 form_main = form.save(commit=False)
                 form_main.password = make_password(password)
+                # form_main.admin = True
+                # form_main.active = True
+                # form_main.activate = True
                 form_main.save()
                 username = form.cleaned_data['username']
                 messages.warning(request, 'User : ' +username + ' pending for verification. ')

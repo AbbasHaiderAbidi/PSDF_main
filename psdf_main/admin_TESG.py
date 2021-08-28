@@ -180,6 +180,25 @@ def approveTESG(request, projid):
                 return redirect('/TESG_projects/')
             if check_password(adminpass,users.objects.get(id = context['user']['id']).password):
                 project = projects.objects.get(id = projid)
+                if boqdata.objects.filter(project = project, boqtype = '2'):
+                    pass
+                else:
+                    sboqs = boqdata.objects.filter(project = project, boqtype = '1')
+                    for sboq in sboqs:
+                        tboq = boqdata()
+                        tboq.project = sboq.project
+                        tboq.boqtype = '2'
+                        tboq.itemno = sboq.itemno
+                        tboq.itemname = sboq.itemname
+                        tboq.itemqty = sboq.itemqty
+                        tboq.itemdesc = sboq.itemdesc
+                        tboq.unitcost = sboq.unitcost
+                        tboq.save()
+                        
+                        
+                        
+                
+                
                 project.status = '2'
                 tesgaprdate = datetime.now().date()
                 project.workflow = str(project.workflow) + ']*[' + 'Project approved in TESG phase on '+ str(tesgaprdate)

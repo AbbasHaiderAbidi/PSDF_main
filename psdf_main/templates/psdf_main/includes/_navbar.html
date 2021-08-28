@@ -42,7 +42,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Interface
+        Approval Phase
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
@@ -57,6 +57,35 @@
 
                 <a class="collapse-item" href="{% url 'under_examination' %}">Project submitted
                 {% if noprojobj > 0 %}<span class="badge badge-danger badge-counter">{{noprojobj}}</span> {% endif %}
+            </a>
+                <a class="collapse-item" href="{% url 'user_tesg' %}">Under TESG &nbsp; &nbsp; &nbsp;
+                    {% if noTESG > 0 %}<span class="badge badge-danger badge-counter">{{noTESG}}</span> {% endif %}
+                </a>
+                <a class="collapse-item" href="{% url 'user_appraisal_projects' %}">Under Appraisal
+                    &nbsp; &nbsp; &nbsp;
+                    {% if noappr > 0 %}<span class="badge badge-danger badge-counter">{{noappr}}</span> {% endif %}
+                </a>
+                <a class="collapse-item" href="{% url 'user_monitoring_projects' %}">Under Monitoring
+                    &nbsp; &nbsp; &nbsp;
+                    {% if nomon > 0 %}<span class="badge badge-danger badge-counter">{{nomon}}</span> {% endif %}
+                </a>
+
+
+                <h6><a class="collapse-item" href="{% url 'user_view_all_projs' %}">View All</a></h6>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+            <i class="fas fa-fw fa-bank"></i>
+            <span>Payment Phase</span>
+        </a>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Payment</h6>
+
+                <a class="collapse-item" href="{% url 'new_loa' %}">Submit New LOA
+                
             </a>
                 <a class="collapse-item" href="{% url 'user_tesg' %}">Under TESG &nbsp; &nbsp; &nbsp;
                     {% if noTESG > 0 %}<span class="badge badge-danger badge-counter">{{noTESG}}</span> {% endif %}

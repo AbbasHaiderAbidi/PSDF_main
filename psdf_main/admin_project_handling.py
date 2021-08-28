@@ -36,7 +36,6 @@ def acceptdpr(request, projid):
             
             sub_boq = get_boq_details(temp_proj.submitted_boq)
             newentry = projects.objects.filter(name = temp_proj.proname, amt_asked = temp_proj.amountasked, userid = temp_proj.userid, schedule = temp_proj.schedule, dprsubdate = temp_proj.dprsubdate, newid=newid)[:1].get()
-            
             for tboq in sub_boq:
                 newboq = boqdata()
                 newboq.project = newentry
@@ -45,9 +44,8 @@ def acceptdpr(request, projid):
                 newboq.itemname = tboq['itemname']
                 newboq.itemqty = tboq['itemqty']
                 newboq.itemdesc = tboq['itemdesc']
-                newboq.unitcost = tboq['itemcost']
+                newboq.unitcost = tboq['itemprice']
                 newboq.save()
-
             newpath = '/'.join(temp_proj.projectpath.split('/')[:-2])+'/'+ str(newentry.id)
             if smkdir(newpath):
                 for f in glob.glob(temp_proj.projectpath+'/*'):
@@ -125,11 +123,11 @@ def download_project(request, projid):
     except:
         return oops(request)
 
+
     if (adminonline(request) or (useronline(request) and (projects.objects.get(id = proid).userid.username == request.session['user']))):
         if projid:
             filelist = {'DPR':'DPR', 'forms':'forms','otherdocs':'otherdocs'}
             proj_path = projects.objects.get(id = proid)
-            
             if proj_path :
                 proj_path = proj_path.projectpath
                 try:
@@ -137,7 +135,6 @@ def download_project(request, projid):
                 except:
                     return oops(request)
                 return handle_download_file(filepath, request)
-            
     return oops(request)
 
 
@@ -242,5 +239,11 @@ def update_boq(request, projectid):
                 context['range'] = range(len(context['sub_boq'])+1,1000)
                 return render(request, 'psdf_main/_admin_update_boq.html', context)
             return render(request, 'psdf_main/_admin_boq.html', context)
+    else:
+        return oops(request)
+
+def final_approval(request):
+    if adminonline(request):
+        pass
     else:
         return oops(request)

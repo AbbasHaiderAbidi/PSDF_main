@@ -34,7 +34,7 @@
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
         <a class="nav-link" href="{% url 'newdpr' %}">
-            <i class="fa fa-plus-square"></i>
+            <i class="fa fa-eye"></i>
             <span>View Pending Requests</span></a>
     </li>
 
@@ -50,14 +50,42 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Projects
+            <span>Approval Phase
                 
             </span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Projects:</h6>
+                <h6 class="collapse-header">Approval Phase: </h6>
                 <a class="collapse-item" href="{% url 'admin_pending_projects' %}">Under Acceptance &nbsp;&nbsp;&nbsp;
+                    {% if nopendingprojects > 0 %}<span class="badge badge-danger badge-counter">{{nopendingprojects}}</span> {% endif %}</a>
+                <a class="collapse-item" href="{% url 'TESG_projects' %}">Under TESG &nbsp; &nbsp; &nbsp;
+                    {% if noTESG > 0 %}<span class="badge badge-danger badge-counter">{{noTESG}}</span> {% endif %}
+                </a>
+                <a class="collapse-item" href="{% url 'appraisal_projects' %}">Under Appraisal
+                    &nbsp; &nbsp; &nbsp;
+                    {% if noappr > 0 %}<span class="badge badge-danger badge-counter">{{noappr}}</span> {% endif %}
+                </a>
+                <a class="collapse-item" href="{% url 'monitoring_projects' %}">Under Monitoring
+                    &nbsp; &nbsp; &nbsp;
+                    {% if nomon > 0 %}<span class="badge badge-danger badge-counter">{{nomon}}</span> {% endif %}
+                </a>
+                <hr class="sidebar-divider">
+                <h6><a class="collapse-item" href="{% url 'view_all_projs' %}"><strong>View All</strong></a></h6>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+            <i class="fas fa-fw fa-bank"></i>
+            <span>Payment Phase
+                
+            </span>
+        </a>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Payment Phase: </h6>
+                <a class="collapse-item" href="{% url 'admin_pending_projects' %}">LOA placed &nbsp;&nbsp;&nbsp;
                     {% if nopendingprojects > 0 %}<span class="badge badge-danger badge-counter">{{nopendingprojects}}</span> {% endif %}</a>
                 <a class="collapse-item" href="{% url 'TESG_projects' %}">Under TESG &nbsp; &nbsp; &nbsp;
                     {% if noTESG > 0 %}<span class="badge badge-danger badge-counter">{{noTESG}}</span> {% endif %}

@@ -1,8 +1,2 @@
-Give provision to change the uploaded files in DPR module
-Editor level access to a new authority level, who can view and download various things from repository. -- IMPORTANT
-Under DPR acceptance give provision to enter ID
-Dont input TESG, appraisal monitoring time
-Remove Reject TESG button
-maintain final revision BoQ and revised cost -- NEW FIELD
-error in TESG user response reject phase
-appraisal --> monitoring in monitoring phase
+make final approval
+display  remaining LOA in tab

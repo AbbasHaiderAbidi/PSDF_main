@@ -99,6 +99,8 @@ urlpatterns = [
     path('auditor_view_user/<str:userid>', views.auditor_view_user, name="auditor_view_user"),
     path('auditor_download_project/<str:projid>', views.auditor_download_project, name="auditor_download_project"),
     
+    #Payment
+    path('new_loa/', views.new_loa, name="new_loa"),
     
     
 ]
