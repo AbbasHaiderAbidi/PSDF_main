@@ -20,17 +20,17 @@ def newdpr(request):
             if req['subtype'] == 'submit':
                 boq = []
                 if request.FILES:
-                    amount = req['amount']
-                    schedle = req['schedule']
-                    proname = req['proname']
+                    amount = sanitize(req['amount'])
+                    schedle = sanitize(req['schedule'])
+                    proname = sanitize(req['proname'])
                     boq = []
                     totcost = 0
                     for i in range(1,1000):
                         if not (req['itemname'+str(i)] == ''):
-                            itemqty = req['itemqty'+str(i)]
-                            itemprice = req['itemprice'+str(i)]
+                            itemqty = sanitize(req['itemqty'+str(i)])
+                            itemprice = sanitize(req['itemprice'+str(i)])
                             if isfloat(itemqty) and float(itemprice):
-                                boq.append({'itemname':req['itemname'+str(i)],'itemno':req['itemno'+str(i)],'itemdesc': req['itemdesc'+str(i)], 'itemqty': itemqty, 'itemprice': itemprice, 'itemcost' : str(float(float(itemprice)*float(itemqty)))})
+                                boq.append({'itemname':sanitize(req['itemname'+str(i)]),'itemno':sanitize(req['itemno'+str(i)]),'itemdesc': sanitize(req['itemdesc'+str(i)]), 'itemqty': itemqty, 'itemprice': itemprice, 'itemcost' : str(float(float(itemprice)*float(itemqty)))})
                             else:
                                 messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
                                 return render(request, 'psdf_main/newdpr.html', context)
