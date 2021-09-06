@@ -263,11 +263,17 @@ def getTempProjects(request):
     if adminonline(request):
         temp_project_list = []
         temp_project = temp_projects.objects.all().exclude(deny = True)
-        for proj in temp_project:
+        for proj in temp_project:            
             temp_project_list.append(temp_projectDetails(proj.id))
         return temp_project_list
     return False
 
+def sanitize(str):
+    str1 = str.replace(",","")
+    str2 = str1.repalce(":","")
+    str3 = str2.replace("/","")
+    str4 = str3.replace("]["," ")
+    return str4
 
 def getTempProjects_user(request, userid):
     if useronline(request):
