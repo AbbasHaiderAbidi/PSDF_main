@@ -7,7 +7,7 @@ def under_examination(request):
         projectobj = temp_projects.objects.filter(userid = userobj, deny = False)
         context['projectobj']= projectobj
         context['noprojobj']= projectobj.count()
-        context['proj_boqlist'] = getTempProjects_user(request, userobj)
+        
         return render(request, 'psdf_main/_user_under_examination.html', context)
     else:
         return oops(request)

@@ -27,8 +27,8 @@
                             {% csrf_token %}
                             <div class="form-group container form-row">
 
-                                {{form.username}}&nbsp;&nbsp;&nbsp;
-                                <!-- <input type="text" name="username" id="username" placeholder="Enter New Username" class="form-control col-md-6 mb-3 text-center" value="{{username}}"> &nbsp;&nbsp;&nbsp; -->
+                                <!-- {{form.username}}&nbsp;&nbsp;&nbsp; -->
+                                <input type="text" name="username" id="username" placeholder="Enter New Username" class="form-control col-md-6 mb-3 text-center" value="{{username}}"> &nbsp;&nbsp;&nbsp;
 
                                 <button class="btn btn-sm btn-outline-primary col-md-3 mb-3 btn-block" type="button" onclick="check_it()">Availabile ?</button> &nbsp;&nbsp;&nbsp;
                                 <div class="bg-success mb-4 text-white col-md-2 form-text form-control-sm" id="available" style="display:none;">Available </div>

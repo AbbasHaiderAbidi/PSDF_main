@@ -72,16 +72,16 @@
 
                             {% else %} {% for proj in projectobj %}
                             <tr>
-                                <td>{{proj.name}}</td>
-                                <td>{{proj.amt_asked}}</td>
+                                <td>{{proj.proname}}</td>
+                                <td>{{proj.amountasked}}</td>
                                 <td>{{proj.schedule}}</td>
-                                <td><a href="/view_user/{{proj.userid.id}}" class="text-danger">{{proj.user_username}}</a></td>
-                                <td>{{proj.user_region}}</td>
+                                <td><a href="/view_user/{{proj.userid.id}}" class="text-danger">{{proj.userid.username}}</a></td>
+                                <td>{{proj.userid.region}}</td>
 
 
 
                                 <td>
-                                    {{proj.user_utilname}}
+                                    {{proj.userid.utilname}}
                                 </td>
 
                                 <!-- <a class="btn btn-outline-info" href="/download_temp_project/{{proj.id}}">
@@ -113,7 +113,7 @@
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id=""> <strong>{{proj.name}}</strong></h3>
+                    <h3 class="modal-title" id=""> <strong>{{proj.proname}}</strong></h3>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -133,7 +133,7 @@
                                         <div class="row">
 
                                             <div class="col-md-6 text-primary"><strong>Username :</strong>
-                                                <h6 class="m-0 font-weight-bold  text-dark">{{proj.user_username}}</h6>
+                                                <h6 class="m-0 font-weight-bold  text-dark">{{proj.userid.username}}</h6>
                                             </div>
 
                                             <div class="col-md-6 text-primary"><strong>DPR Submission Date :</strong>
@@ -144,28 +144,28 @@
                                         <br>
                                         <div class="row">
                                             <div class="col-md-6 text-primary"><strong>Amount requested :</strong>
-                                                <h6 class="m-0 font-weight-bold text-dark">₹ {{proj.amt_asked}}</h6>
+                                                <h6 class="m-0 font-weight-bold text-dark">₹ {{proj.amountasked}}</h6>
                                             </div>
 
                                             <div class="col-md-6 text-primary"><strong>Region :</strong>
-                                                <h6 class="m-0 font-weight-bold text-dark">{{proj.user_region}}</h6>
+                                                <h6 class="m-0 font-weight-bold text-dark">{{proj.user.region}}</h6>
                                             </div>
 
                                         </div>
                                         <br>
                                         <div class="row">
                                             <div class="col-md-6 text-primary"><strong>Nodal Officer :</strong>
-                                                <h6 class="m-0 font-weight-bold text-dark ">{{proj.user_nodal}}</h6>
+                                                <h6 class="m-0 font-weight-bold text-dark ">{{proj.userid.nodal}}</h6>
                                             </div>
 
                                             <div class="col-md-6 text-primary"><strong>Contact :</strong>
-                                                <h6 class="m-0 font-weight-bold text-dark">{{proj.user_contact}}</h6>
+                                                <h6 class="m-0 font-weight-bold text-dark">{{proj.userid.contact}}</h6>
                                             </div>
 
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-6 text-primary"><strong>Address :</strong>
-                                                <h6 class="m-0 font-weight-bold text-dark">{{proj.user_address}}</h6>
+                                                <h6 class="m-0 font-weight-bold text-dark">{{proj.userid.address}}</h6>
                                             </div>
                                             <div class="col-md-6">
 

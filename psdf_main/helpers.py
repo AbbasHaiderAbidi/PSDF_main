@@ -146,33 +146,33 @@ def boq_grandtotal(givenboq):
     
     return Gtotal
 
-def temp_projectDetails(projid):
-    proj = {}
-    proj1 = temp_projects.objects.get(id = projid)
-    if proj1:
-        proj['id'] = proj1.id
-        proj['name'] = proj1.proname
-        proj['dprsubdate'] = proj1.dprsubdate
-        proj['amt_asked'] = proj1.amountasked
-        proj['deny'] = proj1.deny
-        proj['schedule'] = proj1.schedule
-        proj['remark'] = proj1.remark
-        proj['removed'] = proj1.removed
-        proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
-        proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq'])
-        proj['user_username'] = proj1.userid.username
-        proj['user_nodal'] = proj1.userid.nodal
-        proj['user_region'] = proj1.userid.region
-        proj['user_utilname'] = proj1.userid.utilname
-        proj['user_contact'] = proj1.userid.contact
-        proj['user_address'] = proj1.userid.address
-        proj['user_reqdate'] = proj1.userid.reqdate
-        proj['user_aprdate'] = proj1.userid.reqdate
-        proj['user_lastlogin'] = proj1.userid.lastlogin
-        proj['user_active'] = proj1.userid.active
-        return proj
-    else:
-        return False
+# def temp_projectDetails(projid):
+#     proj = {}
+#     proj1 = temp_projects.objects.get(id = projid)
+#     if proj1:
+#         proj['id'] = proj1.id
+#         proj['name'] = proj1.proname
+#         proj['dprsubdate'] = proj1.dprsubdate
+#         proj['amt_asked'] = proj1.amountasked
+#         proj['deny'] = proj1.deny
+#         proj['schedule'] = proj1.schedule
+#         proj['remark'] = proj1.remark
+#         proj['removed'] = proj1.removed
+#         proj['submitted_boq'] = get_boq_details(proj1.submitted_boq)
+#         proj['submitted_boq_Gtotal'] = get_Gtotal_list(proj['submitted_boq'])
+#         proj['user_username'] = proj1.userid.username
+#         proj['user_nodal'] = proj1.userid.nodal
+#         proj['user_region'] = proj1.userid.region
+#         proj['user_utilname'] = proj1.userid.utilname
+#         proj['user_contact'] = proj1.userid.contact
+#         proj['user_address'] = proj1.userid.address
+#         proj['user_reqdate'] = proj1.userid.reqdate
+#         proj['user_aprdate'] = proj1.userid.reqdate
+#         proj['user_lastlogin'] = proj1.userid.lastlogin
+#         proj['user_active'] = proj1.userid.active
+#         return proj
+#     else:
+#         return False
 
 def pen_users(request):
     if adminonline(request):
@@ -259,28 +259,34 @@ def handle_download_file(filepath, request):
         print("DOES NOT EXISTS")
         return oops(request)
 
-def getTempProjects(request):
-    if adminonline(request):
-        temp_project_list = []
-        temp_project = temp_projects.objects.all().exclude(deny = True)
-        for proj in temp_project:            
-            temp_project_list.append(temp_projectDetails(proj.id))
-        return temp_project_list
-    return False
+# def getTempProjects(request):
+#     if adminonline(request):
+#         temp_project_list = []
+#         temp_project = temp_projects.objects.all().exclude(deny = True)
+#         for proj in temp_project:            
+#             temp_project_list.append(temp_projectDetails(proj.id))
+#         return temp_project_list
+#     return False
 
-def sanitize(str):
-    str1 = str.replace(",","")
-    str2 = str1.repalce(":","")
+def sanitize(str0):
+    str1 = str0.replace(",","")
+    str2 = str1.replace(":","")
     str3 = str2.replace("/","")
     str4 = str3.replace("]["," ")
     return str4
+
+def username_sanitize(str0):
+    str1 = sanitize(str0)
+    str2 = str1.replace(" ","")
+    return str2
 
 def getTempProjects_user(request, userid):
     if useronline(request):
         temp_project_list = []
         temp_project = temp_projects.objects.filter(userid = userid).exclude(deny = True)
         for proj in temp_project:
-            temp_project_list.append(temp_projectDetails(proj.id))
+            proj.submitted_boq = get_boq_details(proj.submitted_boq)
+            proj.submitted_boq_Gtotal = get_Gtotal_list(proj.submitted_boq)
         return temp_project_list
     return False
 
@@ -289,7 +295,7 @@ def getTempProjects_user(request, userid):
 def full_admin_context(request):
     if adminonline(request):
         # return {'user':userDetails(request.session['user']), 'nopendingusers' : users.objects.filter(activate = False).count(), 'nopendingprojects' : temp_projects.objects.all().count()}
-        context = {'user':userDetails(request.session['user']) , 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : len(getTempProjects(request))}
+        context = {'user':userDetails(request.session['user']) , 'nopendingusers' : pen_users_num(request), 'nopendingprojects' : temp_projects.objects.all().exclude(deny = True).count()}
         context['tesgprojects'] = projects.objects.filter(status = '1', deny = False)
         context['appraisal_projects'] = projects.objects.filter(status = '2', deny = False)
         context['monitoring_projects'] = projects.objects.filter(status = '3', deny = False)

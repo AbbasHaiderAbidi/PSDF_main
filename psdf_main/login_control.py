@@ -51,6 +51,7 @@ def registeruser(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         cnfpassword = request.POST['cnfpassword']
+        username = username_sanitize(request.POST['username'])
         password = request.POST['password']
         if(password != cnfpassword):
             form.add_error("password" ,"Both password fields must match")
@@ -59,7 +60,9 @@ def registeruser(request):
         else:
             if form.is_valid():
                 form_main = form.save(commit=False)
+                form_main.username = username
                 form_main.password = make_password(password)
+                
                 # form_main.admin = True
                 # form_main.active = True
                 # form_main.activate = True

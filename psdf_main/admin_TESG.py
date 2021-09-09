@@ -137,10 +137,10 @@ def downloadTESGresponse(request, tesgid_projid):
         tesgpath = TESG_master.objects.get(id = tesgid_projid).user_filepath
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/TESG_chain/'+str(thisisimp.project.id))
         if not os.path.exists(thisisimp.user_filepath):
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/TESG_chain/'+str(thisisimp.project.id))
         
         return handle_download_file(thisisimp.user_filepath, request)
     else:
@@ -153,10 +153,10 @@ def downloadTESGrequest(request, tesgid_projid):
         tesgpath = TESG_master.objects.get(id = tesgid_projid).admin_filepath
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/TESG_chain/'+str(thisisimp.project.id))
         if not os.path.exists(thisisimp.admin_filepath):
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/TESG_chain/'+str(thisisimp.project.id))
         
         return handle_download_file(thisisimp.admin_filepath, request)
     else:

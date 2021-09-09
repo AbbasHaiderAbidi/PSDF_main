@@ -42,6 +42,7 @@ def user_tesg_response(request):
                 admin_project = projects.objects.filter(id = projid)[:1].get()
                 this_tesg = TESG_master.objects.filter(project = admin_project, tesgnum = admin_tesg, active = True)[:1].get()
                 tesgpath = ''
+                fullpath = ''
                 if 'responses' in request.FILES:
                         responses = request.FILES['responses']
                         tesgpath = projects.objects.get(id = projid).projectpath + '/TESG/'
@@ -86,10 +87,10 @@ def download_tesg_user_outcome(request, tesgid):
         tesgpath = TESG_master.objects.get(id = tesgid).admin_filepath
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/user_TESG_chain/'+str(thisisimp.project.id))
         if not os.path.exists(thisisimp.admin_filepath):
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/user_TESG_chain/'+str(thisisimp.project.id))
         
         return handle_download_file(thisisimp.admin_filepath, request)
     else:
@@ -105,10 +106,10 @@ def download_tesg_user_response(request, tesgid):
         tesgpath = TESG_master.objects.get(id = tesgid).user_filepath
         if tesgpath == '' or tesgpath == None:
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/user_TESG_chain/'+str(thisisimp.project.id))
         if not os.path.exists(thisisimp.user_filepath):
             messages.error(request, 'Function is not available.')
-            return redirect('/user_TESG_chain/'+thisisimp.project.id)
+            return redirect('/user_TESG_chain/'+str(thisisimp.project.id))
         
         return handle_download_file(thisisimp.user_filepath, request)
     else:

@@ -15,7 +15,12 @@ def admin_dashboard(request):
 def admin_pending_projects(request):
     if adminonline(request):
         context = full_admin_context(request)
-        context['projectobj'] = getTempProjects(request)
+
+        context['projectobj']  = temp_projects.objects.all().exclude(deny = True)
+        for proj in context['projectobj']:
+            proj.submitted_boq = get_boq_details(proj.submitted_boq)
+            proj.submitted_boq_Gtotal = get_Gtotal_list(proj.submitted_boq)
+            
         return render(request, 'psdf_main/_admin_pending_projects.html', context)
 
 
@@ -186,13 +191,16 @@ def APPR_upload(request):
             messages.error(request, 'Invalid Administrator password.')
             return control_panel(request)
         apprdate = req['apprdate']
-        projid = req['projid']
-        apprpath = ''
+        projid1 = req['projid']
         try:
-            oro = projects.objects.get(id = projid)
+            oro = projects.objects.filter(newid = projid1)[:1].get()
+            projid = str(oro.id)
         except:
-            messages.error(request, 'No project with project ID ' +projid+ ' exists.')
+            messages.error(request, 'No project with project ID ' +str(projid)+ ' exists.')
             return control_panel(request)
+        
+        apprpath = ''
+        
         if request.FILES:
             files = request.FILES
             if 'momupload' in files.keys():

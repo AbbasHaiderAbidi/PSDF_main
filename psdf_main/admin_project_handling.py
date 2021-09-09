@@ -54,7 +54,7 @@ def acceptdpr(request, projid):
                 newentry.save(update_fields=['projectpath'])
                 temp_projects.objects.get(id=temp_proj.id).delete()
                 srmdir(temp_proj.projectpath)
-                projectobj = getTempProjects(request)
+                
                 project_user = users.objects.get(id = temp_proj.userid.id)
                 project_user.notification = str(project_user.notification) + ']*[' + 'Your project : '+ newentry.name +' has been accepted with project ID:' + str(newentry.newid)
                 project_user.save(update_fields=['notification'])
