@@ -46,6 +46,15 @@
                             </a>
 
                         </div>
+                        <div class="col-md-2">
+                            <a href="/downloadformat/boqformat" class="btn btn-primary btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-download"></i>
+                            </span>
+                                <span class="text">BOQ Format</span>
+                            </a>
+
+                        </div>
 
                         <div class="col-md-2">
                             <a href="/downloadformat/support" class="btn btn-danger btn-icon-split">
@@ -112,7 +121,7 @@
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Enter following details</h6>
+                    <h6 class="m-0 font-weight-bold text-danger">Enter following details</h6>
                 </div>
                 <div class="card-body">
 
@@ -130,6 +139,7 @@
                             required value='{{user.temp_boq.schedule}}'>
                     </div>
                 </div><br>
+
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Uploads</h6>
                 </div>
@@ -176,19 +186,35 @@
             </div>
     </div>
     <div class="col-lg-6">
-        <div class="card shadow mb-4 border-left-danger border-bottom-danger"><strong>
-            
-            <a href="#boq" class="d-block card-header py-3 font-weight-bold text-danger" data-toggle="modal" data-target="#boq">
-            Fill BoQ details
-            </a></strong>
-        </div>
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
-            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                <h6 class="m-0 font-weight-bold text-success">Confirm Submission</h6>
+
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-warning">Upload BOQ</h6>
             </a>
             <!-- Card Content - Collapse -->
             <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">Upload BOQ (only excel files allowed)</div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-6">
+
+
+                            <input type="file" class="form-control-file btn btn-outline-danger" name="boq" id="boq" accept=".xls, .xlsx">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#collapseConfirm" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-success">Confirm Submission</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse" id="collapseConfirm">
                 <div class="card-body">
                     <div class="row">
 
@@ -269,97 +295,6 @@
     </div>
 
 
-    <div class="modal fade border-bottom-info" id="boq" tabindex="-1" role="dialog" aria-labelledby="BoQ" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id=""> <strong>Fill BoQ Details</strong></h3>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        &nbsp;&nbsp;&nbsp;
-                        <input type="button" class="btn btn-outline-primary pull-left btn-sm" value="Grand Total" onclick="getGrand()">&nbsp;&nbsp;&nbsp;
-                        <h4 class="text-dark font-weight-bolder" id="grandTotal"></h4>
-                        <input type="hidden" value="row{{nboq}}" id="nextrow">
-                        <div class="col-md-6"></div>
-                        <a class="btn btn-outline-success pull-right" onclick="showrow()"><i class="fa fa-plus"></i>&nbsp;Add new row</a> </div>{% for i in user.temp_boq.boq%}
-
-                    <div id='row{{i.srno}}' name="boqWale">
-                        <br>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-2 text-danger"><strong>Item no. :</strong>
-                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemno{{i.srno}}" id="itemno{{i.srno}}" value="{{i.itemno}}">
-                            </div>
-
-                            <div class="col-md-2 text-primary"><strong>Item name :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemname{{i.srno}}" id="itemname{{i.srno}}" value="{{i.itemname}}">
-                            </div>
-                            <div class="col-md-3 text-warning"><strong>Item Description :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemdesc{{i.srno}}" id="itemdesc{{i.srno}}" value="{{i.itemdesc}}">
-                            </div>
-                            <div class="col-md-1 text-info"><strong>Qty :</strong>
-                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemqty{{i.srno}}" id="itemqty{{i.srno}}" value="{{i.itemqty}}">
-                            </div>
-                            <div class="col-md-2 text-dark"><strong>Unit Price :</strong>
-                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemprice{{i.srno}}" id="itemprice{{i.srno}}" value="{{i.itemprice}}">
-                            </div>
-                            <div class="col-md-1 text-dark"><strong>Get:</strong>
-                                <input type="button" class="btn btn-outline-primary btn-sm" onclick="calc_cost('{{i}}')" id="costbtn{{i}}" value="Get Cost">
-
-                            </div>
-                            <div class="col-md-1 text-dark"><strong>Cost :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemcost{{i}}" id="itemcost{{i}}" style="display:none;" disabled></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <br> {% for i in n%}
-                    <div id="row{{i}}" style="display:none">
-                        <br>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-2 text-danger"><strong>Item no. :</strong>
-                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemno{{i}}" id="itemno{{i}}">
-                            </div>
-                            <div class="col-md-2 text-primary"><strong>Item name :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemname{{i}}" id="itemname{{i}}">
-                            </div>
-
-                            <div class="col-md-3 text-warning"><strong>Item Description :</strong>
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemdesc{{i}}" id="itemdesc{{i}}">
-                            </div>
-                            <div class="col-md-1 text-info"><strong>Qty :</strong>
-                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemqty{{i}}" id="itemqty{{i}}">
-                            </div>
-                            <div class="col-md-2 text-dark"><strong>Unit Price :</strong>
-                                <input type="number" class="form-control bg-gray-200 border-0 small" name="itemprice{{i}}" id="itemprice{{i}}">
-                            </div>
-                            <div class="col-md-1 text-dark"><strong>Get:</strong>
-                                <input type="button" class="btn btn-outline-primary btn-sm" onclick="calc_cost('{{i}}')" id="costbtn{{i}}" value="Get Cost">
-
-                            </div>
-                            <div class="col-md-1 text-dark"><strong>Cost :</strong>
-
-                                <input type="text" class="form-control bg-gray-200 border-0 small" name="itemcost{{i}}" id="itemcost{{i}}" style="display:none;" disabled>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-
-                </div>
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-outline-success btn-lg" data-dismiss="modal">Save</button>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
     </form>
 
 </div>

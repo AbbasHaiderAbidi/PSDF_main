@@ -22,8 +22,22 @@ def approve_monitoring(request, projectid):
                 project.workflow = str(project.workflow) + ']*[' + 'Project approved in Monitoring Phase on '+ str(moniaprdate)
                 project.moniaprdate = moniaprdate
                 project.save(update_fields=['status','moniaprdate', 'workflow'])
-                messages.success(request, 'Project : '+ project.name + ' has been approved Appraisal Committee.')
-                notification(projects.objects.get(id = projectid).userid.id, 'Project ID: '+ projectid +' has been approved by Appraisal committee')
+                if boqdata.objects.filter(project = project, boqtype = '3'):
+                    pass
+                else:
+                    sboqs = boqdata.objects.filter(project = project, boqtype = '2')
+                    for sboq in sboqs:
+                        tboq = boqdata()
+                        tboq.project = sboq.project
+                        tboq.boqtype = '3'
+                        tboq.itemno = sboq.itemno
+                        tboq.itemname = sboq.itemname
+                        tboq.itemqty = sboq.itemqty
+                        tboq.itemdesc = sboq.itemdesc
+                        tboq.unitcost = sboq.unitcost
+                        tboq.save()
+                messages.success(request, 'Project : '+ project.name + ' has been approved Monitoring Committee.')
+                notification(projects.objects.get(id = projectid).userid.id, 'Project ID: '+ projectid +' has been approved by Monitoring committee')
             else:
                 messages.success(request, 'Aborted! Invalid administrator password.')
             return redirect('/monitoring_projects/')

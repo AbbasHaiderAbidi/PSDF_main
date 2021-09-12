@@ -100,16 +100,22 @@ def projectDetails(projid):
         return False
 
 def get_boq_details(submitted_boq):
-    eachboq = submitted_boq[2:-2].split('}, {')
+    print(submitted_boq)
+    # print()
+    eachboq = submitted_boq[1:-1].replace("\'", "\"").replace("}, {","}&%#{").split('&%#')
     abc = []
     for boq in eachboq :
-        attrlist = boq.split(', ')
+        print(boq)
+        one_boq = json.loads(boq)
+        # attrlist = boq.split(', ')
         
-        one_boq={}
-        for attr in attrlist:
-            attrname = attr.split(':')[0][1:-1]
-            attrvalue = attr.split(':')[1][2:-1]
-            one_boq[attrname] = attrvalue
+        # one_boq={}
+        # for attr in attrlist:
+        #     # print(attr)
+        #     attrname = attr.split(':')[0][1:-1]
+        #     attrvalue = attr.split(':')[1][:-1]
+        #     one_boq[attrname] = attrvalue
+        #     # print(one_boq)
         abc.append(one_boq)
     return abc
 
@@ -207,14 +213,14 @@ def isfloat(value):
     try:
         float(value)
         return True
-    except ValueError:
+    except:
         return False
 
 def isnum(value):
     try:
         int(value)
         return True
-    except ValueError:
+    except:
         return False
 
 
@@ -349,3 +355,8 @@ def get_TESG_id(request,tesgnum, projid):
     else:
         return oops(request)
 
+def emp_check(celldata):
+    if celldata == '' or celldata == ' ' or celldata == '  ' or celldata == None:
+        return True
+    else:
+        return False

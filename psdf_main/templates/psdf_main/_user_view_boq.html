@@ -74,6 +74,7 @@
                             <td>{{submitted_boq.itemqty}}</td>
                             <td>{{submitted_boq.itemprice}}</td>
                             <td>₹ {{submitted_boq.itemcost}}</td>
+                            <div class="totalcost" style="display:none">{{submitted_boq.itemcost}}</div>
                             {% endfor %}
 
 
@@ -81,15 +82,9 @@
                     </tbody>
                 </table>
 
-                {% for item in proj.submitted_boq_Gtotal %}
-
-                <div class="{{proj.id}}totalcost" style="display:none">{{item.grandtotal}}</div>
-
-
-                {% endfor %}
 
                 <div class="font-weight-bold">Total Cost: &nbsp;&nbsp;&nbsp; </div>
-                <div id="{{proj.id}}totalcost1" class="font-weight-bold text-primary"><button class="btn btn-sm btn-outline-success" id="{{proj.id}}totalcostbtn" onclick="dototal('{{proj.id}}totalcost')">get Grand Total</button></div>
+                <div id="{{proj.id}}totalcost1" class="font-weight-bold text-primary"><button class="btn btn-sm btn-outline-success" id="totalcostbtn" onclick="dototal('totalcost')">get Grand Total</button></div>
 
 
             </div>
@@ -129,7 +124,7 @@
         console.log(sum);
         var totalfield = document.getElementById(yehaiclass + '1');
         totalfield.innerHTML = '₹ ' + sum;
-        document.getElementById(yehaiclass + 'btn').style.display = 'none';
+        document.getElementById('totalcostbtn').style.display = 'none';
     }
 
     function get_temp_proj(btnID, rpc) {

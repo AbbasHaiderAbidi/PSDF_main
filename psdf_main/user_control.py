@@ -6,54 +6,72 @@ def newdpr(request):
     # form = NewDPR_form()
     if useronline(request) and not adminonline(request):
         user = userDetails(request.session['user'])
-        if(user['temp_boq'] == ''):
-            rboq = range(1,0)
-            nboq = 1
-            n = range(1,1000)
-        else:
-            rboq = range(1,len(user['temp_boq']['boq'])+1)
-            nboq = len(user['temp_boq']['boq'])+1
-            n = range(len(user['temp_boq']['boq'])+1,1000)
-        context = {'user':user, 'n' : n, 'nboq' : nboq, 'rboq' : rboq}
+        context = full_user_context(request)
         if request.method == 'POST':
             req = request.POST
             if req['subtype'] == 'submit':
-                boq = []
                 if request.FILES:
                     amount = sanitize(req['amount'])
                     schedle = sanitize(req['schedule'])
                     proname = sanitize(req['proname'])
-                    boq = []
-                    totcost = 0
-                    for i in range(1,1000):
-                        if not (req['itemname'+str(i)] == ''):
-                            itemqty = sanitize(req['itemqty'+str(i)])
-                            itemprice = sanitize(req['itemprice'+str(i)])
-                            if isfloat(itemqty) and float(itemprice):
-                                boq.append({'itemname':sanitize(req['itemname'+str(i)]),'itemno':sanitize(req['itemno'+str(i)]),'itemdesc': sanitize(req['itemdesc'+str(i)]), 'itemqty': itemqty, 'itemprice': itemprice, 'itemcost' : str(float(float(itemprice)*float(itemqty)))})
-                            else:
-                                messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
-                                return render(request, 'psdf_main/newdpr.html', context)
-                    for k in boq:
-                        totcost = totcost + float(k['itemcost'])
-                    if not totcost == float(amount):
-                        messages.warning(request, 'Total cost of BoQ must be equal to amount entered.')
-                        return render(request, 'psdf_main/newdpr.html', context)
+                    if not ('boq' in request.FILES):
+                        messages.warning(request, 'No BoQ file selected')
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
                     if not ('dpr' in request.FILES and 'a1' in request.FILES):
                         messages.warning(request, 'Please select files to upload')
-                        return render(request, 'psdf_main/newdpr.html', context)
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
 
                     if(not isfloat(amount)):
                         messages.warning(request, 'Amount should be a decimal number')
-                        return render(request, 'psdf_main/newdpr.html', context)
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
 
                     if(not isnum(schedle)):
                         messages.warning(request, 'Schedule should be a number')
-                        return render(request, 'psdf_main/newdpr.html', context)
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
 
                     if len(proname) < 3:
                         messages.warning(request, 'Enter a valid project name')
-                        return render(request, 'psdf_main/newdpr.html', context)
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
+                    
+                    proname = sanitize(proname)
+                    
+                    
+                    
+                    boq_workbook = xl.load_workbook(request.FILES['boq'])
+                    boq = boq_workbook.active
+                    m_rows = boq.max_row
+                    total_cost = 0
+                    for j in range(1,6):
+                        if emp_check(boq.cell(row = m_rows, column = j)):
+                            messages.error(request, "Extra rows in BOQ file.")
+                            return render(request, 'psdf_main/_user_new_dpr.html', context)
+                    for i in range(2, m_rows+1):
+                        if not isnum(boq.cell(row = i, column = 1).value):
+                            messages.error(request, "Error in Row no. "+str(i)+" ITEM NUMBER column")
+                            return render(request, 'psdf_main/_user_new_dpr.html', context)
+                        if not isnum(boq.cell(row = i, column = 2).value):
+                            messages.error(request, "Error in Row no. "+str(i)+" in ITEM NAME column")
+                            return render(request, 'psdf_main/_user_new_dpr.html', context)
+                        if not isnum(boq.cell(row = i, column = 4).value):
+                            messages.error(request, "Error in Row no. "+str(i)+" QUANTITY column")
+                            return render(request, 'psdf_main/_user_new_dpr.html', context)
+                        if not isfloat(boq.cell(row = i, column = 5).value):
+                            messages.error(request, "Error in Row no. "+str(i)+" UNIT PRICE column")
+                            return render(request, 'psdf_main/_user_new_dpr.html', context)
+                        total_cost = total_cost + float(int(boq.cell(row = i, column = 4).value)*float(boq.cell(row = i, column = 5).value))
+                    if not total_cost == float(amount):
+                        messages.error(request, "BOQ total amount should be equal to entered amount")
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
+                    boqlist = []
+                    # {'itemname':sanitize(req['itemname'+str(i)]),'itemno':sanitize(req['itemno'+str(i)]),'itemdesc': sanitize(req['itemdesc'+str(i)]), 'itemqty': itemqty, 'itemprice': itemprice, 'itemcost' : str(float(float(itemprice)*float(itemqty)))}
+                    for i in range(2, m_rows+1):
+                        itemno = boq.cell(row = i, column = 1).value
+                        itemname = sanitize(boq.cell(row = i, column = 2).value)
+                        itemdesc = sanitize(boq.cell(row = i, column = 3).value)
+                        itemqty = int(boq.cell(row = i, column = 4).value)
+                        itemprice = float(boq.cell(row = i, column = 4).value)
+                        itemcost = itemqty * itemprice
+                        boqlist.append({'itemname':itemname, 'itemno':itemno, 'itemdesc': itemdesc, 'itemqty':itemqty, 'itemprice': itemprice, 'itemcost': itemcost})
                     ## CHECK FOR AMOUNT EQUALITY
                     dpr = request.FILES['dpr']
                     a1 = request.FILES['a1']
@@ -83,7 +101,7 @@ def newdpr(request):
                         temp_project.amountasked = amount
                         temp_project.projectpath = newdprpath
                         temp_project.schedule = schedle
-                        temp_project.submitted_boq = boq
+                        temp_project.submitted_boq = boqlist
                         temp_project.userid = users.objects.get(id = userDetails(request.session['user'])['id'])
                         temp_project.save()
                         temp_dpr = users.objects.get(id = user['id'])
@@ -93,60 +111,55 @@ def newdpr(request):
                         admin_user.notification = str(admin_user.notification) + ']*[' + 'New project : '+ proname +' has been submitted by user: ' + str(temp_project.userid.username)
                         admin_user.save(update_fields=['notification'])
                         messages.success(request, 'DPR for Project : '+ proname +' has been submitted for examination.')
-                        return render(request, 'psdf_main/newdpr.html', context)
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
+                    else:
+                        messages.error(request, "Error in creating record")
+                        return render(request, 'psdf_main/_user_new_dpr.html', context)
 
                 else:
 
                     messages.warning(request, 'Please upload supporting documents')
-                    return render(request, 'psdf_main/newdpr.html', context)
+                    return render(request, 'psdf_main/_user_new_dpr.html', context)
             elif req['subtype'] == 'save':
                 amount = req['amount']
                 schedle = req['schedule']
                 proname = req['proname']
-                boq = []
-                x = 0
-                for i in range(1,1000):
-                    if not (req['itemname'+str(i)] == ''):
-                        itemqty = req['itemqty'+str(i)]
-                        itemprice = req['itemprice'+str(i)]
-                        if isfloat(itemqty) and float(itemprice):
-                            x = x + 1
-                            boq.append({'srno':x, 'itemname':req['itemname'+str(i)],'itemno':req['itemno'+str(i)],'itemdesc': req['itemdesc'+str(i)], 'itemqty': itemqty, 'itemprice': itemprice, 'itemcost' : str(float(float(itemprice)*float(itemqty)))})
-                        else:
-                            messages.warning(request, 'BoQ item quantity and Price must be a decimal number')
-                            return render(request, 'psdf_main/newdpr.html', context)
                 saveddpr = {}
                 saveddpr['amountasked'] = amount
                 saveddpr['schedule'] = schedle
                 saveddpr['proname'] = proname
-                saveddpr['boq'] = boq
+                
                 temp_dpr = users.objects.get(id = user['id'])
                 temp_dpr.tpd = saveddpr
                 temp_dpr.save(update_fields=['tpd'])
+                
                 
             elif req['subtype'] == 'clear':
                 temp_dpr = users.objects.get(id = user['id'])
                 temp_dpr.tpd = ''
                 temp_dpr.save(update_fields=['tpd'])
-
-        return render(request, 'psdf_main/newdpr.html', context)
+            context = full_user_context(request)
+        return render(request, 'psdf_main/_user_new_dpr.html', context)
     return oops(request)
 
 
 
 def downloadformat(request,thisdoc):
-    filelist = {'support':'DPR_Supporting_documents', 'format':'DPR_Forms','sample1':'sample1','sample2':'sample2','sample3':'sample3'}
-    # try:
-    if useronline(request) and not adminonline(request):
-        formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), os.path.join('Admin/Formats/',filelist[thisdoc]))
-        formatpath = glob.glob(formatpath+'*')[0]
-        print(formatpath)
-        return handle_download_file(formatpath, request)
-    else:
-        return oops(request)
-    # except:
-    #     messages.error(request, 'Function unavailable.')
-    #     return redirect('/newdpr')
+    filelist = {'support':'DPR_Supporting_documents', 'format':'DPR_Forms','sample1':'sample1','sample2':'sample2','sample3':'sample3', 'boqformat':'BOQ_Format'}
+    try:
+        if useronline(request) and not adminonline(request):
+            formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), os.path.join('Admin/Formats/',filelist[thisdoc]))
+            formatpath = glob.glob(formatpath+'*')[0]
+            # if os.path.exists(formatpath):
+            return handle_download_file(formatpath, request)
+            # else:
+            #     messages.error(request, "File not available")
+            #     return redirect('/newdpr')
+        else:
+            return oops(request)
+    except:
+        messages.error(request, 'Function unavailable.')
+        return redirect('/newdpr')
 
 
 def notificationread(request, userid):
@@ -181,8 +194,10 @@ def user_boq_view(request, projid):
             
             context = full_user_context(request)
             if backpage == 'underexamination':
-                project = temp_projectDetails(proj.id)
-                context['proj'] = project
+                # project = temp_projectDetails(proj.id)
+                context['proj'] = temp_projects.objects.filter(id = proj.id)
+                context['proj'].submitted_boq = get_boq_details(proj.submitted_boq)
+                print(context['proj'].submitted_boq)
                 context['backpage'] = backpages[backpage]
                 return render(request, 'psdf_main/_user_view_boq.html', context)
             else:
@@ -219,5 +234,15 @@ def user_view_all_projs(request):
         context['nreject'] = projects.objects.filter(deny = True, userid = userobj).count() + temp_projects.objects.filter(deny = True, userid = userobj).count()
         
         return render(request, 'psdf_main/_user_view_all_projects.html', context)
+    else:
+        return oops(request)
+
+def user_project_details(request, projid):
+    context = full_user_context(request)
+    context['proj'] = projects.objects.get(id = projid)
+    if useronline(request) and context['proj'].userid.username == request.session['user']:
+        context['proj'].workflow = context['proj'].workflow.split(']*[')[1:]
+        context['tesgs'] = TESG_master.objects.filter(project = context['proj'])
+        return render(request, 'psdf_main/_user_view_project.html', context)
     else:
         return oops(request)

@@ -43,11 +43,12 @@
     </div>
 
 </div>
+{% if not loa_project and not approved_boq_total > 0%}
 <div class="row">
 
-    <div class="col-lg-4">
+    <div class="col-lg-4 center">
 
-        <div class="card shadow mb-4">
+        <div class="card shadow">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Select from approved projects to submit LOA</h6>
             </div>
@@ -65,13 +66,19 @@
                     <form action="{% url 'new_loa' %}" method="POST" class="row" name='projform' id='projform'>
                         {% csrf_token %}
                         <div class="input-group container" style="margin-top:20%">
-                            <label for="projectid">Select project</label> &nbsp;&nbsp;&nbsp;
-                            <select name="projectid" id="projectid" class="form-control" onchange="autosubmit()">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="projectid" class="font-weight-bold">Select project</label> &nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-md-2"></div>
+                                <div class="col-md-6">
+                                    <select name="projectid" id="projectid" class="form-control" onchange="autosubmit()">
                             <option value="0"  class="form-control">-- Select Project from list --</option>
                             {% for proj in projectlist %}
                             <option value="{{proj.id}}"  class="form-control">{{proj.newid}} -- {{proj.name}}</option>
                             {% endfor %}
                         </select>
+                                </div>
+                            </div>
                         </div>
 
                     </form>
@@ -83,7 +90,13 @@
 
         </div>
     </div>
-    <div class="col-lg-8">
+
+</div>
+{% endif %} {% if loa_project and approved_boq_total > 0%}
+
+<div class="row">
+
+    <div class="col-lg-12">
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
@@ -103,7 +116,8 @@
                                         <th>Item Description</th>
                                         <th>Quantity</th>
                                         <th>Unit Price</th>
-                                        <th>Total Cost</th>
+
+                                        <th class="alert-danger">Claim</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -123,14 +137,17 @@
                                         <td>{{boq.itemdesc}}</td>
                                         <td>{{boq.itemqty}}</td>
                                         <td>₹ {{boq.unitcost}}</td>
-                                        <td>₹ {% multiply boq.itemqty boq.unitcost %}</td>
+                                        <form action="{% url 'submitloa' %}" method="POST" enctype="multipart/form-data" name="loaform" id="loaform">
+                                            {% csrf_token %}
+                                            <td><input type="number" class="form-control col-md-4 center" name="item_{{boq.itemno}}" id="item_{{boq.itemno}}" value="0" max="{{boq.itemqty}}" required></td>
+                                            <input type="hidden" value="{{loa_project.id}}" id="projid" name="projid">
                                     </tr>
                                     {% endfor %}
                                     <tr>
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
+
                                         <td class="font-weight-bold">Grand Total</td>
                                         <td>
                                             <h6 class="font-weight-bold text-danger">₹ {{approved_boq_total}} </h6>
@@ -149,18 +166,50 @@
         </div>
     </div>
 </div>
-{% if loa_project and approved_boq_total > 0%}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Submit New LOA</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Upload New LOA</h6>
             </div>
             <div class="card-body">
+                <input type="file" class="form-control-file btn btn-outline-danger col-md-6 center" name="loa" id="loa" required>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Submission</h6>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                            <label class="form-check-label" for="terms">
+                
+                                <a>I confirm that the above given data is to the best of my knowledge and I shall be responsible for any discrepancy found in the submitted LOA and the claimed items</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+                <div class="row">
+                    <h5 class="col-md-4">Enter your password: </h5>
+                    <div class="col-md-1"></div><input type="password" class="form-control col-md-6" name="userpass" id="userpass" required>
+                    <div class="col-md-1"></div>
+                </div>
+                <hr>
+                <input type="submit" class="btn btn-block btn-outline-success" value="Submit">
+            </div>
+        </div>
+    </div>
+
 </div>
+</form>
 {% endif %}
 
 

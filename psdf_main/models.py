@@ -122,4 +122,15 @@ class boqdata(models.Model):
     itemdesc = models.TextField(null=True)
     itemqty = models.IntegerField(null = True)
     unitcost = models.FloatField(null = True)
-    
+
+class loadata(models.Model):
+    project = models.ForeignKey(projects, null = True, on_delete= models.CASCADE)
+    tranche = models.IntegerField(null=True)
+    req_boq = models.TextField(null=True)
+    filepath = models.TextField(null=True)
+    subdate = models.DateField(null = True, auto_now_add=True)
+    compdate = models.DateField(null = True, auto_now_add=False)
+    approved = models.CharField(max_length = 1, default = 2)
+#1-- Completed
+#2-- Ongoing
+#3-- Rejected

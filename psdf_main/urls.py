@@ -81,6 +81,7 @@ urlpatterns = [
     #ViewAll
     path('view_all_projs/', views.view_all_projs, name="view_all_projs"),
     path('user_view_all_projs/', views.user_view_all_projs, name="user_view_all_projs"),
+    path('user_project_details/<str:projid>', views.user_project_details, name = "user_project_details"),
     path('admin_project_details/<str:projid>', views.admin_project_details, name = "admin_project_details"),
     path('admin_temp_project_details/<str:projectid>', views.admin_temp_project_details, name = "admin_temp_project_details"),
     path('appr_mom_download/<str:projid>', views.appr_mom_download, name = "appr_mom_download"),
@@ -101,6 +102,6 @@ urlpatterns = [
     
     #Payment
     path('new_loa/', views.new_loa, name="new_loa"),
-    
+    path('submitloa/', views.submitloa, name="submitloa"),
     
 ]

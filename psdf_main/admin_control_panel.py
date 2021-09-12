@@ -38,7 +38,7 @@ def control_panel(request):
     
     
 def uploadformat(request):
-    filelist = {'support':'DPR_Supporting_documents', 'format':'DPR_Forms','sample1':'sample1','sample2':'sample2','sample3':'sample3'}
+    filelist = {'support':'DPR_Supporting_documents', 'format':'DPR_Forms','sample1':'sample1','sample2':'sample2','sample3':'sample3','boqformat':'BOQ_Format'}
     if adminonline(request):
         if request.method == 'POST':
             req = request.POST
@@ -111,6 +111,18 @@ def uploadformat(request):
                     # formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
                     
                     messages.success(request, 'Sample 3 updated.')
+                if 'boqformat' in files.keys():
+                    naam = 'boqformat'
+                    support = files[naam]
+                    try:
+                        ext = '.' + support.name.split('.')[1]
+                    except:
+                        ext = ''
+                    name = filelist[naam] + ext
+                    handle_uploaded_file(os.path.join(formatpath,name),files[naam])
+                    # formatpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'), 'Admin/Formats/')
+                    
+                    messages.success(request, 'BOQ Format updated.')
                 return control_panel(request)
             else:
                 return control_panel(request)
