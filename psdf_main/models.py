@@ -53,6 +53,7 @@ class projects(models.Model):
     submitted_boq  = models.TextField(null=True)
     
     approved = models.BooleanField(default = False)
+    
     deny = models.BooleanField(default = False)
     remark = models.TextField(null = True)
     
@@ -69,18 +70,22 @@ class projects(models.Model):
     
     moniaprdate = models.DateField(null = True)
     
-    finalaprdate= models.DateField(null = True)
+    
     
     workflow = models.TextField(null=True)
 
+    doc_path = models.TextField(null=True)
+    
+    doc_sign_date = models.DateField(null=True)
+    
+    
     ##################################
     ## 1 - DPR approved
     ## 2 - TESG approved
     ## 3 - Appraisal approved
     ## 4 - Monitoring approved
-    ## 5 - Final approval done
-    ## 6 - Document Signing done
-    ## 7 - Payment Done
+    ## 5 - Document Signing done
+    ## 6 - Payment Done
 
 
 class TESG_admin(models.Model):
@@ -125,7 +130,7 @@ class boqdata(models.Model):
 
 class loadata(models.Model):
     project = models.ForeignKey(projects, null = True, on_delete= models.CASCADE)
-    tranche = models.IntegerField(null=True)
+    tranche = models.IntegerField(null=True, default=0)
     req_boq = models.TextField(null=True)
     filepath = models.TextField(null=True)
     subdate = models.DateField(null = True, auto_now_add=True)
@@ -134,3 +139,10 @@ class loadata(models.Model):
 #1-- Completed
 #2-- Ongoing
 #3-- Rejected
+
+
+class init_payment(models.Model):
+    project = models.ForeignKey(projects, null = True, on_delete= models.CASCADE)
+    ref_no = models.TextField(null=True, default='Not available')
+    amount = models.IntegerField(null=True)
+    release_date = models.DateField(null=True, auto_now_add=True)

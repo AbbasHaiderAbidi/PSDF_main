@@ -44,30 +44,33 @@ def user_tesg_response(request):
                 tesgpath = ''
                 fullpath = ''
                 if 'responses' in request.FILES:
-                        responses = request.FILES['responses']
-                        tesgpath = projects.objects.get(id = projid).projectpath + '/TESG/'
-                        smkdir(tesgpath)
-                        try:
-                            alreadyfile = glob.glob(os.path.join(tesgpath,str(tesg_no)+'_response')+'*')[0]
-                            
-                            if os.path.exists(alreadyfile):
-                                sremove(alreadyfile)
-                            else:
-                                print("NOT EXISTS")
-                        except:
-                            pass
-                        try:
-                            extension = str(responses.name.split(".")[1])
-                        except:
-                            extension = ''
-                        fullpath = os.path.join(tesgpath,str(str(tesg_no)+'_response'+ "." +extension ))
-                        handle_uploaded_file(fullpath,responses)
+                    responses = request.FILES['responses']
+                    tesgpath = projects.objects.get(id = projid).projectpath + '/TESG/'
+                    smkdir(tesgpath)
+                    try:
+                        alreadyfile = glob.glob(os.path.join(tesgpath,str(tesg_no)+'_response')+'*')[0]
                         
+                        if os.path.exists(alreadyfile):
+                            sremove(alreadyfile)
+                        else:
+                            print("NOT EXISTS")
+                    except:
+                        pass
+                    try:
+                        extension = str(responses.name.split(".")[-1])
+                    except:
+                        extension = ''
+                    fullpath = os.path.join(tesgpath,str(str(tesg_no)+'_response'+ "." +extension ))
+                    if handle_uploaded_file(fullpath,responses):
+                        pass
+                    else:
+                        return oops(request)
+                    
                 this_tesg.user_res_date = datetime.now().date()
                 this_tesg.user_response = tesg_response
                 this_tesg.user_filepath = fullpath
                 this_tesg.save(update_fields=['user_res_date','user_response','user_filepath'])
-                messages.error(request, 'Response of TESG '+tesg_no+' have been intimated to PSDF Sectt.')
+                messages.success(request, 'Response of TESG '+tesg_no+' have been intimated to PSDF Sectt.')
                 notification(users.objects.filter(admin = True)[:1].get().id, 'TESG #'+tesg_no+' response updated by user '+request.session['user'])
                 return user_TESG_chain(request, projid)
             else:

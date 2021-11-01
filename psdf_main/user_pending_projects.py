@@ -24,45 +24,52 @@ def upload_dpr_docs(request):
                 if 'dpr' in files.keys():
                     dpr = request.FILES['dpr']
                     try:
-                        extension = dpr.name.split('.')[1]
+                        extension = dpr.name.split('.')[-1]
                     except:
                         extension = ''
                     try:
                         dprfilenames = glob.glob(projpath+'/DPR*')
                         for dprfilename in dprfilenames:
                             sremove(dprfilename)
-                        handle_uploaded_file(projpath+'/DPR.'+extension, dpr)
-                        messages.success(request, "Project DPR updated.")
+                        if handle_uploaded_file(projpath+'/DPR.'+extension, dpr):
+                            messages.success(request, "Project DPR updated.")
+                        else:
+                            return oops(request)
+                        
                     except :
                         messages.error(request, "Some error has occurred")
                         return redirect('/under_examination')
                 if 'forms' in files.keys():
                     forms = request.FILES['forms']
                     try:
-                        extension = forms.name.split('.')[1]
+                        extension = forms.name.split('.')[-1]
                     except:
                         extension = ''
                     try:
                         formfilenames = glob.glob(projpath+'/forms*')
                         for formfilename in formfilenames:
                             sremove(formfilename)
-                        handle_uploaded_file(projpath+'/forms.'+extension, forms)
-                        messages.success(request, "Project Forms updated.")
+                        if handle_uploaded_file(projpath+'/forms.'+extension, forms):
+                            messages.success(request, "Project Forms updated.")
+                        else:
+                            return oops(request)
                     except :
                         messages.error(request, "Some error has occurred")
                         return redirect('/under_examination')
                 if 'otherdocs' in files.keys():
                     otherdocs = request.FILES['otherdoc']
                     try:
-                        extension = otherdocs.name.split('.')[1]
+                        extension = otherdocs.name.split('.')[-1]
                     except:
                         extension = ''
                     try:
                         otherfilenames = glob.glob(projpath+'/otherdocs*')
                         for otherfilename in otherfilenames:
                             sremove(otherfilename)
-                        handle_uploaded_file(projpath+'/otherdocs.'+extension, otherdocs)
-                        messages.success(request, "Other documents updated.")
+                        if handle_uploaded_file(projpath+'/otherdocs.'+extension, otherdocs):
+                            messages.success(request, "Other documents updated.")
+                        else:
+                            return oops(request)
                     except :
                         messages.error(request, "Some error has occurred")
                         return redirect('/under_examination')

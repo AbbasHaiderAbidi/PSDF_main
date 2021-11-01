@@ -110,7 +110,7 @@ def admin_boq_view(request, projid):
             return oops(request)
         context = full_admin_context(request)
         if backpage == 'underexamination':
-            project = temp_projectDetails(proj.id)
+            project = projects.objects.get(id = proj.id)
             context['proj'] = project
             
             context['backpage'] = backpages[backpage]

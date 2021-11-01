@@ -35,8 +35,7 @@ def newdpr(request):
                     
                     proname = sanitize(proname)
                     
-                    
-                    
+
                     boq_workbook = xl.load_workbook(request.FILES['boq'])
                     boq = boq_workbook.active
                     m_rows = boq.max_row
@@ -80,22 +79,39 @@ def newdpr(request):
                     newdprpath = os.path.join(os.path.join(BASE_DIR, 'Data_Bank'),os.path.join(request.session['user'],'temp/'+proname+'_'+amount+'_'+schedle))
                     if smkdir(newdprpath):
                         try:
-                            dpr_filename = secure_filename("DPR."+dpr.name.split('.')[1])
-                            a1_filename = secure_filename("forms."+a1.name.split('.')[1])
+                            
+                            
                             if 'otherdoc' in request.FILES:
                                 try:
-                                    otherdoc_filename = secure_filename("otherdocs."+otherdoc.name.split('.')[1])
+                                    otherdoc_filename = secure_filename("otherdocs."+otherdoc.name.split('.')[-1])
                                 except:
                                     otherdoc_filename = secure_filename("otherdocs")
-                        except:
-                            dpr_filename = secure_filename("DPR")
-                            a1_filename = secure_filename("forms")
+                            try:
+                                dpr_filename = secure_filename("DPR."+dpr.name.split('.')[-1])
+                            except:
+                                dpr_filename = secure_filename("DPR")
+                            try:
+                                a1_filename = secure_filename("forms."+a1.name.split('.')[-1])
+                            except:
+                                a1_filename = secure_filename("forms")
+                                
                             if 'otherdoc' in request.FILES:
                                 otherdoc_filename = secure_filename("otherdocs")
-                        handle_uploaded_file(os.path.join(newdprpath,dpr_filename),dpr)
-                        handle_uploaded_file(os.path.join(newdprpath,a1_filename),a1)
-                        if 'otherdoc' in request.FILES:
-                            handle_uploaded_file(os.path.join(newdprpath,otherdoc_filename),otherdoc)
+                                if handle_uploaded_file(os.path.join(newdprpath,otherdoc_filename),otherdoc):
+                                    pass
+                                else:
+                                    return oops(request)
+                            if handle_uploaded_file(os.path.join(newdprpath,dpr_filename),dpr):
+                                pass
+                            else:
+                                return oops(request)
+                            if handle_uploaded_file(os.path.join(newdprpath,a1_filename),a1):
+                                pass
+                            else:
+                                return oops(request)
+                        except :
+                            return oops(request)
+                        
                         temp_project = temp_projects()
                         temp_project.proname = proname
                         temp_project.amountasked = amount
@@ -128,12 +144,9 @@ def newdpr(request):
                 saveddpr['amountasked'] = amount
                 saveddpr['schedule'] = schedle
                 saveddpr['proname'] = proname
-                
                 temp_dpr = users.objects.get(id = user['id'])
                 temp_dpr.tpd = saveddpr
                 temp_dpr.save(update_fields=['tpd'])
-                
-                
             elif req['subtype'] == 'clear':
                 temp_dpr = users.objects.get(id = user['id'])
                 temp_dpr.tpd = ''

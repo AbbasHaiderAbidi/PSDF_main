@@ -28,6 +28,18 @@ def proj_of_user(request, projid):
     else:
         return False
 
+
+def getuser(request, username):
+    return users.objects.filter(username = request.session['user'])[:1].get()
+
+def projectofuser(request, username,projid):
+    if projects.objects.get(id = projid).userid == getuser(request, username):
+        return True
+    else:
+        return False
+
+    
+
 def oops(request):
     return render(request, 'psdf_main/404.html')
 
@@ -248,10 +260,14 @@ def srmdir(filename):
 
 
 def handle_uploaded_file(path, f):
-    destination = open(path, 'wb+')
-    for chunk in f.chunks():
-        destination.write(chunk)
-    destination.close()
+    try:
+        destination = open(path, 'wb+')
+        for chunk in f.chunks():
+            destination.write(chunk)
+        destination.close()
+        return True
+    except:
+        return False
 
 def handle_download_file(filepath, request):
     print("DOWNLOAD STARTED")

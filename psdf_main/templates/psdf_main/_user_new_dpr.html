@@ -29,7 +29,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
             <a href="#format" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                <h6 class="m-0 font-weight-bold text-warning">View Format</h6>
+                <h6 class="m-0 font-weight-bold text-info">View Format</h6>
             </a>
             <!-- Card Content - Collapse -->
             <div class="collapse" id="format">
@@ -201,7 +201,7 @@
                         <div class="col-md-6">
 
 
-                            <input type="file" class="form-control-file btn btn-outline-danger" name="boq" id="boq" accept=".xls, .xlsx">
+                            <input type="file" class="form-control-file btn btn-outline-warning" name="boq" id="boq" accept=".xls, .xlsx">
                         </div>
                     </div>
                 </div>
@@ -229,7 +229,7 @@
                     <div class="row">
                         <div class="col-lg-8" style="margin: auto;">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
 
                                     <button type="button" class="btn btn-outline-danger btn-wrap-text" data-toggle="modal" data-target="#exampleModal">
   Clear Data
@@ -257,17 +257,17 @@
                                     </div>
 
                                 </div>
+                                <div class="col-md-2"></div>
+                                <!-- <div class="col-md-4">
+                                    <button class="btn btn-outline-info btn-wrap-text" onclick="check_n_submit('save')">Save as draft</button></div> -->
                                 <div class="col-md-0"></div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-outline-info btn-wrap-text" onclick="check_n_submit('save')">Save as draft</button></div>
-                                <div class="col-md-0"></div>
-                                <div class="col-md-4">
-                                    <button type="button" class="btn btn-success btn-wrap-text" data-toggle="modal" data-target="#exampleModal1">
-                                        Submit
+                                <div class="col-md-5">
+                                    <button type="button" class="btn btn-lg btn-outline-success btn-wrap-text" data-toggle="modal" data-target="#confirmsub">
+                                        <strong>Submit</strong>
                                 </button>
                                 </div>
 
-                                <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="confirmsub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">

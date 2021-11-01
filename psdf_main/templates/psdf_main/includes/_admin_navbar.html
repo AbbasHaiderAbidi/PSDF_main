@@ -30,13 +30,6 @@
             <span>Dashboard</span></a>
     </li>
 
-    <hr class="sidebar-divider my-0">
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'newdpr' %}">
-            <i class="fa fa-eye"></i>
-            <span>View Pending Requests</span></a>
-    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -71,6 +64,10 @@
                     {% if nomon > 0 %}<span class="badge badge-danger badge-counter">{{nomon}}</span> {% endif %}
                 </a>
                 <hr class="sidebar-divider">
+                <a class="collapse-item" href="{% url 'admin_in_doc_sign' %}"><strong>Document Signing</strong>
+                </a>
+
+                <hr class="sidebar-divider">
                 <h6><a class="collapse-item" href="{% url 'view_all_projs' %}"><strong>View All</strong></a></h6>
             </div>
         </div>
@@ -85,6 +82,8 @@
         <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Payment Phase: </h6>
+                <a class="collapse-item" href="{% url 'init_release' %}">Initial payment release
+                </a>
                 <a class="collapse-item" href="{% url 'admin_pending_projects' %}">LOA placed &nbsp;&nbsp;&nbsp;
                     {% if nopendingprojects > 0 %}<span class="badge badge-danger badge-counter">{{nopendingprojects}}</span> {% endif %}</a>
                 <a class="collapse-item" href="{% url 'TESG_projects' %}">Under TESG &nbsp; &nbsp; &nbsp;

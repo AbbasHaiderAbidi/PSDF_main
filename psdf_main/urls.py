@@ -78,6 +78,12 @@ urlpatterns = [
     path('download_moni_mom/<str:moniid>', views.download_moni_mom, name = 'download_moni_mom'),
     path('approve_monitoring/<str:projectid>', views.approve_monitoring, name = "approve_monitoring"),
 
+
+    #approval
+    path('user_in_doc_sign/', views.user_in_doc_sign, name="user_in_doc_sign"),
+    path('admin_in_doc_sign/', views.admin_in_doc_sign, name="admin_in_doc_sign"),
+    path('download_doc_sign/<str:projid>', views.download_doc_sign, name="download_doc_sign"),
+    
     #ViewAll
     path('view_all_projs/', views.view_all_projs, name="view_all_projs"),
     path('user_view_all_projs/', views.user_view_all_projs, name="user_view_all_projs"),
@@ -101,6 +107,9 @@ urlpatterns = [
     path('auditor_download_project/<str:projid>', views.auditor_download_project, name="auditor_download_project"),
     
     #Payment
+    
+    path('init_record/', views.init_record, name="init_record"),
+    path('init_release/', views.init_release, name="init_release"),
     path('new_loa/', views.new_loa, name="new_loa"),
     path('submitloa/', views.submitloa, name="submitloa"),
     

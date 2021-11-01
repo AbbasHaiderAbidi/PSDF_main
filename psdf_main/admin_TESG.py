@@ -62,11 +62,14 @@ def tesgchain_form(request):
                 tesgpath = projects.objects.get(id = projid).projectpath + '/TESG/'
                 smkdir(tesgpath)
                 try:
-                    extension = str(observations.name.split(".")[1])
+                    extension = str(observations.name.split(".")[-1])
                 except:
                     extension = ''
                 fullpath = os.path.join(tesgpath,str(str(tesgnum) + "." +extension ))
-                handle_uploaded_file(fullpath,observations)
+                if handle_uploaded_file(fullpath,observations):
+                    messages.success(request, 'Outcome File uploaded.')
+                else:
+                    return oops(request)
             tesg = TESG_master()
             tesg.project = projects.objects.get(id = projid)
             tesg.tesgnum = TESG_admin.objects.filter(TESG_no = tesgnum)[:1].get()
